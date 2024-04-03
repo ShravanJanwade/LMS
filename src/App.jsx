@@ -1,23 +1,14 @@
-import './App.css'
-import { NavbarWithMegaMenu } from './Components/Navbar';
-import BatchDetailsCards from './Pages/BatchDetailsCards';
-import  BatchDetailsTable  from './Pages/BatchDetailsTable';
-import { useState } from 'react';
+import "./App.css";
+import { NavbarWithMegaMenu } from "./Components/Navbar";
+import Routes from "./Routes/Routes";
+import { BrowserRouter as Router } from "react-router-dom";
 function App() {
-  const [card,setCard]=useState(true);
-  const toggleHandler=()=>{
-    setCard(prev=>!prev)
-  }
   return (
-    <>
-    <NavbarWithMegaMenu/>
-    {card ? (
-        <BatchDetailsCards card={card} toggleHandler={toggleHandler} />
-      ) : (
-        <BatchDetailsTable card={card} toggleHandler={toggleHandler} />
-      )}
-    </>
-  )
+    <Router>
+      <NavbarWithMegaMenu />
+      <Routes />
+    </Router>
+  );
 }
 
-export default App
+export default App;

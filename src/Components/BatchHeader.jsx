@@ -22,70 +22,71 @@ const TABS = [
     value: "Active",
   },
   {
-    label: "Non-Active",
+    label: "UnActive",
     value: "Non-Active",
   },
 ];
-const BatchHeader = ({ toggleHandler, card, onStatusChange }) => {
+const BatchHeader = ({ toggleHandler, card, onStatusChange,searchHandler}) => {
   const [status, setStatus] = useState("All");
   const handlerTabClick = (value) => {
     setStatus(value);
     onStatusChange(value);
     console.log(status);
   };
-
   return (
     <CardHeader floated={false} shadow={false} className="rounded-none">
-      <div className="mb-8 flex items-center justify-between gap-8 ml-12">
-        <div>
-          <Typography variant="h5" color="blue-gray">
-            Batch list
-          </Typography>
-          <Typography color="gray" className="mt-1 font-normal">
-            See information about all Batches
-          </Typography>
-        </div>
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-          <Button variant="outlined" onClick={toggleHandler} className="w-52">
-            {" "}
-            {card ? "Table View" : "Card View"}
+    <div className="mb-4 sm:mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 ml-4 sm:ml-12">
+      <div>
+        <Typography variant="h5" color="blue-gray">
+          Batch list
+        </Typography>
+        <Typography color="gray" className="mt-1 font-normal">
+          See information about all Batches
+        </Typography>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <Button variant="outlined" onClick={toggleHandler} className="w-full sm:w-auto">
+          {card ? "Table View" : "Card View"}
+        </Button>
+        <Link to="/lms/create-batch">
+          <Button className="flex items-center gap-2">
+            <UserPlusIcon strokeWidth={2} className="h-5 w-5" /> Create New Batch
           </Button>
-          <Link to="/lms/create-batch">
-            <Button className="flex items-center gap-3">
-              <UserPlusIcon strokeWidth={2} className="h-5 w-5" /> Create New
-              Batch
-            </Button>
-          </Link>
-        </div>
+        </Link>
       </div>
-      <div className="flex flex-col items-center justify-between gap-4 ml-12 md:flex-row">
-        <Tabs value="all" className="w-full  md:w-96">
-          <TabsHeader>
-            {TABS.map(({ label, value }) => (
-              <Tab
-                key={value}
-                value={value}
-                onClick={() => handlerTabClick(value)}
-              >
-                &nbsp;&nbsp;{label}&nbsp;&nbsp;
-              </Tab>
-            ))}
-          </TabsHeader>
-        </Tabs>
-        <div className="w-full md:w-96">
-          <Input
-            label="Search"
-            icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-            className="w-full"
-          />
-        </div>
+    </div>
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 ml-4 sm:ml-12">
+      <Tabs value="all" className="w-full sm:w-72 md:w-96">
+        <TabsHeader>
+          {TABS.map(({ label, value }) => (
+            <Tab
+              key={value}
+              value={value}
+              onClick={() => handlerTabClick(value)}
+            >
+              &nbsp;&nbsp;{label}&nbsp;&nbsp;
+            </Tab>
+          ))}
+        </TabsHeader>
+      </Tabs>
+      <div className="w-full sm:w-72 md:w-96">
+        <Input
+          label="Search"
+          icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+          className="w-full"
+          onChange={searchHandler}
+        />
       </div>
-    </CardHeader>
+    </div>
+  </CardHeader>
+  
   );
 };
 BatchHeader.propTypes = {
   card: PropTypes.bool.isRequired,
   toggleHandler: PropTypes.func.isRequired,
   onStatusChange: PropTypes.func.isRequired,
+  searchHandler: PropTypes.func.isRequired,
+
 };
 export default BatchHeader;

@@ -6,9 +6,10 @@ import {
   Chip,
   Button,
 } from "@material-tailwind/react";
+import ProgressBar from "./ProgressBar";
 import PropTypes from "prop-types";
-
-export function CourseCard({ online }) {
+import { Link } from "react-router-dom";
+export function CourseCard({ online,progressValue}) {
   return (
     <Card className="mt-6 w-96 inline-block m-5">
       <CardBody>
@@ -29,13 +30,14 @@ export function CourseCard({ online }) {
           <Chip
             variant="ghost"
             size="sm"
-            value={online ? "online" : "offline"}
+            value={online ? "Active" : "Non-Active"}
             color={online ? "green" : "blue-gray"}
           />
         </div>
       </CardBody>
       <CardFooter className="pt-0">
         <a href="#" className="inline-block">
+          <Link to="/lms/batchDetails">
           <Button size="sm" variant="text" className="flex items-center gap-2">
             Batch Details
             <svg
@@ -52,12 +54,16 @@ export function CourseCard({ online }) {
                 d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
               />
             </svg>
+
           </Button>
+          </Link>
         </a>
       </CardFooter>
+      <ProgressBar progressValue={progressValue}/>
     </Card>
   );
 }
 CourseCard.propTypes = {
   online: PropTypes.bool.isRequired,
+  progressValue:PropTypes.number.isRequired,
 };

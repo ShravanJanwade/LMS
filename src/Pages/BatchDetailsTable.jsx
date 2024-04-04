@@ -1,5 +1,6 @@
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
+import {Link} from "react-router-dom";
 import {
   Card,
   Typography,
@@ -11,47 +12,43 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
+import ProgressBar from "../Components/ProgressBar";
 const TABLE_HEAD = [
   "Batch Name",
-  "Function",
+  "Progress",
   "Status",
   "Batch Created Date",
-  "Edit Batch",
+  "View Batch",
 ];
 
 const TABLE_ROWS = [
   {
-    name: "John Michael",
-    job: "Manager",
-    org: "Organization",
+    name: "Batch 100",
+    progressValue: 50,
     online: true,
     date: "23/04/18",
   },
   {
-    name: "Alexa Liras",
-    job: "Programator",
-    org: "Developer",
+    name: "Batch 101",
+    progressValue: 70,
     online: false,
     date: "23/04/18",
   },
   {
-    name: "Laurent Perrier",
-    job: "Executive",
-    org: "Projects",
+    name: "Batch 102",
+    progressValue: 20,
     online: false,
     date: "19/09/17",
   },
   {
-    name: "Michael Levi",
-    job: "Programator",
-    org: "Developer",
+    name: "Batch 103",
+    progressValue: 90,
     online: true,
     date: "24/12/08",
   },
   {
-    name: "Richard Gran",
-    job: "Manager",
-    org: "Executive",
+    name: "Batch 104",
+    progressValue: 40,
     online: false,
     date: "04/10/21",
   },
@@ -90,7 +87,7 @@ const BatchDetailsTable = ({ status }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map(({ name, job, org, online, date }, index) => {
+            {filteredRows.map(({ name,progressValue, online, date }, index) => {
               // Render each row based on filteredRows
               const isLast = index === filteredRows.length - 1;
               const classes = isLast
@@ -113,20 +110,7 @@ const BatchDetailsTable = ({ status }) => {
                   </td>
                   <td className={classes}>
                     <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {job}
-                      </Typography>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal opacity-70"
-                      >
-                        {org}
-                      </Typography>
+                      <ProgressBar progressValue={progressValue}/>
                     </div>
                   </td>
                   <td className={classes}>
@@ -134,7 +118,7 @@ const BatchDetailsTable = ({ status }) => {
                       <Chip
                         variant="ghost"
                         size="sm"
-                        value={online ? "online" : "offline"}
+                        value={online ? "Active" : "Non-Active"}
                         color={online ? "green" : "blue-gray"}
                       />
                     </div>
@@ -149,11 +133,12 @@ const BatchDetailsTable = ({ status }) => {
                     </Typography>
                   </td>
                   <td className={classes}>
-                    <Tooltip content="Edit User">
+                    <Link to="/lms/batchDetails">
+                    <Tooltip content="Batch Details">
                       <IconButton variant="text">
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip></Link>
                   </td>
                 </tr>
               );

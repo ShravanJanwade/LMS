@@ -8,3 +8,24 @@ body {
 
 }
 
+/* Width and Color */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust the width as needed */
+  background-color: #f5f5f5; /* Background color of the scrollbar track */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f5f5f5; /* Background color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar handle */
+  border-radius: 4px; /* Radius of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar handle on hover */
+}

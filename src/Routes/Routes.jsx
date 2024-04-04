@@ -9,7 +9,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<ViewBatches />} />
       <Route path="/lms/create-batch" element={<CreateBatch />} />
-      <Route path="/lms/batchDetails" element={<BatchDetails/>}/>
+      <Route path="/lms/batchDetails" element={<BatchDetails />} />
     </Routes>
   );
 }

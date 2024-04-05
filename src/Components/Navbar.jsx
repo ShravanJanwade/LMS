@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Navbar,
   Collapse,
@@ -166,7 +167,8 @@ function NavList() {
         color="blue-gray"
         className="font-medium"
       >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">Home</ListItem>
+        <Link to="/lms/viewBatches">
+        <ListItem className="flex items-center gap-2 py-2 pr-4">Home</ListItem></Link>
       </Typography>
       <NavListMenu />
       <Typography
@@ -197,24 +199,30 @@ export function NavbarWithMegaMenu() {
   return (
     <Navbar className="px-4 py-2 w-full !important">
       <div className="flex items-center justify-between text-blue-gray-900">
+        <Link to="/">
         <Typography
           as="a"
           href="#"
           variant="h6"
           className="mr-4 cursor-pointer py-1.5 lg:ml-2"
         >
-          Material Tailwind
+          LMS
         </Typography>
+        </Link>
         <div className="hidden lg:block">
           <NavList />
         </div>
         <div className="hidden gap-2 lg:flex">
+          <Link to="/login">
           <Button variant="text" size="sm" color="blue-gray">
             Log In
           </Button>
-          <Button variant="gradient" size="sm">
+          </Link>
+         <Link to="/register">
+         <Button variant="gradient" size="sm">
             Sign In
           </Button>
+          </Link>
         </div>
         <IconButton
           variant="text"

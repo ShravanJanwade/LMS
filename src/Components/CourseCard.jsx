@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 export function CourseCard({ online, progressValue, name, description, date }) {
   return (
-    <Card className="mt-6 w-96 inline-block m-5">
+    <Card className="mt-6 w-96 inline-block m-2">
       <CardBody>
         <div className="flex space-x-4 justify-end inline-block">
           <div className="w-max">

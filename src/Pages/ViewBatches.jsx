@@ -44,6 +44,21 @@ const batchData = [
     online: false,
     date: "04/10/21",
   },
+  {
+    id: 6,
+    name: "Batch 105",
+    description:
+      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+    online: false,
+    date: "04/10/21",
+  },  {
+    id: 7,
+    name: "Batch 106",
+    description:
+      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+    online: false,
+    date: "04/10/21",
+  },
 ];
 const progressData = [
   {
@@ -65,6 +80,13 @@ const progressData = [
   {
     batchId: 5,
     progressValue: 10,
+  },
+  {
+    batchId: 6,
+    progressValue: 70,
+  }, {
+    batchId: 7,
+    progressValue: 100,
   },
 ];
 

@@ -64,7 +64,7 @@ const BatchHeader = ({
           >
             {card ? "Table View" : "Card View"}
           </Button>
-          <Link to="/lms/create-batch">
+          <Link to="/lms/batches/create-batch">
             <Button className="flex items-center gap-2 mr-5">
               <UserPlusIcon strokeWidth={2} className="h-5 w-5" /> Create New
               Batch

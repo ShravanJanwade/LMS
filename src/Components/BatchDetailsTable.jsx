@@ -164,7 +164,7 @@ const BatchDetailsTable = ({
                     </Typography>
                   </td>
                   <td className={classes}>
-                    <Link to="/lms/batchDetails" className="ml-5">
+                    <Link to="/lms/batches/batchDetails" className="ml-5">
                       <Tooltip content="Batch Details">
                         <IconButton variant="text">
                           <svg

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+
 function CreateBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
@@ -13,9 +14,40 @@ function CreateBatch() {
   const handleDateChange = () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const diffInMilliseconds = end - start;
-    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+    // Calculate the difference in time
+    const diffInTime = end.getTime() - start.getTime();
+
+    // Calculate the difference in days
+    let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1; // Add 1 to include both start and end dates
+
+    // Check if start date and end date are the same
+    if (diffInDays < 1) {
+      diffInDays = 0; // Set duration to 0 days
+    }
+
+    // Update duration
     setDuration(`${diffInDays} days`);
+  };
+
+  const handleStartDateChange = (e) => {
+    const newStartDate = e.target.value;
+
+    // Update start date
+    setStartDate(newStartDate);
+
+    // Update duration
+    handleDateChange();
+  };
+
+  const handleEndDateChange = (e) => {
+    const newEndDate = e.target.value;
+
+    // Update end date
+    setEndDate(newEndDate);
+
+    // Update duration
+    handleDateChange();
   };
 
   // Handle form submission
@@ -39,48 +71,62 @@ function CreateBatch() {
           Batch Creation
         </Typography>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input
-            size="lg"
-            placeholder="Batch Name"
-            value={batchName}
-            onChange={(e) => setBatchName(e.target.value)}
-          />
-          <Input
-            size="lg"
-            placeholder="Batch Description"
-            value={batchDescription}
-            onChange={(e) => setBatchDescription(e.target.value)}
-          />
-          <Input
-            type="date"
-            size="lg"
-            placeholder="Start Date"
-            value={startDate}
-            onChange={(e) => {
-              setStartDate(e.target.value);
-              handleDateChange();
-            }}
-          />
-          <Input
-            type="date"
-            size="lg"
-            placeholder="End Date"
-            value={endDate}
-            onChange={(e) => {
-              setEndDate(e.target.value);
-              handleDateChange();
-            }}
-          />
-          <Input
-            size="lg"
-            placeholder="Batch Size"
-            value={batchSize}
-            onChange={(e) => setBatchSize(e.target.value)}
-          />
+          <div className="flex flex-col">
+            <label htmlFor="batchName">Batch Name:</label>
+            <Input
+              id="batchName"
+              size="lg"
+              placeholder="Batch Name"
+              value={batchName}
+              onChange={(e) => setBatchName(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="batchDescription">Batch Description:</label>
+            <Input
+              id="batchDescription"
+              size="lg"
+              placeholder="Batch Description"
+              value={batchDescription}
+              onChange={(e) => setBatchDescription(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="startDate">Start Date:</label>
+            <Input
+              id="startDate"
+              type="date"
+              size="lg"
+              placeholder="Start Date"
+              value={startDate}
+              onChange={handleStartDateChange}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="endDate">End Date:</label>
+            <Input
+              type="date"
+              size="lg"
+              placeholder="End Date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              min={startDate} // Set the minimum selectable date as the start date
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="batchSize">Batch Size:</label>
+            <Input
+              id="batchSize"
+              size="lg"
+              placeholder="Batch Size"
+              value={batchSize}
+              onChange={(e) => setBatchSize(e.target.value)}
+            />
+          </div>
           <Typography variant="body" color="gray">
             Duration: {duration}
           </Typography>
-          <Link to="/" size="lg width-full">
+          <Link to="/">
             <Button type="submit" color="lightBlue" size="lg" ripple="light">
               Create Batch
             </Button>

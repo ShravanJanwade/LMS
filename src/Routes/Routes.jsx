@@ -5,6 +5,8 @@ import ViewBatches from "../Pages/ViewBatches";
 import BatchDetails from "../Pages/BatchDetails";
 import UsersList from "../Pages/UsersList";
 import AdminDashBoard from "../Pages/adminDashBoard";
+import LearningPlan from "../Pages/LearningPlan";
+import LearningResource from "../Pages/LearningResource";
 function AppRoutes() {
   return (
     <Routes>
@@ -16,6 +18,8 @@ function AppRoutes() {
         path="/lms/batches/batchDetails/addUsersToBatch"
         element={<UsersList />}
       />
+      <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
+      <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
     </Routes>
   );
 }

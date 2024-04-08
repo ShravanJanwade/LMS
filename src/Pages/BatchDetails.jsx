@@ -59,7 +59,9 @@ const BatchDetails = () => {
               <Typography>Type of Plan: Bootcamp</Typography>
             </CardBody>
             <CardFooter className="pt-0">
+              <Link to="/lms/batches/batchDetails/learningPlan">
               <Button>View Learning Plan</Button>
+              </Link>
             </CardFooter>
           </Card>
         </div>

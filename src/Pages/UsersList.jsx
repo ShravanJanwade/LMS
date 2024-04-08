@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
-import { TABLE_HEAD, TABLE_ROWS } from "../Services/BatchData.js";
+import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 
 const UsersList = () => {

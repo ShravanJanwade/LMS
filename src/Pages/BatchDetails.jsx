@@ -12,7 +12,7 @@ import ProgressBar from "../Components/ProgressBar";
 import { useState } from "react";
 import SearchBar from "../Components/SearchBar";
 import EmployeeTable from "../Components/EmployeeTable";
-import { TABLE_HEAD, TABLE_ROWS } from "../Services/BatchData.js";
+import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
 import Modal from "../Components/Modal";
 const BatchDetails = () => {
   const [rows, setRows] = useState(TABLE_ROWS);

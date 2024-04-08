@@ -5,6 +5,7 @@ import { Input } from "@material-tailwind/react";
 
 const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [initialRows, setInitialRows] = useState(TABLE_ROWS);
 
   const searchQueryHandler = (e) => {
     setSearchQuery(e.target.value);
@@ -13,9 +14,9 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
   useEffect(() => {
     // Filter rows based on search query
     if (searchQuery.trim() === "") {
-      setRows(TABLE_ROWS); // Display all rows when search string is empty
+      setRows(initialRows); // Display all rows when search string is empty
     } else {
-      const filteredRows = TABLE_ROWS.filter((row) => {
+      const filteredRows = initialRows.filter((row) => {
         return (
           (typeof row.employeeId === "number" &&
             row.employeeId.toString().includes(searchQuery)) ||
@@ -26,32 +27,13 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
 
       setRows(filteredRows);
     }
-  }, [searchQuery]);
 
-  useEffect(() => {
-    // Preserve selected rows when rows change due to search
+    // Preserve selected rows when search query changes
     setSelectedRows((prevSelectedRows) => {
       const newSelectedRows = {};
 
-      Object.keys(prevSelectedRows).forEach((employeeId) => {
-        const matchingRow = TABLE_ROWS.find(
-          (row) => row.employeeId === parseInt(employeeId)
-        );
-        if (matchingRow) {
-          newSelectedRows[employeeId] = prevSelectedRows[employeeId];
-        }
-      });
-
-      return newSelectedRows;
-    });
-  }, [TABLE_ROWS]);
-  useEffect(() => {
-    // Preserve selected rows when rows change due to search
-    setSelectedRows((prevSelectedRows) => {
-      const newSelectedRows = {};
-  
       // Map selected status from previous selected rows to new filtered rows
-      rows.forEach((row) => {
+      initialRows.forEach((row) => {
         if (prevSelectedRows[row.employeeId] !== undefined) {
           newSelectedRows[row.employeeId] = prevSelectedRows[row.employeeId];
         } else {
@@ -59,11 +41,15 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
           newSelectedRows[row.employeeId] = false;
         }
       });
-  
+
       return newSelectedRows;
     });
-  }, [rows]);
-  
+  }, [searchQuery]);
+
+  useEffect(() => {
+    // Preserve initial rows when TABLE_ROWS changes
+    setInitialRows(TABLE_ROWS);
+  }, [TABLE_ROWS]);
 
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

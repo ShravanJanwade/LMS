@@ -60,7 +60,7 @@ const ContentContainer = () => {
           ipsum dolor sit amet consectetur adipisicing elit.`}
         />
       </div>
-      <BottomBar />
+    
     </div>
   );
 };

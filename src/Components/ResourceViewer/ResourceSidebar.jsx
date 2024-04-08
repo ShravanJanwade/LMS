@@ -3,7 +3,7 @@ import { FaFire, FaPoo } from 'react-icons/fa';
 
 const ResourceSidebar = () => {
   return (
-    <div className="fixed left-0  w-16 h-96 justify-center mt-40 bg-[#F2F2F2] dark:bg-gray-900 ">
+    <div className="fixed left-0  w-16 h-96 justify-center mt-40 bg-[#F2F2F2] dark:bg-gray-900 z-20 ">
   <div className="flex flex-col justify-center items-center h-full ">
     <SideBarIcon icon={<FaFire size="28" />} />
     <Divider />

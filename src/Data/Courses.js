@@ -10,6 +10,8 @@ const Courses = [
     difficultyLevel: "moderate",
     topics: [
       {
+
+        topicId: "1",
         topicName: "Introduction to OOPS",
         description: "OOPS - Object Oriented Programming System",
         startDate: "25-05-2024",
@@ -64,6 +66,7 @@ const Courses = [
     difficultyLevel: "beginner",
     topics: [
       {
+        topicId: "1",
         topicName: "Introduction to Linux",
         description: "Basic overview of Linux operating system",
         startDate: "15-05-2024",
@@ -71,6 +74,7 @@ const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "File System Management",
         description: "Working with files and directories in Linux",
         startDate: "18-05-2024",
@@ -78,6 +82,7 @@ const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Shell Scripting",
         description: "Writing and executing shell scripts in Linux",
         startDate: "21-05-2024",
@@ -85,6 +90,7 @@ const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Networking Basics",
         description: "Introduction to networking concepts in Linux",
         startDate: "24-05-2024",
@@ -92,6 +98,7 @@ const Courses = [
         progress: 40,
       },
       {
+        topicId: "5",
         topicName: "User and Group Management",
         description: "Managing users and groups in Linux",
         startDate: "27-05-2024",
@@ -99,6 +106,7 @@ const Courses = [
         progress: 20,
       },
       {
+        topicId: "6",
         topicName: "System Administration Tasks",
         description: "Performing system administration tasks in Linux",
         startDate: "30-05-2024",
@@ -118,6 +126,7 @@ const Courses = [
     difficultyLevel: "intermediate",
     topics: [
       {
+        topicId: "1",
         topicName: "Introduction to Azure",
         description: "Overview of Microsoft Azure cloud services",
         startDate: "10-06-2024",
@@ -125,6 +134,7 @@ const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "Azure Virtual Machines",
         description: "Creating and managing virtual machines in Azure",
         startDate: "13-06-2024",
@@ -132,6 +142,7 @@ const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Azure Storage",
         description: "Working with Azure storage services",
         startDate: "16-06-2024",
@@ -139,6 +150,7 @@ const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Azure App Services",
         description: "Deploying and managing web applications on Azure",
         startDate: "19-06-2024",
@@ -146,6 +158,7 @@ const Courses = [
         progress: 40,
       },
       {
+        topicId: "5",
         topicName: "Azure Functions",
         description: "Developing serverless functions with Azure Functions",
         startDate: "22-06-2024",
@@ -153,6 +166,7 @@ const Courses = [
         progress: 20,
       },
       {
+        topicId: "6",
         topicName: "Azure Networking",
         description: "Configuring networking in Azure",
         startDate: "25-06-2024",
@@ -172,6 +186,7 @@ const Courses = [
     difficultyLevel: "advanced",
     topics: [
       {
+        topicId: "1",
         topicName: "Introduction to Jenkins",
         description: "Overview of Jenkins automation server",
         startDate: "01-07-2024",
@@ -179,6 +194,7 @@ const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "Pipeline as Code",
         description: "Writing Jenkins pipelines as code",
         startDate: "04-07-2024",
@@ -186,6 +202,7 @@ const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Jenkins Plugins",
         description: "Extending Jenkins functionality with plugins",
         startDate: "07-07-2024",
@@ -193,6 +210,7 @@ const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Jenkins Security",
         description: "Implementing security measures in Jenkins",
         startDate: "10-07-2024",
@@ -200,6 +218,7 @@ const Courses = [
         progress: 40,
       },
       {
+        topicId: "5",
         topicName: "Jenkins Administration",
         description: "Administering Jenkins server",
         startDate: "13-07-2024",
@@ -207,6 +226,7 @@ const Courses = [
         progress: 20,
       },
       {
+        topicId: "6",
         topicName: "Jenkins Integration",
         description: "Integration of Jenkins with other tools",
         startDate: "16-07-2024",
@@ -226,6 +246,7 @@ const Courses = [
     difficultyLevel: "expert",
     topics: [
       {
+        topicId: "1",
         topicName: "Kubernetes Architecture",
         description: "Understanding Kubernetes architecture components",
         startDate: "05-08-2024",
@@ -233,6 +254,7 @@ const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "Pods and Deployments",
         description: "Working with pods and deployments in Kubernetes",
         startDate: "08-08-2024",
@@ -240,6 +262,7 @@ const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Services and Networking",
         description: "Configuring networking and services in Kubernetes",
         startDate: "11-08-2024",
@@ -247,6 +270,7 @@ const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Storage in Kubernetes",
         description: "Persistent storage management in Kubernetes",
         startDate: "14-08-2024",
@@ -254,6 +278,7 @@ const Courses = [
         progress: 40,
       },
       {
+        topicId: "5",
         topicName: "Security in Kubernetes",
         description: "Implementing security measures in Kubernetes",
         startDate: "17-08-2024",
@@ -261,6 +286,7 @@ const Courses = [
         progress: 20,
       },
       {
+        topicId: "6",
         topicName: "Scaling and Load Balancing",
         description: "Scaling applications and load balancing in Kubernetes",
         startDate: "20-08-2024",
@@ -280,6 +306,7 @@ const Courses = [
     difficultyLevel: "expert",
     topics: [
       {
+        topicId: "1",
         topicName: "Docker Basics",
         description: "Understanding Docker basics and terminology",
         startDate: "01-10-2024",
@@ -287,6 +314,7 @@ const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "Docker Images and Containers",
         description: "Working with Docker images and containers",
         startDate: "04-10-2024",
@@ -294,6 +322,7 @@ const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Docker Compose",
         description: "Using Docker Compose for multi-container applications",
         startDate: "07-10-2024",
@@ -301,6 +330,7 @@ const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Docker Networking",
         description: "Networking options and configurations in Docker",
         startDate: "10-10-2024",
@@ -308,6 +338,7 @@ const Courses = [
         progress: 40,
       },
       {
+        topicId: "5",
         topicName: "Docker Volumes",
         description: "Managing data volumes in Docker containers",
         startDate: "13-10-2024",
@@ -315,6 +346,7 @@ const Courses = [
         progress: 20,
       },
       {
+        topicId: "6",
         topicName: "Docker Swarm",
         description: "Introduction to Docker Swarm for orchestration",
         startDate: "16-10-2024",
@@ -322,27 +354,11 @@ const Courses = [
         progress: 10,
       },
     ],
-
-    colorCodes: [
-      "ff70a6",
-      "ff9770",
-      "ffd670",
-      "e9ff70",
-      "70d6ff"
-    ]
   },
   // Add more courses similarly
 ];
 
-const Topics = [
-  {
-    topicName: "Introduction to OOPS",
-    description: "OOPS - Object Orient Progragramming System",
-    startDate: "25-5-2024",
-    endDate: "27-5-2024",
-    progress: 100,
-  },
-];
+
 
 
 

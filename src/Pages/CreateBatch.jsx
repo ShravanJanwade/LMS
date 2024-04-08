@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-
 
 function CreateBatch() {
   const [batchName, setBatchName] = useState("");
@@ -11,50 +10,40 @@ function CreateBatch() {
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
 
-  // Calculate duration when start or end date changes
-  const handleDateChange = () => {
+  useEffect(() => {
+    calculateDuration();
+  }, [startDate, endDate]);
+
+  const calculateDuration = () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-  
-    // Calculate the difference in time
-    const diffInTime = end.getTime() - start.getTime();
-  
-    // Calculate the difference in days
-    let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1; // Add 1 to include both start and end dates
-  
-    // Check if start date and end date are the same
-    if (diffInDays < 1) {
-      diffInDays = 0; // Set duration to 0 days
+
+    if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
+      const diffInTime = end.getTime() - start.getTime();
+      let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
+
+      if (diffInDays < 1) {
+        diffInDays = 0;
+      }
+
+      setDuration(`${diffInDays} days`);
+    } else {
+      setDuration("");
     }
-  
-    // Update duration
-    setDuration(`${diffInDays} days`);
   };
-  
+
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
-
-    // Update start date
     setStartDate(newStartDate);
-
-    // Update duration
-    handleDateChange();
   };
 
   const handleEndDateChange = (e) => {
     const newEndDate = e.target.value;
-
-    // Update end date
     setEndDate(newEndDate);
-
-    // Update duration
-    handleDateChange();
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save batch details to your backend or perform other actions
     console.log("Batch details:", {
       batchName,
       batchDescription,

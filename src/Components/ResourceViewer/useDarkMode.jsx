@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+
+
 const useLocalStorage = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
@@ -26,15 +28,14 @@ const useLocalStorage = (key, initialValue) => {
 };
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme');
-  const isEnabled = typeof enabledState === 'undefined' && enabled;
+  const [enabled, setEnabled] = useLocalStorage('dark-theme', false); // Default to false
 
   useEffect(() => {
     const className = 'dark';
     const bodyClass = window.document.body.classList;
 
-    isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
-  }, [enabled, isEnabled]);
+    enabled ? bodyClass.add(className) : bodyClass.remove(className);
+  }, [enabled]);
 
   return [enabled, setEnabled];
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -10,50 +10,48 @@ function CreateBatch() {
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
 
-  // Calculate duration when start or end date changes
-  const handleDateChange = () => {
+  useEffect(() => {
+    calculateDuration();
+  }, [startDate, endDate]);
+
+  const calculateDuration = () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Calculate the difference in time
-    const diffInTime = end.getTime() - start.getTime();
+    if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
+      const diffInTime = end.getTime() - start.getTime();
+      let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
 
-    // Calculate the difference in days
-    let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1; // Add 1 to include both start and end dates
+      if (diffInDays < 1) {
+        diffInDays = 0;
+      }
 
-    // Check if start date and end date are the same
-    if (diffInDays < 1) {
-      diffInDays = 0; // Set duration to 0 days
+      setDuration(`${diffInDays} days`);
+    } else {
+      setDuration("");
     }
-
-    // Update duration
-    setDuration(`${diffInDays} days`);
   };
 
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
-
-    // Update start date
     setStartDate(newStartDate);
 
-    // Update duration
-    handleDateChange();
+    // Set minimum selectable date for end date input
+    document.getElementById("endDate").setAttribute("min", newStartDate);
+    
+    // If end date is before new start date, reset end date
+    if (new Date(endDate) < new Date(newStartDate)) {
+      setEndDate("");
+    }
   };
 
   const handleEndDateChange = (e) => {
     const newEndDate = e.target.value;
-
-    // Update end date
     setEndDate(newEndDate);
-
-    // Update duration
-    handleDateChange();
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save batch details to your backend or perform other actions
     console.log("Batch details:", {
       batchName,
       batchDescription,
@@ -63,6 +61,9 @@ function CreateBatch() {
       duration,
     });
   };
+
+  // Get today's date in the format YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="flex justify-center items-center h-full mt-10">
@@ -100,17 +101,19 @@ function CreateBatch() {
               placeholder="Start Date"
               value={startDate}
               onChange={handleStartDateChange}
+              min={today} // Set minimum selectable date to today's date
             />
           </div>
           <div className="flex flex-col">
             <label htmlFor="endDate">End Date:</label>
             <Input
+              id="endDate"
               type="date"
               size="lg"
               placeholder="End Date"
               value={endDate}
               onChange={handleEndDateChange}
-              min={startDate} // Set the minimum selectable date as the start date
+              min={startDate} // Set minimum selectable date as the start date
             />
           </div>
           <div className="flex flex-col">
@@ -126,7 +129,7 @@ function CreateBatch() {
           <Typography variant="body" color="gray">
             Duration: {duration}
           </Typography>
-          <Link to="/">
+          <Link to="/lms/batches">
             <Button type="submit" color="lightBlue" size="lg" ripple="light">
               Create Batch
             </Button>

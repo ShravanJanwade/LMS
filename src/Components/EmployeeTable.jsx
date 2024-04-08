@@ -1,28 +1,32 @@
 import PropTypes from "prop-types";
 import { Typography, Avatar, Checkbox } from "@material-tailwind/react";
-import { useState } from "react";
-const EmployeeTable = ({ TABLE_HEAD, rows, setRows }) => {
-  const [selectedAll, setSelectedAll] = useState(false);
+
+const EmployeeTable = ({ TABLE_HEAD, rows,  selectedRows,setSelectedRows, handleCheckboxChange }) => {
   const selectAllHandler = () => {
-    setSelectedAll((prev) => !prev);
-    const allChecked = rows.every((row) => row.checked);
-    setRows((prevRows) =>
-      prevRows.map((row) => ({
-        ...row,
-        checked: !allChecked,
-      }))
-    );
+    const allFilteredRowsChecked = rows.every(row => selectedRows[row.employeeId]);
+  
+    // Check if all filtered rows are selected, then deselect them
+    if (allFilteredRowsChecked) {
+      const newSelectedRows = {};
+  
+      rows.forEach(row => {
+        newSelectedRows[row.employeeId] = false;
+      });
+  
+      setSelectedRows(newSelectedRows);
+    } else { // Otherwise, select all filtered rows
+      const newSelectedRows = {};
+  
+      rows.forEach(row => {
+        newSelectedRows[row.employeeId] = true;
+      });
+  
+      setSelectedRows(newSelectedRows);
+    }
   };
-  const handleCheckboxChange = (id) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => {
-        if (row.employeeId === id) {
-          return { ...row, checked: !row.checked }; // Toggle the checked state
-        }
-        return row;
-      })
-    );
-  };
+  
+  
+
   return (
     <table className="mt-4 w-full min-w-max table-auto text-left">
       <thead>
@@ -42,7 +46,7 @@ const EmployeeTable = ({ TABLE_HEAD, rows, setRows }) => {
                   <Checkbox
                     color="green"
                     onChange={selectAllHandler}
-                    checked={selectedAll}
+                    checked={Object.values(selectedRows).every(Boolean)}
                   />
                 )}
               </Typography>
@@ -52,10 +56,7 @@ const EmployeeTable = ({ TABLE_HEAD, rows, setRows }) => {
       </thead>
       <tbody>
         {rows.map(
-          (
-            { img, name, email, job, buisnessUnit, employeeId, checked },
-            index
-          ) => {
+          ({ img, name, email, job, buisnessUnit, employeeId }, index) => {
             const isLast = index === rows.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -113,7 +114,7 @@ const EmployeeTable = ({ TABLE_HEAD, rows, setRows }) => {
                 <td className={classes}>
                   <Checkbox
                     color="green"
-                    checked={checked}
+                    checked={selectedRows[employeeId]}
                     onChange={() => handleCheckboxChange(employeeId)}
                   />
                 </td>
@@ -125,10 +126,13 @@ const EmployeeTable = ({ TABLE_HEAD, rows, setRows }) => {
     </table>
   );
 };
+
 EmployeeTable.propTypes = {
   TABLE_HEAD: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
-  setRows: PropTypes.func.isRequired,
+  selectedRows: PropTypes.object.isRequired,
+  handleCheckboxChange: PropTypes.func.isRequired,
+  setSelectedRows: PropTypes.func.isRequired,
 };
 
 export default EmployeeTable;

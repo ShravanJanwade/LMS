@@ -12,12 +12,22 @@ import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD, TABLE_ROWS } from "../Services/BatchData.js";
 import SearchBar from "../Components/SearchBar";
+
 const UsersList = () => {
   const [rows, setRows] = useState(TABLE_ROWS);
+  const [selectedRows, setSelectedRows] = useState({});
 
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
+
+  const handleCheckboxChange = (employeeId) => {
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      [employeeId]: !prevSelectedRows[employeeId],
+    }));
+  };
+
   return (
     <Card className="h-full w-full mt-2">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -32,7 +42,7 @@ const UsersList = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <SearchBar setRows={setRows} TABLE_ROWS={TABLE_ROWS} />
+          <SearchBar setRows={setRows} TABLE_ROWS={TABLE_ROWS} setSelectedRows={setSelectedRows} rows={rows}/>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Button
               className="flex items-center gap-3"
@@ -47,7 +57,13 @@ const UsersList = () => {
         </div>
       </CardHeader>
       <CardBody className="overflow-scroll px-0">
-        <EmployeeTable TABLE_HEAD={TABLE_HEAD} rows={rows} setRows={setRows} />
+        <EmployeeTable
+          TABLE_HEAD={TABLE_HEAD}
+          rows={rows}
+          selectedRows={selectedRows}
+          handleCheckboxChange={handleCheckboxChange}
+          setSelectedRows={setSelectedRows}
+        />
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -65,4 +81,5 @@ const UsersList = () => {
     </Card>
   );
 };
+
 export default UsersList;

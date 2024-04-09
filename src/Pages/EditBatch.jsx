@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
+import { Link } from "react-router-dom";
 
-function CreateBatch() {
+function EditBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
-  const navigate = useNavigate(); // Initialize useHistory hook
 
   useEffect(() => {
     calculateDuration();
@@ -51,35 +50,16 @@ function CreateBatch() {
     setEndDate(newEndDate);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:1212/batches", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          batchName,
-          batchDescription,
-          startDate,
-          endDate,
-          batchSize,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create batch");
-      }
-
-      // Optionally, you can redirect to another page after successful creation
-      // history.push('/some-other-page');
-      navigate("/lms/batches"); // Update the redirection link
-      console.log("Batch created successfully");
-    } catch (error) {
-      console.error("Error creating batch:", error);
-    }
+    console.log("Batch details:", {
+      batchName,
+      batchDescription,
+      startDate,
+      endDate,
+      batchSize,
+      duration,
+    });
   };
 
   // Get today's date in the format YYYY-MM-DD
@@ -89,7 +69,7 @@ function CreateBatch() {
     <div className="flex justify-center items-center h-full mt-10">
       <Card color="lightBlue" shadow="regular" className="w-full max-w-lg p-8">
         <Typography variant="h4" color="blueGray" className="mb-6">
-          Batch Creation
+          Edit Batch
         </Typography>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col">
@@ -149,13 +129,15 @@ function CreateBatch() {
           <Typography variant="body" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" color="lightBlue" size="lg" ripple="light">
-            Create Batch
-          </Button>
+          <Link to="/lms/batches">
+            <Button type="submit" color="lightBlue" size="lg" ripple="light">
+              Update Batch
+            </Button>
+          </Link>
         </form>
       </Card>
     </div>
   );
 }
 
-export default CreateBatch;
+export default EditBatch;

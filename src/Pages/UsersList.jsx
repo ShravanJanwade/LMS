@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   CardBody,
-  CardFooter,
 } from "@material-tailwind/react";
 import { useState } from "react";
 import Modal from "../Components/Modal";
@@ -14,12 +13,17 @@ import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 
 const UsersList = () => {
+  const table = {
+    height: "490px",
+  };
   const [rows, setRows] = useState(TABLE_ROWS);
   const [selectedRows, setSelectedRows] = useState({});
 
   const [open, setOpen] = useState(false);
+  const [openExcel, setOpenExcel] = useState(false);
 
   const handleOpen = () => setOpen(!open);
+  const handleOpenExcel = () => setOpenExcel(!openExcel);
 
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
@@ -42,21 +46,35 @@ const UsersList = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <SearchBar setRows={setRows} TABLE_ROWS={TABLE_ROWS} setSelectedRows={setSelectedRows} rows={rows}/>
+          <SearchBar
+            setRows={setRows}
+            TABLE_ROWS={TABLE_ROWS}
+            setSelectedRows={setSelectedRows}
+            rows={rows}
+          />
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Button
               className="flex items-center gap-3"
               size="sm"
               onClick={handleOpen}
             >
-              <Modal handleOpen={handleOpen} open={open} />
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               To Batch
             </Button>
+            <Modal handleOpen={handleOpen} open={open} />
+            <Button
+              className="flex items-center gap-3"
+              size="sm"
+              onClick={handleOpen}
+            >
+              <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
+              Through Excel
+            </Button>
+            <Modal handleOpen={handleOpenExcel} open={openExcel} />
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="overflow-scroll  px-0" style={table}>
         <EmployeeTable
           TABLE_HEAD={TABLE_HEAD}
           rows={rows}
@@ -65,19 +83,6 @@ const UsersList = () => {
           setSelectedRows={setSelectedRows}
         />
       </CardBody>
-      <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-        <Typography variant="small" color="blue-gray" className="font-normal">
-          Page 1 of 10
-        </Typography>
-        <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
-            Previous
-          </Button>
-          <Button variant="outlined" size="sm">
-            Next
-          </Button>
-        </div>
-      </CardFooter>
     </Card>
   );
 };

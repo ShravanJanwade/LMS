@@ -21,37 +21,43 @@ const BatchDetailsCards = ({
   };
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
-    filteredTable = filteredTable.filter(({ name }) =>
-      name.toLowerCase().includes(query)
+    filteredTable = filteredTable.filter(({ batchName }) =>
+      batchName.toLowerCase().includes(query)
     );
-    batchData = batchData.filter(({ name }) =>
-      name.toLowerCase().includes(query)
+    batchData = batchData.filter(({ batchName }) =>
+      batchName.toLowerCase().includes(query)
     );
   }
 
   return (
     <div className="flex flex-wrap justify-center sm:justify-start space-evenly ml-4 sm:ml-12">
       {status === "All"
-        ? batchData.map(({ id, name, description, online, date }) => (
-            <CourseCard
-              key={id}
-              online={online}
-              progressValue={progressHandler(id)}
-              name={name}
-              description={description}
-              date={date}
-            />
-          ))
-        : filteredTable.map(({ id, name, description, online, date }) => (
-            <CourseCard
-              key={id}
-              online={online}
-              progressValue={progressHandler(id)}
-              name={name}
-              description={description}
-              date={date}
-            />
-          ))}
+        ? batchData.map(
+            ({ batchId, batchName, batchDescription, online, startDate }) => (
+              <CourseCard
+                key={batchId}
+                online={online}
+                progressValue={progressHandler(batchId)}
+                name={batchName}
+                description={batchDescription}
+                date={startDate}
+                batchId={batchId}
+              />
+            )
+          )
+        : filteredTable.map(
+            ({ batchId, batchName, batchDescription, online, startDate }) => (
+              <CourseCard
+                key={batchId}
+                online={online}
+                progressValue={progressHandler(batchId)}
+                name={batchName}
+                description={batchDescription}
+                date={startDate}
+                batchId={batchId}
+              />
+            )
+          )}
     </div>
   );
 };
@@ -61,6 +67,7 @@ BatchDetailsCards.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   batchData: PropTypes.array.isRequired,
   progressData: PropTypes.array.isRequired,
+  setSelectedBatch: PropTypes.func.isRequired,
 };
 
 export default BatchDetailsCards;

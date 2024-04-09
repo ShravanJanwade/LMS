@@ -1,8 +1,8 @@
 import BatchHeader from "../Components/BatchHeader";
 import BatchDetailsCards from "../Components/BatchDetailsCards";
 import BatchDetailsTable from "../Components/BatchDetailsTable";
-import { useState } from "react";
-import { batchData } from "../Services/BatchData";
+import { useState, useEffect } from "react";
+import { fetchBatchData } from "../Services/BatchData";
 import { progressData } from "../Services/ProgressData";
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
@@ -17,6 +17,17 @@ const ViewBatches = () => {
   const searchHandler = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
+  const [batchData, setBatchData] = useState([]);
+
+  // Function to fetch batch data when the component mounts
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchBatchData();
+      setBatchData(data);
+    }
+    fetchData();
+  }, []);
+
   return (
     <div>
       <BatchHeader

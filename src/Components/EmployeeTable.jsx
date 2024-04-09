@@ -1,34 +1,32 @@
 import PropTypes from "prop-types";
 import { Typography, Avatar, Checkbox } from "@material-tailwind/react";
 
-const EmployeeTable = ({ TABLE_HEAD, rows,  selectedRows,setSelectedRows, handleCheckboxChange }) => {
+const EmployeeTable = ({
+  TABLE_HEAD,
+  rows,
+  selectedRows,
+  setSelectedRows,
+  handleCheckboxChange,
+}) => {
   const selectAllHandler = () => {
-    const allFilteredRowsChecked = rows.every(row => selectedRows[row.employeeId]);
-  
-    // Check if all filtered rows are selected, then deselect them
-    if (allFilteredRowsChecked) {
-      const newSelectedRows = {};
-  
-      rows.forEach(row => {
-        newSelectedRows[row.employeeId] = false;
-      });
-  
-      setSelectedRows(newSelectedRows);
-    } else { // Otherwise, select all filtered rows
-      const newSelectedRows = {};
-  
-      rows.forEach(row => {
-        newSelectedRows[row.employeeId] = true;
-      });
-  
-      setSelectedRows(newSelectedRows);
-    }
+    const visibleRows = rows.filter((row) => !row.isHidden);
+    const allVisibleRowsChecked = visibleRows.every(
+      (row) => selectedRows[row.employeeId]
+    );
+
+    // Toggle the selection status of visible rows
+    const newSelectedRows = { ...selectedRows };
+
+    visibleRows.forEach((row) => {
+      newSelectedRows[row.employeeId] = !allVisibleRowsChecked;
+    });
+
+    // Update the selectedRows state directly to ensure the select all checkbox state is updated
+    setSelectedRows(newSelectedRows);
   };
-  
-  
 
   return (
-    <table className="mt-4 w-full min-w-max table-auto text-left">
+    <table className="w-full min-w-max table-auto text-left">
       <thead>
         <tr>
           {TABLE_HEAD.map((head, index) => (
@@ -44,6 +42,7 @@ const EmployeeTable = ({ TABLE_HEAD, rows,  selectedRows,setSelectedRows, handle
                 {head}{" "}
                 {index == TABLE_HEAD.length - 1 && (
                   <Checkbox
+                    id="select-all-checkbox"
                     color="green"
                     onChange={selectAllHandler}
                     checked={Object.values(selectedRows).every(Boolean)}

@@ -5,12 +5,14 @@ import ViewBatches from "../Pages/ViewBatches";
 import BatchDetails from "../Pages/BatchDetails";
 import UsersList from "../Pages/UsersList";
 import AdminDashBoard from "../Pages/adminDashBoard";
+import EditBatch from "../Pages/EditBatch";
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AdminDashBoard />} />
       <Route path="/lms/batches" element={<ViewBatches />} />
       <Route path="/lms/batches/create-batch" element={<CreateBatch />} />
+      <Route path="/lms/batches/editBatch" element={<EditBatch />} />
       <Route path="/lms/batches/batchDetails" element={<BatchDetails />} />
       <Route
         path="/lms/batches/batchDetails/addUsersToBatch"

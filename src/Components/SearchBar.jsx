@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { Input } from "@material-tailwind/react";
 
-const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
+const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [initialRows, setInitialRows] = useState(TABLE_ROWS);
 
@@ -66,7 +66,6 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows,rows }) => {
 
 SearchBar.propTypes = {
   TABLE_ROWS: PropTypes.array.isRequired,
-  rows: PropTypes.array.isRequired,
   setRows: PropTypes.func.isRequired,
   setSelectedRows: PropTypes.func.isRequired,
 };

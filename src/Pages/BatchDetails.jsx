@@ -1,5 +1,5 @@
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -9,15 +9,19 @@ import {
   Button,
 } from "@material-tailwind/react";
 import ProgressBar from "../Components/ProgressBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "../Components/SearchBar";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
 import Modal from "../Components/Modal";
+import { fetchBatchDetails } from "../Services/BatchDetailsData.js";
+import { useBatch } from "../Context/BatchContext";
+
 const BatchDetails = () => {
   const [rows, setRows] = useState(TABLE_ROWS);
   const [selectedRows, setSelectedRows] = useState({});
-
+  const { id } = useBatch();
+  const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
@@ -28,32 +32,77 @@ const BatchDetails = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const deleteHandler = () => {
+    console.log(batchDetails);
+    console.log(id);
     setOpen((prev) => !prev);
   };
   const deleteBatchhandler = () => {
+    console.log(batchDetails);
     setDeleteOpen((prevs) => !prevs);
   };
+  const [batchDetails, setBatchDetails] = useState(null);
+
+  useEffect(() => {
+    async function fetchBatch() {
+      const id = sessionStorage.getItem("id");
+      if (!id) return;
+      try {
+        const data = await fetchBatchDetails(id);
+        if (data) {
+          setBatchDetails(data);
+        } else {
+          throw new Error("Failed to fetch batch details");
+        }
+      } catch (error) {
+        console.error("Error fetching batch details:", error);
+      }
+    }
+    fetchBatch();
+  }, [id]);
+
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
         <div className="flex flex-col w-full m-5">
           <Card className="mt-0 mb-6 w-full m-1 h-1/2">
             <CardBody>
-              <Typography variant="h4" color="blue-gray" className="mb-5 flex">
-                Batch Name: Batch 103
-                <div className="flex justify-end  ml-12 w-72">
-                  <Button onClick={deleteBatchhandler}>Delete Batch</Button>
-                  <Modal open={deleteOpen} handleOpen={deleteBatchhandler} />
-                </div>
-              </Typography>
-              <Typography className="mb-5" variant="h6" color="gray">
-                Batch Description: The place is close to Barceloneta Beach and
-                bus stop just 2 min by walk and near to &quot;Naviglio&quot;
-                where you can enjoy the main night life in Barcelona.
-              </Typography>
-              <Typography className="mb-5">StartDate: 12/04/2024</Typography>
-              <Typography className="mb-5">EndDate: 19/04/2024</Typography>
-              <Typography>Batch Size:50</Typography>
+              {batchDetails ? (
+                <>
+                  <Typography
+                    variant="h4"
+                    color="blue-gray"
+                    className="mb-5 flex"
+                  >
+                    Batch Name: {batchDetails.batchName}
+                    <div className="flex justify-end w-80">
+                      <Link to="/lms/batches/editBatch">
+                        <Button className="mr-2" onClick={deleteBatchhandler}>
+                          Edit Batch
+                        </Button>
+                      </Link>
+                      <Button className="h-10" onClick={deleteBatchhandler}>
+                        Delete Batch
+                      </Button>
+                      <Modal
+                        open={deleteOpen}
+                        handleOpen={deleteBatchhandler}
+                      />
+                    </div>
+                  </Typography>
+                  <Typography className="mb-5" variant="h6" color="gray">
+                    Batch Description: {batchDetails.batchDescription}
+                  </Typography>
+                  <Typography className="mb-5">
+                    StartDate: {batchDetails.startDate}
+                  </Typography>
+                  <Typography className="mb-5">
+                    EndDate: {batchDetails.endDate}
+                  </Typography>
+                  <Typography>Batch Size:{batchDetails.batchSize}</Typography>
+                </>
+              ) : (
+                <Typography>Loading...</Typography>
+              )}
             </CardBody>
             <CardFooter className="pt-0">
               <ProgressBar progressValue={62} />
@@ -72,9 +121,13 @@ const BatchDetails = () => {
           </Card>
         </div>
       </div>
-      <div className="w-1/2">
+      <div className="w-1/2 h-full">
         <Card className="h-full m-1 mt-5">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
+          <CardHeader
+            floated={false}
+            shadow={false}
+            className="rounded-none h-56"
+          >
             <div className="mb-0 mt-0 flex items-center justify-between gap-10 mb-0">
               <div>
                 <Typography variant="h5" color="blue-gray">
@@ -96,8 +149,13 @@ const BatchDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row mb-20 ">
-            <SearchBar setRows={setRows} TABLE_ROWS={TABLE_ROWS} setSelectedRows={setSelectedRows} rows={rows}/>
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row mt-3 ">
+              <SearchBar
+                setRows={setRows}
+                TABLE_ROWS={TABLE_ROWS}
+                setSelectedRows={setSelectedRows}
+                rows={rows}
+              />
 
               <Button
                 onClick={deleteHandler}
@@ -112,14 +170,14 @@ const BatchDetails = () => {
             </div>
           </CardHeader>
 
-          <CardBody className="overflow-auto">
-          <EmployeeTable
-          TABLE_HEAD={TABLE_HEAD}
-          rows={rows}
-          selectedRows={selectedRows}
-          handleCheckboxChange={handleCheckboxChange}
-          setSelectedRows={setSelectedRows}
-        />
+          <CardBody className="overflow-auto mt-0 ">
+            <EmployeeTable
+              TABLE_HEAD={TABLE_HEAD}
+              rows={rows}
+              selectedRows={selectedRows}
+              handleCheckboxChange={handleCheckboxChange}
+              setSelectedRows={setSelectedRows}
+            />
           </CardBody>
         </Card>
       </div>

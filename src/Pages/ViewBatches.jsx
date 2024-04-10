@@ -3,11 +3,12 @@ import BatchDetailsCards from "../Components/BatchDetailsCards";
 import BatchDetailsTable from "../Components/BatchDetailsTable";
 import { useState, useEffect } from "react";
 import { fetchBatchData } from "../Services/BatchData";
-import { progressData } from "../Services/ProgressData";
+import { fetchProgressData } from "../Services/ProgressData";
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
   const [status, setStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [progressData,setProgressData]=useState([]);
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
@@ -23,10 +24,20 @@ const ViewBatches = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await fetchBatchData();
+      const  progress=await fetchProgressData();
+      setProgressData(progress);
       setBatchData(data);
     }
     fetchData();
-  }, []);
+  }, [batchData,progressData]);
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchProgressData();
+      setProgressData(data);
+    }
+    fetchData();
+  }, [progressData]);
+
 
   return (
     <div>

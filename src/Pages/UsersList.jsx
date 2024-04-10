@@ -6,32 +6,84 @@ import {
   Button,
   CardBody,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
-import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
+import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
+import { fetchEmployees,sendSelectedUsers} from "../Services/allEmployee.js";
 
 const UsersList = () => {
   const table = {
     height: "490px",
   };
-  const [rows, setRows] = useState(TABLE_ROWS);
+  const [employees, setEmployees] = useState([]);
+  const [rows, setRows] = useState(employees);
   const [selectedRows, setSelectedRows] = useState({});
 
   const [open, setOpen] = useState(false);
   const [openExcel, setOpenExcel] = useState(false);
 
-  const handleOpen = () => setOpen(!open);
-  const handleOpenExcel = () => setOpenExcel(!openExcel);
-
+  const handleOpen = () =>{
+    if(open){
+      handleAddToBatch();
+    }
+    setOpen(prev=>!prev);
+  } 
+  const handleClose=()=>{
+    setOpen(prev=>!prev);
+  } 
+   const handleOpenExcel = () => setOpenExcel(!openExcel);
+   const handleExcelClose=()=>{
+    setOpenExcel(prev=>!prev);
+  } 
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
+  const id=sessionStorage.getItem("id");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchEmployees(id);
+        if (data) {
+          console.log();
+          setEmployees(data);
+          console.log(data);
+        } else {
+          throw new Error("Failed to fetch trainees");
+        }
+      } catch (error) {
+        console.error("Error fetching trainees:", error);
+      }
+    };
 
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [id,selectedRows]);
+
+  // Update rows state when trainees change
+  useEffect(() => {
+    setRows(employees);
+  }, [employees]);
+
+  const handleAddToBatch = async () => {
+    const selectedUsers = Object.keys(selectedRows).filter(
+      (userId) => selectedRows[userId]
+    );
+    try {
+      await sendSelectedUsers(selectedUsers, id); // Assuming you have a function to send selected users
+      // Clear selectedRows state or perform any other necessary action
+      setSelectedRows({});
+    } catch (error) {
+      console.error("Error adding users to batch:", error);
+    }
+  };
   return (
     <Card className="h-full w-full mt-2">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -48,7 +100,7 @@ const UsersList = () => {
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <SearchBar
             setRows={setRows}
-            TABLE_ROWS={TABLE_ROWS}
+            TABLE_ROWS={employees}
             setSelectedRows={setSelectedRows}
             rows={rows}
           />
@@ -61,7 +113,7 @@ const UsersList = () => {
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               To Batch
             </Button>
-            <Modal handleOpen={handleOpen} open={open} />
+            <Modal handleOpen={handleOpen} open={open} handleClose={handleClose} />
             <Button
               className="flex items-center gap-3"
               size="sm"
@@ -70,7 +122,7 @@ const UsersList = () => {
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               Through Excel
             </Button>
-            <Modal handleOpen={handleOpenExcel} open={openExcel} />
+            <Modal handleOpen={handleOpenExcel} open={openExcel} handleClose={handleExcelClose} />
           </div>
         </div>
       </CardHeader>

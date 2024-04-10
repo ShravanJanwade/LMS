@@ -1,5 +1,5 @@
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { useNavigate, Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -12,54 +12,137 @@ import ProgressBar from "../Components/ProgressBar";
 import { useState, useEffect } from "react";
 import SearchBar from "../Components/SearchBar";
 import EmployeeTable from "../Components/EmployeeTable";
-import { TABLE_HEAD, TABLE_ROWS } from "../Services/EmployeeData.js";
+import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import Modal from "../Components/Modal";
-import { fetchBatchDetails } from "../Services/BatchDetailsData.js";
-import { useBatch } from "../Context/BatchContext";
-
+import { fetchBatchDetails,deleteTraineesFromBatch,deleteBatch } from "../Services/BatchDetailsData.js";
+// import { useBatch } from "../Context/BatchContext";
+import { fetchTrainees } from "../Services/BatchEmployee.js";
+import { fetchBatchProgress } from "../Services/ProgressData.js";
 const BatchDetails = () => {
-  const [rows, setRows] = useState(TABLE_ROWS);
+  const [trainees, setTrainees] = useState([]);
+  const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState({});
-  const { id } = useBatch();
-  const navigate = useNavigate();
+  // const { id } = useBatch();
+  const id=sessionStorage.getItem("id");
+  const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [batchDetails, setBatchDetails] = useState(null);
+  const [progressData,setProgressData]=useState([]);
+  const navigate=useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
-  const [open, setOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const deleteHandler = () => {
-    console.log(batchDetails);
-    console.log(id);
+    console.log(selectedRows)
+    if(open){
+      deleteHandlerEmployees()
+      navigate("/lms/batches/batchDetails")
+    }
     setOpen((prev) => !prev);
   };
+
   const deleteBatchhandler = () => {
-    console.log(batchDetails);
+    if(deleteOpen){
+      deleteBatchFromList();
+      navigate("/lms/batches");
+    }
     setDeleteOpen((prevs) => !prevs);
   };
-  const [batchDetails, setBatchDetails] = useState(null);
-
+  const handleClose=()=>{
+    setOpen(prev=>!prev);
+  }
+  const handleDeleteClose=()=>{
+    setDeleteOpen(prev=>!prev);
+  }
   useEffect(() => {
-    async function fetchBatch() {
-      const id = sessionStorage.getItem("id");
-      if (!id) return;
+    const fetchData = async () => {
       try {
-        const data = await fetchBatchDetails(id);
-        if (data) {
-          setBatchDetails(data);
+        const batchData = await fetchBatchDetails(id);
+        if (batchData) {
+          setBatchDetails(batchData);
         } else {
           throw new Error("Failed to fetch batch details");
         }
       } catch (error) {
         console.error("Error fetching batch details:", error);
       }
-    }
-    fetchBatch();
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
   }, [id]);
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchTrainees(id);
+        if (data) {
+          console.log(id);
+          setTrainees(data);
+          console.log(data);
+        } else {
+          throw new Error("Failed to fetch trainees");
+        }
+      } catch (error) {
+        console.error("Error fetching trainees:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [id,selectedRows,rows]);
+
+  // Update rows state when trainees change
+  useEffect(() => {
+    setRows(trainees);
+  }, [trainees]);
+  
+  const deleteHandlerEmployees = async () => {
+    try {
+      const selectedUserIds = Object.keys(selectedRows).filter(
+        (userId) => selectedRows[userId]
+      );
+      console.log("Selected User id's are"+selectedUserIds);
+      await deleteTraineesFromBatch(id, selectedUserIds);
+      // After successful deletion, update the UI
+      const updatedTrainees = trainees.filter(
+        (trainee) => !selectedUserIds.includes(trainee.id)
+      );
+      setTrainees(updatedTrainees);
+      setRows(updatedTrainees);
+      setSelectedRows({});
+    } catch (error) {
+      console.error("Error deleting trainees:", error);
+    }
+  };
+  const deleteBatchFromList = async () => {
+    try {
+      await deleteBatch(id);
+    } catch (error) {
+      console.error("Error deleting trainees:", error);
+    }
+  };
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchBatchProgress(id);
+      setProgressData(data);
+    }
+    fetchData();
+  }, [progressData]);
+
+
+  const height = rows.length < 11 ? "h-42" : "h-48";
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
@@ -86,6 +169,7 @@ const BatchDetails = () => {
                       <Modal
                         open={deleteOpen}
                         handleOpen={deleteBatchhandler}
+                        handleClose={handleDeleteClose}
                       />
                     </div>
                   </Typography>
@@ -105,7 +189,7 @@ const BatchDetails = () => {
               )}
             </CardBody>
             <CardFooter className="pt-0">
-              <ProgressBar progressValue={62} />
+              <ProgressBar progressValue={progressData==null?0:progressData.batchProgress} />
             </CardFooter>
           </Card>
           <Card className="mt-6 w-full h-1/3">
@@ -126,7 +210,7 @@ const BatchDetails = () => {
           <CardHeader
             floated={false}
             shadow={false}
-            className="rounded-none h-56"
+            className={`rounded-none ${height}`}
           >
             <div className="mb-0 mt-0 flex items-center justify-between gap-10 mb-0">
               <div>
@@ -152,7 +236,7 @@ const BatchDetails = () => {
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row mt-3 ">
               <SearchBar
                 setRows={setRows}
-                TABLE_ROWS={TABLE_ROWS}
+                TABLE_ROWS={trainees}
                 setSelectedRows={setSelectedRows}
                 rows={rows}
               />
@@ -166,7 +250,7 @@ const BatchDetails = () => {
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Delete
                 Trainees From Batch
               </Button>
-              <Modal open={open} handleOpen={deleteHandler} />
+              <Modal open={open} handleOpen={deleteHandler} handleClose={handleClose} />
             </div>
           </CardHeader>
 

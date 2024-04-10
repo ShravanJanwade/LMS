@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
@@ -9,17 +9,38 @@ function EditBatch() {
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
+  
+  const id = sessionStorage.getItem("id");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    calculateDuration();
-  }, [startDate, endDate]);
+    const fetchBatchDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:1212/batches/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch batch details");
+        }
+        const data = await response.json();
+        setBatchName(data.batchName);
+        setBatchDescription(data.batchDescription);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        setBatchSize(data.batchSize);
+        calculateDuration(data.startDate, data.endDate);
+      } catch (error) {
+        console.error("Error fetching batch details:", error);
+      }
+    };
 
-  const calculateDuration = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    fetchBatchDetails();
+  }, [id]);
 
-    if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
-      const diffInTime = end.getTime() - start.getTime();
+  const calculateDuration = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    if (startDate && endDate && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+      const diffInTime = endDate.getTime() - startDate.getTime();
       let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
 
       if (diffInDays < 1) {
@@ -35,34 +56,44 @@ function EditBatch() {
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
     setStartDate(newStartDate);
-
-    // Set minimum selectable date for end date input
-    document.getElementById("endDate").setAttribute("min", newStartDate);
-
-    // If end date is before new start date, reset end date
-    if (new Date(endDate) < new Date(newStartDate)) {
-      setEndDate("");
-    }
+    calculateDuration(newStartDate, endDate);
   };
 
   const handleEndDateChange = (e) => {
     const newEndDate = e.target.value;
     setEndDate(newEndDate);
+    calculateDuration(startDate, newEndDate);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Batch details:", {
-      batchName,
-      batchDescription,
-      startDate,
-      endDate,
-      batchSize,
-      duration,
-    });
+
+    try {
+      const response = await fetch(`http://localhost:1212/batches/${id}/edit`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          batchName,
+          batchDescription,
+          startDate,
+          endDate,
+          batchSize,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update batch");
+      }
+
+      navigate("/lms/batches/batchDetails");
+      console.log("Batch updated successfully");
+    } catch (error) {
+      console.error("Error updating batch:", error);
+    }
   };
 
-  // Get today's date in the format YYYY-MM-DD
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -101,7 +132,7 @@ function EditBatch() {
               placeholder="Start Date"
               value={startDate}
               onChange={handleStartDateChange}
-              min={today} // Set minimum selectable date to today's date
+              min={today}
             />
           </div>
           <div className="flex flex-col">
@@ -113,7 +144,7 @@ function EditBatch() {
               placeholder="End Date"
               value={endDate}
               onChange={handleEndDateChange}
-              min={startDate} // Set minimum selectable date as the start date
+              min={startDate}
             />
           </div>
           <div className="flex flex-col">
@@ -129,11 +160,9 @@ function EditBatch() {
           <Typography variant="body" color="gray">
             Duration: {duration}
           </Typography>
-          <Link to="/lms/batches">
-            <Button type="submit" color="lightBlue" size="lg" ripple="light">
-              Update Batch
-            </Button>
-          </Link>
+          <Button type="submit" color="lightBlue" size="lg" ripple="light">
+            Update Batch
+          </Button>
         </form>
       </Card>
     </div>

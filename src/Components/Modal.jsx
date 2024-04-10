@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
 
-const Modal = ({ handleOpen, open }) => {
+const Modal = ({ handleOpen, open ,handleClose}) => {
   return (
     <>
       <Dialog
@@ -29,7 +29,7 @@ const Modal = ({ handleOpen, open }) => {
           <Button
             variant="text"
             color="red"
-            onClick={handleOpen}
+            onClick={handleClose}
             className="mr-1"
           >
             <span>Cancel</span>
@@ -44,6 +44,7 @@ const Modal = ({ handleOpen, open }) => {
 };
 Modal.propTypes = {
   handleOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
 

@@ -38,7 +38,10 @@ const BatchDetailsTable = ({
       : batchData.filter((row) => !row.online);
   const progressHandler = (batchId) => {
     const res = progressData.filter((data) => data.batchId == batchId);
-    return res[0].progressValue;
+    if(res==undefined || res==null || res.length==0){
+      return 0;
+    }
+    return res[0].batchProgress;
   };
   const handleSort = (columnIndex) => {
     let newSortBy = { column: columnIndex, ascending: true };

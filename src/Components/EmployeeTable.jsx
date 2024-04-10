@@ -1,5 +1,10 @@
 import PropTypes from "prop-types";
-import { Typography, Avatar, Checkbox } from "@material-tailwind/react";
+import {
+  Typography,
+  Checkbox,
+  Tooltip,
+  IconButton,
+} from "@material-tailwind/react";
 
 const EmployeeTable = ({
   TABLE_HEAD,
@@ -8,17 +13,18 @@ const EmployeeTable = ({
   setSelectedRows,
   handleCheckboxChange,
 }) => {
+
   const selectAllHandler = () => {
     const visibleRows = rows.filter((row) => !row.isHidden);
     const allVisibleRowsChecked = visibleRows.every(
-      (row) => selectedRows[row.employeeId]
+      (row) => selectedRows[row.userId]
     );
 
     // Toggle the selection status of visible rows
     const newSelectedRows = { ...selectedRows };
 
     visibleRows.forEach((row) => {
-      newSelectedRows[row.employeeId] = !allVisibleRowsChecked;
+      newSelectedRows[row.userId] = !allVisibleRowsChecked;
     });
 
     // Update the selectedRows state directly to ensure the select all checkbox state is updated
@@ -32,21 +38,31 @@ const EmployeeTable = ({
           {TABLE_HEAD.map((head, index) => (
             <th
               key={head}
-              className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+              className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-1 transition-colors hover:bg-blue-gray-50"
             >
               <Typography
                 variant="small"
                 color="blue-gray"
-                className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                className="flex items-center justify-between gap-0 font-normal leading-none opacity-70"
               >
                 {head}{" "}
                 {index == TABLE_HEAD.length - 1 && (
-                  <Checkbox
-                    id="select-all-checkbox"
-                    color="green"
-                    onChange={selectAllHandler}
-                    checked={Object.values(selectedRows).every(Boolean)}
-                  />
+                  <Tooltip content="Select All" id="select-all-checkbox">
+                    <span onClick={() => selectAllHandler()}>
+                      <IconButton variant="text" className=" mt-1 ml-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          width="27"
+                          height="27"
+                          viewBox="0 0 50 50"
+                        >
+                          <path d="M 7 2 C 4.199219 2 2 4.199219 2 7 L 2 34 C 2 36.800781 4.199219 39 7 39 L 34 39 C 36.800781 39 39 36.800781 39 34 L 39 7 C 39 6.5 38.914063 6 38.8125 5.5 L 19.09375 27.40625 L 9.40625 18.6875 L 10.6875 17.1875 L 19 24.5 L 37.6875 3.6875 C 36.789063 2.6875 35.5 2 34 2 Z M 41 11 L 41 35 C 41 38.300781 38.300781 41 35 41 L 11 41 L 11 43 C 11 45.800781 13.199219 48 16 48 L 43 48 C 45.800781 48 48 45.800781 48 43 L 48 16 C 48 13.199219 45.800781 11 43 11 Z"></path>
+                        </svg>{" "}
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 )}
               </Typography>
             </th>
@@ -55,29 +71,28 @@ const EmployeeTable = ({
       </thead>
       <tbody>
         {rows.map(
-          ({ img, name, email, job, buisnessUnit, employeeId }, index) => {
+          ({ userName, email, designation, businessUnit, userId }, index) => {
             const isLast = index === rows.length - 1;
-            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+            const classes = isLast ? "p-1" : "p-1 border-b border-blue-gray-50";
 
             return (
-              <tr key={name}>
+              <tr key={userName}>
                 <td className={classes}>
                   <div className="w-max">
                     <Typography variant="lead" size="sm">
-                      {employeeId}
+                      {userId}
                     </Typography>
                   </div>
                 </td>
                 <td className={classes}>
-                  <div className="flex items-center gap-3">
-                    <Avatar src={img} alt={name} size="sm" />
+                  <div className="flex items-center gap-1">
                     <div className="flex flex-col">
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {name}
+                        {userName}
                       </Typography>
                       <Typography
                         variant="small"
@@ -96,7 +111,7 @@ const EmployeeTable = ({
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {job}
+                      {designation}
                     </Typography>
                   </div>
                 </td>
@@ -107,14 +122,14 @@ const EmployeeTable = ({
                     color="blue-gray"
                     className="font-normal"
                   >
-                    {buisnessUnit}
+                    {businessUnit}
                   </Typography>
                 </td>
                 <td className={classes}>
                   <Checkbox
                     color="green"
-                    checked={selectedRows[employeeId]}
-                    onChange={() => handleCheckboxChange(employeeId)}
+                    checked={selectedRows[userId]}
+                    onChange={() => handleCheckboxChange(userId)}
                   />
                 </td>
               </tr>

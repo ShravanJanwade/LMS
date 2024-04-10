@@ -18,10 +18,10 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
     } else {
       const filteredRows = initialRows.filter((row) => {
         return (
-          (typeof row.employeeId === "number" &&
-            row.employeeId.toString().includes(searchQuery)) ||
-          row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.buisnessUnit.toLowerCase().includes(searchQuery.toLowerCase())
+          (typeof row.userId === "number" &&
+            row.userId.toString().includes(searchQuery)) ||
+          row.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.businessUnit.toLowerCase().includes(searchQuery.toLowerCase())
         );
       });
 
@@ -34,11 +34,11 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
 
       // Map selected status from previous selected rows to new filtered rows
       initialRows.forEach((row) => {
-        if (prevSelectedRows[row.employeeId] !== undefined) {
-          newSelectedRows[row.employeeId] = prevSelectedRows[row.employeeId];
+        if (prevSelectedRows[row.userId] !== undefined) {
+          newSelectedRows[row.userId] = prevSelectedRows[row.userId];
         } else {
           // If a row was not previously selected, default it to false
-          newSelectedRows[row.employeeId] = false;
+          newSelectedRows[row.userId] = false;
         }
       });
 
@@ -49,7 +49,7 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
   useEffect(() => {
     // Preserve initial rows when TABLE_ROWS changes
     setInitialRows(TABLE_ROWS);
-  }, [TABLE_ROWS]);
+  }, [TABLE_ROWS,setRows]);
 
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

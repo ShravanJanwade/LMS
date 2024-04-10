@@ -17,7 +17,10 @@ const BatchDetailsCards = ({
   }
   const progressHandler = (batchId) => {
     const res = progressData.filter((data) => data.batchId == batchId);
-    return res[0].progressValue;
+    if(res==undefined || res==null || res.length == 0){
+      return 0;
+    }
+    return res[0].batchProgress;
   };
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
@@ -67,7 +70,6 @@ BatchDetailsCards.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   batchData: PropTypes.array.isRequired,
   progressData: PropTypes.array.isRequired,
-  setSelectedBatch: PropTypes.func.isRequired,
 };
 
 export default BatchDetailsCards;

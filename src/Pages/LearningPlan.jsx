@@ -30,7 +30,7 @@ import { LiaBookSolid } from "react-icons/lia";
 import AnimatedProgressProvider from "../Components/AnimatedProgressProvider";
 import { easeQuadInOut } from "d3-ease";
 import { Link } from "react-router-dom";
-import Courses from '../Data/Courses'
+import {Courses} from '../Data/Courses'
 
 
 const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];

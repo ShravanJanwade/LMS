@@ -1,32 +1,42 @@
-import { useState } from 'react';
-import { BsHash } from 'react-icons/bs';
-import { FaChevronDown, FaChevronRight, FaPlus } from 'react-icons/fa';
-import Courses from '../../Data/Courses';
-import { Card, Accordion, AccordionHeader, AccordionBody, Typography } from '@material-tailwind/react';
-import useDarkMode from './useDarkMode';
-const topics = ['tailwind-css', 'react'];
-const questions = ['jit-compilation', 'purge-files', 'dark-mode'];
-const random = ['variants', 'plugins'];
+import { useContext, useState } from "react";
+import { BsHash } from "react-icons/bs";
+import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
+import { Courses, topics } from "../../Data/Courses";
+import {
+  Card,
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+  Typography,
+} from "@material-tailwind/react";
+import useDarkMode from "./useDarkMode";
+import { viewerContext } from "./viewerContext";
+// import topics from '../../Data/Courses'
+// const topics = ['tailwind-css', 'react'];
+const questions = ["jit-compilation", "purge-files", "dark-mode"];
+const random = ["variants", "plugins"];
 
 const TopicList = ({ courseId }) => {
-  const course = Courses.find(course => course.courseId === courseId);
-  console.log(JSON.stringify(course))
+  const course = Courses.find((course) => course.courseId === courseId);
+  console.log(JSON.stringify(course));
   const [darkTheme, setDarkTheme] = useDarkMode();
+
   return (
-    <div className='channel-bar shadow-lg w-[800px] '>
+    <div className="channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[800px] ">
       {/* enter course Name here */}
       <ChannelBlock CourseName={course.courseName} />
-      <div className='channel-container '>
-      <Card className=' overflow-auto min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#646464]'>
-        
-        {course.topics.map((topic, index) => (
-          <Dropdown key={index} header={topic.topicName} selections={topics} />
-        ))}
-       
+      <div className="channel-container ">
+        <Card className=" overflow-auto min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3" >
+          {course.topics.map((topic, index) => (
+            <Dropdown
+              key={index}
+              header={topic.topicName}
+              selections={topics}
+            />
+          ))}
         </Card>
-        </div>
+      </div>
     </div>
-
   );
 };
 
@@ -34,86 +44,97 @@ const Dropdown = ({ header, selections }) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-
-    
-    <Accordion open={expanded} className='dropdown'>
-      <AccordionHeader onClick={() => setExpanded(!expanded)} className={expanded ? 'dropdown-header-text-selected' : 'dropdown-header-text'}>
+    <Accordion open={expanded} className="dropdown m-1 ">
+      <AccordionHeader
+        onClick={() => setExpanded(!expanded)}
+        className={
+          expanded ? "dropdown-header-text-selected text-blue-500 dark:text-[#f8f8f8]" : "dropdown-header-text text-gray-500  dark:text-[#949ba4]"
+        }
+      >
         {header}
       </AccordionHeader>
-      <AccordionBody className='dropdown-selection'>
+      <AccordionBody className="dropdown-selection">
         <p>
           <ResourceBlock resources={selections} />
-          {JSON.stringify(selections)}
+          {/* {JSON.stringify(selections)} */}
         </p>
       </AccordionBody>
     </Accordion>
-    
 
     // {/* {expanded &&
     //   selections &&
     //   selections.map((selection) => <TopicSelection selection={selection} />)} */}
-
   );
 };
 
-
 const ResourceBlock = (props) => {
-  const TABLE_HEAD = ["Name", "Type", "Status"];
+  const { view, setView } = useContext(viewerContext);
+  // const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleClick = (data) => {
+    // Set the view to the clicked data
+    setView(data);
+    // Set the selected item to the clicked data
+    // setSelectedItem(data.id);
+  };
+
   return (
-    <Card className="h-full w-[450px] m-1" >
-      <table className="w-full min-w-max table-auto text-left">
-        <thead>
-         
-        </thead>
+    <Card className="h-full w-[450px] m-1 dark:bg-[#53555f]   bg-gray-200">
+      <table className="w-full min-w-max table-auto text-left ">
+        <thead></thead>
         <tbody>
           {props.resources.map((data, index) => {
-            
-            const classes = "p-4 border-b border-blue-gray-50";
+            const classes = "p-4 border-b border-blue-gray-50 ";
+            // Apply conditional styling to highlight the selected item
+            const rowClasses = `   hover:bg-blue-gray-100 hover:dark:bg-[#36373d]  hover:dark:text-green-200 dark:text-gray-100 rounded-lg ${view?.id === data.id ? 'dark:bg-[#45a049] bg-green-200' : ''}`;
 
             return (
-              <tr key={index} className='dropdown-selection-text'>
-                <a href='http://www.google.com'>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {data}
-                    </Typography>
-                  </td>
-                </a>
+              <tr
+                key={index}
+                className={rowClasses}
+                onClick={() => handleClick(data)}
+              >
                 <td className={classes}>
                   <Typography
                     variant="small"
-                    color="blue-gray"
+                    // color="blue-gray"
                     className="font-normal"
                   >
-                    {data}
+                    {data.name}
                   </Typography>
                 </td>
                 <td className={classes}>
                   <Typography
                     variant="small"
-                    color="blue-gray"
+                    // color="blue-gray"
                     className="font-normal"
                   >
-                    {data}
+                    {data.type}
                   </Typography>
                 </td>
-
+                <td className={classes}>
+                  <Typography
+                    variant="small"
+                    // color="blue-gray"
+                    className="font-normal "
+                  >
+                    {data.progress}
+                  </Typography>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </Card >
-  )
-}
+    </Card>
+  );
+};
+
+
 
 const ChannelBlock = (props) => (
-  <div className='channel-block'>
-    <h5 className='channel-block-text'>{props.CourseName}</h5>
+  <div className="channel-block ">
+    <h5 className="channel-block-text">{props.CourseName}</h5>
   </div>
 );
 

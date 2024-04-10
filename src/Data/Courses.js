@@ -1,4 +1,4 @@
-const Courses = [
+export const Courses = [
   {
     courseId: "1",
     courseName: "Java",
@@ -10,7 +10,6 @@ const Courses = [
     difficultyLevel: "moderate",
     topics: [
       {
-
         topicId: "1",
         topicName: "Introduction to OOPS",
         description: "OOPS - Object Oriented Programming System",
@@ -358,12 +357,48 @@ const Courses = [
   // Add more courses similarly
 ];
 
-
-
-
-
-
-
-
-
-export default Courses
+export const topics = [
+  {
+    id: 1,
+    type: "pdf",
+    source:
+      "https://docs.aws.amazon.com/pdfs/AWSEC2/latest/UserGuide/ec2-ug.pdf",
+    name: "Testing pdf document",
+    progress: 50,
+  },
+  {
+    id: 2,
+    type: "ppt",
+    source: "https://thisisthbs-my.sharepoint.com/:p:/r/personal/kayalvizhi_navaneethakrishnan_thbs_com/Documents/Microsoft%20Teams%20Chat%20Files/Manual%20Testing%20Techniques.pptx?d=w5e4ff119a9a341879f0b8997c639ea68&csf=1&web=1&e=r8o4fg",
+    name: "Testing ppt",
+    progress: 60,
+  },
+  {
+    id: 3,
+    type: "docx",
+    source: "",
+    name: "Testing docx",
+    progress: 40,
+  },
+  {
+    id: 4,
+    type: "youtubeVideo",
+    source: "",
+    name: "youtube Test",
+    progress: 20,
+  },
+  {
+    id: 5,
+    type: "sharePointVideo",
+    source: "",
+    name: "sharepoint Test",
+    progress: 100,
+  },
+  {
+    id: 6,
+    type: "undefined",
+    source: "www.google.com",
+    name: "unknown type test",
+    progress: 50,
+  },
+];

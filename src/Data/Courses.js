@@ -364,7 +364,7 @@ export const topics = [
     source:
       "https://docs.aws.amazon.com/pdfs/AWSEC2/latest/UserGuide/ec2-ug.pdf",
     name: "Testing pdf document",
-    progress: 50,
+    progress: 96,
   },
   {
     id: 2,

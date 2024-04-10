@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
 import { Courses, topics } from "../../Data/Courses";
@@ -14,6 +14,7 @@ import {
   AccordionBody,
   Typography,
 } from "@material-tailwind/react";
+import TickMark from '../../../public/icons8-tick.gif'
 import useDarkMode from "./useDarkMode";
 import { viewerContext } from "./viewerContext";
 import AnimatedProgressProvider from "../AnimatedProgressProvider";
@@ -133,6 +134,28 @@ const ResourceBlock = (props) => {
 };
 
 
+const  PlayOnceGif = ({ src, alt }) => {
+  const [playOnce, setPlayOnce] = useState(true);
+
+  useEffect(() => {
+    // After the component mounts, wait for the duration of the GIF
+    const gifDuration = 2000; // Adjust this value according to your GIF's duration
+    const timeout = setTimeout(() => {
+      // After the duration, set playOnce to false to stop the GIF from playing
+      setPlayOnce(false);
+    }, gifDuration);
+
+    // Clean up the timeout when the component unmounts
+    return () => clearTimeout(timeout);
+  }, []); // Run this effect only once after the component mounts
+
+  return (
+    <img
+      src={playOnce ? src : ''}
+      alt={alt}
+    />
+  );
+}
 
 
 
@@ -141,10 +164,13 @@ const CompletionMarker = ({ progress, type }) => {
   return (
     <div>
       {
-        type != "youtubeVideo" 
-        ? 
-        <Checkbox color={progress<20 ? "red" : progress<60 ? "yello" :"green"}  />  
-        :
+        type != "youtubeVideo"
+          ?
+          progress<95 ? <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
+          <path fill="#c8e6c9" d="M44,24c0,11-9,20-20,20S4,35,4,24S13,4,24,4S44,13,44,24z"></path>
+          </svg> : 
+        <PlayOnceGif src="../../../public/icons8-tick.gif" alt="done"/>
+          : 
           <AnimatedProgressProvider
             valueStart={0}
             valueEnd={progress}

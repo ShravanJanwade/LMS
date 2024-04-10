@@ -3,6 +3,11 @@ import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
 import { Courses, topics } from "../../Data/Courses";
 import {
+  CircularProgressbar, buildStyles
+} from "react-circular-progressbar";
+import { easeQuadInOut } from "d3-ease";
+import {
+  Checkbox,
   Card,
   Accordion,
   AccordionHeader,
@@ -11,6 +16,7 @@ import {
 } from "@material-tailwind/react";
 import useDarkMode from "./useDarkMode";
 import { viewerContext } from "./viewerContext";
+import AnimatedProgressProvider from "../AnimatedProgressProvider";
 // import topics from '../../Data/Courses'
 // const topics = ['tailwind-css', 'react'];
 const questions = ["jit-compilation", "purge-files", "dark-mode"];
@@ -68,7 +74,9 @@ const Dropdown = ({ header, selections }) => {
 };
 
 const ResourceBlock = (props) => {
-  const { view, setView } = useContext(viewerContext);
+  const contextValue = useContext(viewerContext);
+  let view = contextValue?.view;
+  let setView = contextValue?.setView;
   // const [selectedItem, setSelectedItem] = useState(null);
 
   const handleClick = (data) => {
@@ -113,13 +121,7 @@ const ResourceBlock = (props) => {
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <Typography
-                    variant="small"
-                    // color="blue-gray"
-                    className="font-normal "
-                  >
-                    {data.progress}
-                  </Typography>
+                  <CompletionMarker progress={data.progress} type={data.type} />
                 </td>
               </tr>
             );
@@ -131,6 +133,50 @@ const ResourceBlock = (props) => {
 };
 
 
+
+
+
+
+const CompletionMarker = ({ progress, type }) => {
+  return (
+    <div>
+      {
+        type != "youtubeVideo" 
+        ? 
+        <Checkbox color={progress<20 ? "red" : progress<60 ? "yello" :"green"}  />  
+        :
+          <AnimatedProgressProvider
+            valueStart={0}
+            valueEnd={progress}
+            duration={0.9}
+            easingFunction={easeQuadInOut}
+            repeat
+          >
+            {value => {
+              const roundedValue = Math.round(value);
+              return (
+                <div className="w-7 h-7">
+                  <CircularProgressbar
+                    value={progress}
+
+                  /* This is important to include, because if you're fully managing the
+            animation yourself, you'll want to disable the CSS animation. */
+
+                  />
+                </div>
+
+              );
+            }}
+          </AnimatedProgressProvider>
+      }
+    </div>
+
+
+
+
+
+  )
+}
 
 const ChannelBlock = (props) => (
   <div className="channel-block ">

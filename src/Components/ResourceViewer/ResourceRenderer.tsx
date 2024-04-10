@@ -28,13 +28,13 @@ const ResourceRenderer: React.FC<Props> = (
       {view?.type === "ppt" ? (
         <PptRenderer source={view.source} />
       ) : view?.type === "docx" ? (
-        <DocxRenderer />
+        <DocxRenderer source={view.source} />
       ) : view?.type === "pdf" ? (
         <PdfRenderer />
       ) : view?.type === "sharePointVideo" ? (
-        <SharePointVideoRenderer />
+        <SharePointVideoRenderer source={view.source} />
       ) : view?.type === "youtubeVideo" ? (
-        <CustomYoutubeRenderer />
+        <CustomYoutubeRenderer source={view.source} />
       ) : (
         <ExternalTab />
       )}
@@ -43,12 +43,17 @@ const ResourceRenderer: React.FC<Props> = (
     </div>
   );
 };
-const CustomYoutubeRenderer = () => {
+const CustomYoutubeRenderer: React.FC<{ source: string }> = ({ source }) => {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/;
+  // Extracting the video ID using match method
+  const match = source.match(regex);
+  // If match is found, return the video ID, otherwise return null
+  const vidId = match ? match[1] : " k1BneeJTDcU";
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
       <CardHeader shadow={false} floated={false} className="min-h-[88vh] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
-          <CustomYouTubePlayer vidId="C7OQHIpDlvA" />
+          <CustomYouTubePlayer vidId={vidId} />
         </div>
       </CardHeader>
       <CardBody>
@@ -79,7 +84,7 @@ const convertToEmbedLink = (fileLink: string): string => {
     : "";
 
   // Construct the embed link with the user-specific part and formatted document ID
-  return `https://thisisthbs-my.sharepoint.com/personal/${userPart}/_layouts/15/Doc.aspx?sourcedoc={${formattedId}}&amp;action=embedview&amp;wdAr=1.7777777777777777`;
+  return `https://thisisthbs-my.sharepoint.com/personal/${userPart}/_layouts/15/Doc.aspx?sourcedoc={${formattedId}}&action=embedview&wdAr=1.7777777777777777`;
 };
 
 const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
@@ -89,8 +94,8 @@ const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
   console.log(typeof embedLink);
   return (
     <iframe
-      // src={embedLink}
-      src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
+      src={embedLink}
+      // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
       // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
       // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
       // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
@@ -113,7 +118,7 @@ const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
 const PptRenderer: React.FC<{ source: string }> = ({ source }) => {
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 ">
+      <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
         <div>
           <object
             data="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
@@ -121,8 +126,7 @@ const PptRenderer: React.FC<{ source: string }> = ({ source }) => {
             width="906"
             height="742 "
           >
-            <IframeCustom source={source}/>
-           
+            <IframeCustom source={source} />
           </object>
         </div>
       </CardHeader>
@@ -134,19 +138,20 @@ const PptRenderer: React.FC<{ source: string }> = ({ source }) => {
   );
 };
 
-const DocxRenderer = () => {
+const DocxRenderer: React.FC<{ source: string }> = ({ source }) => {
+  console.log("docx link", source)
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 ">
+      <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
         <div>
           <object
-            data="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
+            data={source}
             type="application/docx"
             width="906"
             height="742 "
           >
             <iframe
-              src="https://thisisthbs-my.sharepoint.com/personal/venkat_gollapudi_thbs_com/_layouts/15/Doc.aspx?sourcedoc={7f10f696-23dc-426c-9b98-8838f012b28f}&amp;action=embedview&amp;wdEmbedCode=0"
+              src={source}
               width="906px"
               height="581px"
               frameborder="0"
@@ -167,7 +172,7 @@ const DocxRenderer = () => {
       <CardBody>
         <input></input>
       </CardBody>
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 mb-10">
         <Button
           ripple={false}
           fullWidth={true}
@@ -179,19 +184,19 @@ const DocxRenderer = () => {
     </Card>
   );
 };
-const SharePointVideoRenderer = () => {
+const SharePointVideoRenderer: React.FC<{ source: string }> = ({ source }) => {
   return (<div>
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 ">
+      <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
-          <iframe src="https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" 
-          width="906" 
-          height="581" 
-          frameborder="0" 
-          scrolling="no" 
-          allowfullscreen 
-          title="Git Repo demonstration meeting-20240404_151549-Meeting Recording 1.mp4">
-
+          <iframe 
+          src="https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
+            width="906"
+            height="581"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+            title="Git Repo demonstration meeting-20240404_151549-Meeting Recording 1.mp4">
           </iframe>
         </div>
       </CardHeader>
@@ -216,18 +221,18 @@ const PdfRenderer = () => {
       <CardHeader
         shadow={false}
         floated={false}
-        className="min-h-[100vh] mx-5 "
+        className=" mx-5 bg-gray-200 dark:bg-[#666666]"
       >
         <div>
           <object
             data="https://pdfjs-express.s3-us-west-2.amazonaws.com/docs/choosing-a-pdf-viewer.pdf"
             type="application/pdf"
-            width="906"
+            width="919"
             height="742 "
           >
             <iframe
               src="https://pdfjs-express.s3-us-west-2.amazonaws.com/docs/choosing-a-pdf-viewer.pdf"
-              width="906"
+              width="919"
               height="742"
             >
               <p>This browser does not support PDF!</p>
@@ -238,7 +243,7 @@ const PdfRenderer = () => {
       <CardBody>
         <input></input>
       </CardBody>
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 ">
         <Button
           ripple={false}
           fullWidth={true}

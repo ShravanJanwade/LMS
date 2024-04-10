@@ -1,6 +1,7 @@
 package batch.backend.json.batch.Controller;
 
 import batch.backend.json.batch.Model.User;
+import batch.backend.json.batch.Services.BatchService;
 import batch.backend.json.batch.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,22 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private BatchService batchService;
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
+    @GetMapping("/allUsers/{id}")
+    public ResponseEntity<List<User>> getAllUsersForBatch(@PathVariable("id") long id){
+        List<User> allUsers=userService.getAllUsers();
+        List<User> batchUsers=batchService.getBatchById(id).getBatchUsers();
+        for(User u:batchUsers){
+            allUsers.remove(u);
+        }
+        return new ResponseEntity<>(allUsers,HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = userService.getUserById(id);

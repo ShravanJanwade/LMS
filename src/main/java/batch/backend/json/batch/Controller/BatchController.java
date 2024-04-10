@@ -44,7 +44,17 @@ public class BatchController {
         Batch createdBatch = batchService.saveBatch(batch);
         return new ResponseEntity<>(createdBatch, HttpStatus.CREATED);
     }
-
+    @PutMapping("{id}/edit")
+    public ResponseEntity<Batch> editBatch(@PathVariable("id") long id,@RequestBody Batch batch) {
+        Batch editedBatch=batchService.getBatchById(id);
+        editedBatch.setBatchName(batch.getBatchName());
+        editedBatch.setBatchDescription(batch.getBatchDescription());
+        editedBatch.setBatchSize(batch.getBatchSize());
+        editedBatch.setStartDate(batch.getStartDate());
+        editedBatch.setEndDate(batch.getEndDate());
+        batchService.saveBatch(editedBatch);
+        return new ResponseEntity<>(editedBatch, HttpStatus.CREATED);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBatch(@PathVariable("id") Long id) {
         batchService.deleteBatch(id);
@@ -91,16 +101,18 @@ public class BatchController {
 
     @DeleteMapping("/{batchId}/users")
     public ResponseEntity<List<User>> deleteUsersFromBatch(@PathVariable("batchId") Long batchId,
-            @RequestBody List<Long> userId) {
+    @RequestBody BatchUserDTO batchUserDTO) {
         Batch batch = batchService.getBatchById(batchId);
         if (batch == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+        List<Long> userId=batchUserDTO.getUserIds();
         List<User> users = batch.getBatchUsers();
         for (Long id : userId) {
             users.remove(userService.getUserById(id));
         }
+        batch.setBatchUsers(users);
+        batchService.saveBatch(batch);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

@@ -1,14 +1,16 @@
+import { motion } from "framer-motion";
 import { CourseCard } from "./CourseCard";
+// import { useState } from "react";
 import PropTypes from "prop-types";
-
 const BatchDetailsCards = ({
   status,
   searchQuery,
   batchData,
   progressData,
+  change,
 }) => {
   let filteredTable = batchData;
-
+  // const [carousel, setCarousel] = useState(false);
   // Filter table data based on status
   if (status === "Active") {
     filteredTable = batchData.filter(({ online }) => online);
@@ -16,11 +18,8 @@ const BatchDetailsCards = ({
     filteredTable = batchData.filter(({ online }) => !online);
   }
   const progressHandler = (batchId) => {
-    const res = progressData.filter((data) => data.batchId == batchId);
-    if(res==undefined || res==null || res.length == 0){
-      return 0;
-    }
-    return res[0].batchProgress;
+    const res = progressData.find((data) => data.batchId === batchId);
+    return res ? res.batchProgress : 0;
   };
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
@@ -31,34 +30,50 @@ const BatchDetailsCards = ({
       batchName.toLowerCase().includes(query)
     );
   }
+  const width = change ? "w-full mr-10" : "";
+  const scale = change ? { scale: 1.04 } : { scale: 1.1 };
 
   return (
     <div className="flex flex-wrap justify-center sm:justify-start space-evenly ml-4 sm:ml-12">
       {status === "All"
         ? batchData.map(
             ({ batchId, batchName, batchDescription, online, startDate }) => (
-              <CourseCard
+              <motion.div
                 key={batchId}
-                online={online}
-                progressValue={progressHandler(batchId)}
-                name={batchName}
-                description={batchDescription}
-                date={startDate}
-                batchId={batchId}
-              />
+                whileHover={scale}
+                className={`course-card-wrapper ${width}`}
+                style={{ zIndex: 1 }}
+              >
+                <CourseCard
+                  online={online}
+                  progressValue={progressHandler(batchId)}
+                  name={batchName}
+                  description={batchDescription}
+                  date={startDate}
+                  batchId={batchId}
+                  change={change}
+                />
+              </motion.div>
             )
           )
         : filteredTable.map(
             ({ batchId, batchName, batchDescription, online, startDate }) => (
-              <CourseCard
+              <motion.div
                 key={batchId}
-                online={online}
-                progressValue={progressHandler(batchId)}
-                name={batchName}
-                description={batchDescription}
-                date={startDate}
-                batchId={batchId}
-              />
+                whileHover={scale}
+                className={`course-card-wrapper ${width}`}
+                style={{ zIndex: 1 }}
+              >
+                <CourseCard
+                  online={online}
+                  progressValue={progressHandler(batchId)}
+                  name={batchName}
+                  description={batchDescription}
+                  date={startDate}
+                  batchId={batchId}
+                  change={change}
+                />
+              </motion.div>
             )
           )}
     </div>
@@ -70,6 +85,7 @@ BatchDetailsCards.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   batchData: PropTypes.array.isRequired,
   progressData: PropTypes.array.isRequired,
+  change: PropTypes.array.isRequired,
 };
 
 export default BatchDetailsCards;

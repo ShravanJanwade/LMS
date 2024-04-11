@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { Input } from "@material-tailwind/react";
 
-const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
+const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [initialRows, setInitialRows] = useState(TABLE_ROWS);
 
@@ -51,10 +51,18 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
     setInitialRows(TABLE_ROWS);
   }, [TABLE_ROWS, setRows]);
 
+  useEffect(() => {
+    // Clear search query when clearSearch flag is true
+    if (clearSearch) {
+      setSearchQuery("");
+    }
+  }, [clearSearch]);
+
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
       <div className="w-full md:w-72">
         <Input
+          value={searchQuery}
           onChange={searchQueryHandler}
           label="Search"
           icon={<MagnifyingGlassIcon className="h-5 w-5" />}
@@ -68,6 +76,7 @@ SearchBar.propTypes = {
   TABLE_ROWS: PropTypes.array.isRequired,
   setRows: PropTypes.func.isRequired,
   setSelectedRows: PropTypes.func.isRequired,
+  clearSearch: PropTypes.bool.isRequired,
 };
 
 export default SearchBar;

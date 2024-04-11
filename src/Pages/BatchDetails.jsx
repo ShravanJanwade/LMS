@@ -1,5 +1,6 @@
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -27,6 +28,7 @@ const BatchDetails = () => {
   const [rows, setRows] = useState(trainees);
   const [selectedRows, setSelectedRows] = useState({});
   const [fetch, setFetch] = useState(false);
+  const [clearSearch, setClearSearch] = useState(false);
   // const { id } = useBatch();
   const id = sessionStorage.getItem("id");
   const [open, setOpen] = useState(false);
@@ -45,6 +47,7 @@ const BatchDetails = () => {
       // setFetch((prev) => !prev);
       deleteHandlerEmployees();
       // setFetch((prev) => !prev);
+      setClearSearch(true);
       setTimeout(() => {
         setFetch((prev) => !prev);
       }, 1000);
@@ -127,6 +130,7 @@ const BatchDetails = () => {
       setTrainees(updatedTrainees);
       setRows(updatedTrainees);
       setSelectedRows({});
+      setClearSearch(true); // Set clearSearch flag to true to clear search bar
     } catch (error) {
       console.error("Error deleting trainees:", error);
     }
@@ -203,17 +207,23 @@ const BatchDetails = () => {
               />
             </CardFooter>
           </Card>
-          <Card className="mt-6 w-full h-1/3">
-            <CardBody>
-              <Typography variant="h3" color="blue-gray" className="mb-2">
-                Learning Plan for Batch
-              </Typography>
-              <Typography>Type of Plan: Bootcamp</Typography>
-            </CardBody>
-            <CardFooter className="pt-0">
-              <Button>View Learning Plan</Button>
-            </CardFooter>
-          </Card>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="course-card-wrapper"
+            style={{ zIndex: 1 }}
+          >
+            <Card className="mt-6 w-full">
+              <CardBody>
+                <Typography variant="h3" color="blue-gray" className="mb-2">
+                  Learning Plan for Batch
+                </Typography>
+                <Typography>Type of Plan: Bootcamp</Typography>
+              </CardBody>
+              <CardFooter className="pt-0">
+                <Button>View Learning Plan</Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
         </div>
       </div>
       <div className="w-1/2 h-full">
@@ -250,6 +260,7 @@ const BatchDetails = () => {
                 TABLE_ROWS={trainees}
                 setSelectedRows={setSelectedRows}
                 rows={rows}
+                clearSearch={clearSearch}
               />
 
               <Button

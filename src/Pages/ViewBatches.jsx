@@ -9,6 +9,7 @@ const ViewBatches = () => {
   const [status, setStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [progressData, setProgressData] = useState([]);
+  const [change, setChange] = useState(false);
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
@@ -37,6 +38,9 @@ const ViewBatches = () => {
     }
     fetchData();
   }, [progressData]);
+  const changeCardLayout = () => {
+    setChange((prev) => !prev);
+  };
 
   return (
     <div>
@@ -45,6 +49,7 @@ const ViewBatches = () => {
         card={card}
         onStatusChange={statusHandler}
         searchHandler={searchHandler}
+        changeCardLayout={changeCardLayout}
       />
       {card ? (
         <BatchDetailsCards
@@ -52,6 +57,7 @@ const ViewBatches = () => {
           searchQuery={searchQuery}
           batchData={batchData}
           progressData={progressData}
+          change={change}
         />
       ) : (
         <BatchDetailsTable

@@ -21,7 +21,7 @@ const UsersList = () => {
   const [employees, setEmployees] = useState([]);
   const [rows, setRows] = useState(employees);
   const [selectedRows, setSelectedRows] = useState({});
-
+  const [clearSearch, setClearSearch] = useState(false);
   const [open, setOpen] = useState(false);
   const [openExcel, setOpenExcel] = useState(false);
   const [fetch, setFetch] = useState(false);
@@ -75,11 +75,10 @@ const UsersList = () => {
       (userId) => selectedRows[userId]
     );
     try {
-      await sendSelectedUsers(selectedUsers, id); // Assuming you have a function to send selected users
-      // Clear selectedRows state or perform any other necessary action
+      await sendSelectedUsers(selectedUsers, id);
       setSelectedRows({});
-      // Fetch the updated list of employees after adding users to the batch
       setFetch((prev) => !prev);
+      setClearSearch(true); // Set clearSearch flag to true to clear search bar
     } catch (error) {
       console.error("Error adding users to batch:", error);
     }
@@ -104,6 +103,7 @@ const UsersList = () => {
             TABLE_ROWS={employees}
             setSelectedRows={setSelectedRows}
             rows={rows}
+            clearSearch={clearSearch} // Pass clearSearch flag to the SearchBar
           />
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Button

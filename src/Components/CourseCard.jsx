@@ -17,6 +17,7 @@ export function CourseCard({
   description,
   date,
   batchId,
+  change,
 }) {
   const navigate = useNavigate();
   const { setId } = useBatch();
@@ -25,8 +26,9 @@ export function CourseCard({
     sessionStorage.setItem("id", batchId);
     navigate("/lms/batches/batchDetails");
   };
+  const width = change ? "w-full" : "w-96 m-5";
   return (
-    <Card className="mt-6 w-96 inline-block m-5">
+    <Card className={`mt-6  h-72 inline-block m-5 ${width}`}>
       <CardBody>
         <div className="flex space-x-4 justify-end inline-block">
           <div className="w-max">
@@ -78,4 +80,5 @@ CourseCard.propTypes = {
   description: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   batchId: PropTypes.number.isRequired,
+  change: PropTypes.bool.isRequired,
 };

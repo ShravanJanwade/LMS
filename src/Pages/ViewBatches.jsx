@@ -8,7 +8,7 @@ const ViewBatches = () => {
   const [card, setCard] = useState(true);
   const [status, setStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [progressData,setProgressData]=useState([]);
+  const [progressData, setProgressData] = useState([]);
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
@@ -24,12 +24,12 @@ const ViewBatches = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await fetchBatchData();
-      const  progress=await fetchProgressData();
+      const progress = await fetchProgressData();
       setProgressData(progress);
       setBatchData(data);
     }
     fetchData();
-  }, [batchData,progressData]);
+  }, [batchData]);
   useEffect(() => {
     async function fetchData() {
       const data = await fetchProgressData();
@@ -37,7 +37,6 @@ const ViewBatches = () => {
     }
     fetchData();
   }, [progressData]);
-
 
   return (
     <div>

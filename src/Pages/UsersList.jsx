@@ -6,52 +6,54 @@ import {
   Button,
   CardBody,
 } from "@material-tailwind/react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
-import { fetchEmployees,sendSelectedUsers} from "../Services/allEmployee.js";
+import { fetchEmployees, sendSelectedUsers } from "../Services/allEmployee.js";
 
 const UsersList = () => {
   const table = {
     height: "490px",
   };
+
   const [employees, setEmployees] = useState([]);
   const [rows, setRows] = useState(employees);
   const [selectedRows, setSelectedRows] = useState({});
 
   const [open, setOpen] = useState(false);
   const [openExcel, setOpenExcel] = useState(false);
-
-  const handleOpen = () =>{
-    if(open){
+  const [fetch, setFetch] = useState(false);
+  const handleOpen = () => {
+    if (open) {
+      // setFetch((prev) => !prev);
       handleAddToBatch();
+      setFetch((prev) => !prev);
+      // window.location.reload();
     }
-    setOpen(prev=>!prev);
-  } 
-  const handleClose=()=>{
-    setOpen(prev=>!prev);
-  } 
-   const handleOpenExcel = () => setOpenExcel(!openExcel);
-   const handleExcelClose=()=>{
-    setOpenExcel(prev=>!prev);
-  } 
+    setOpen((prev) => !prev);
+  };
+  const handleClose = () => {
+    setOpen((prev) => !prev);
+  };
+  const handleOpenExcel = () => setOpenExcel(!openExcel);
+  const handleExcelClose = () => {
+    setOpenExcel((prev) => !prev);
+  };
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
-  const id=sessionStorage.getItem("id");
+  const id = sessionStorage.getItem("id");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchEmployees(id);
         if (data) {
-          console.log();
           setEmployees(data);
-          console.log(data);
         } else {
           throw new Error("Failed to fetch trainees");
         }
@@ -61,16 +63,12 @@ const UsersList = () => {
     };
 
     fetchData();
-
-    return () => {
-      // Cleanup function
-    };
-  }, [id,selectedRows]);
+  }, [id, fetch]);
 
   // Update rows state when trainees change
   useEffect(() => {
     setRows(employees);
-  }, [employees]);
+  }, [employees, fetch]);
 
   const handleAddToBatch = async () => {
     const selectedUsers = Object.keys(selectedRows).filter(
@@ -80,10 +78,13 @@ const UsersList = () => {
       await sendSelectedUsers(selectedUsers, id); // Assuming you have a function to send selected users
       // Clear selectedRows state or perform any other necessary action
       setSelectedRows({});
+      // Fetch the updated list of employees after adding users to the batch
+      setFetch((prev) => !prev);
     } catch (error) {
       console.error("Error adding users to batch:", error);
     }
   };
+
   return (
     <Card className="h-full w-full mt-2">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -113,7 +114,11 @@ const UsersList = () => {
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               To Batch
             </Button>
-            <Modal handleOpen={handleOpen} open={open} handleClose={handleClose} />
+            <Modal
+              handleOpen={handleOpen}
+              open={open}
+              handleClose={handleClose}
+            />
             <Button
               className="flex items-center gap-3"
               size="sm"
@@ -122,7 +127,11 @@ const UsersList = () => {
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               Through Excel
             </Button>
-            <Modal handleOpen={handleOpenExcel} open={openExcel} handleClose={handleExcelClose} />
+            <Modal
+              handleOpen={handleOpenExcel}
+              open={openExcel}
+              handleClose={handleExcelClose}
+            />
           </div>
         </div>
       </CardHeader>

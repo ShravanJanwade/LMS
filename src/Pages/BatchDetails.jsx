@@ -1,5 +1,5 @@
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -14,50 +14,58 @@ import SearchBar from "../Components/SearchBar";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import Modal from "../Components/Modal";
-import { fetchBatchDetails,deleteTraineesFromBatch,deleteBatch } from "../Services/BatchDetailsData.js";
+import {
+  fetchBatchDetails,
+  deleteTraineesFromBatch,
+  deleteBatch,
+} from "../Services/BatchDetailsData.js";
 // import { useBatch } from "../Context/BatchContext";
 import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(trainees);
   const [selectedRows, setSelectedRows] = useState({});
+  const [fetch, setFetch] = useState(false);
   // const { id } = useBatch();
-  const id=sessionStorage.getItem("id");
+  const id = sessionStorage.getItem("id");
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [batchDetails, setBatchDetails] = useState(null);
-  const [progressData,setProgressData]=useState([]);
-  const navigate=useNavigate();
+  const [progressData, setProgressData] = useState([]);
+  const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
-
   const deleteHandler = () => {
-    console.log(selectedRows)
-    if(open){
-      deleteHandlerEmployees()
-      navigate("/lms/batches/batchDetails")
+    if (open) {
+      // setFetch((prev) => !prev);
+      deleteHandlerEmployees();
+      // setFetch((prev) => !prev);
+      setTimeout(() => {
+        setFetch((prev) => !prev);
+      }, 1000);
     }
     setOpen((prev) => !prev);
+    // ReloadAfterDelay();
   };
 
   const deleteBatchhandler = () => {
-    if(deleteOpen){
+    if (deleteOpen) {
       deleteBatchFromList();
       navigate("/lms/batches");
     }
     setDeleteOpen((prevs) => !prevs);
   };
-  const handleClose=()=>{
-    setOpen(prev=>!prev);
-  }
-  const handleDeleteClose=()=>{
-    setDeleteOpen(prev=>!prev);
-  }
+  const handleClose = () => {
+    setOpen((prev) => !prev);
+  };
+  const handleDeleteClose = () => {
+    setDeleteOpen((prev) => !prev);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -77,17 +85,14 @@ const BatchDetails = () => {
     return () => {
       // Cleanup function
     };
-  }, [id]);
-
+  }, [id, fetch]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchTrainees(id);
         if (data) {
-          console.log(id);
           setTrainees(data);
-          console.log(data);
         } else {
           throw new Error("Failed to fetch trainees");
         }
@@ -101,19 +106,19 @@ const BatchDetails = () => {
     return () => {
       // Cleanup function
     };
-  }, [id,selectedRows,rows]);
+  }, [id, fetch]);
 
   // Update rows state when trainees change
   useEffect(() => {
-    setRows(trainees);
-  }, [trainees]);
-  
+    setRows(trainees); // Make sure trainees are correctly set to rows state
+  }, [trainees, fetch]);
+
   const deleteHandlerEmployees = async () => {
     try {
+      setFetch((prev) => !prev); // Trigger re-fetch of trainees list
       const selectedUserIds = Object.keys(selectedRows).filter(
         (userId) => selectedRows[userId]
       );
-      console.log("Selected User id's are"+selectedUserIds);
       await deleteTraineesFromBatch(id, selectedUserIds);
       // After successful deletion, update the UI
       const updatedTrainees = trainees.filter(
@@ -126,6 +131,7 @@ const BatchDetails = () => {
       console.error("Error deleting trainees:", error);
     }
   };
+
   const deleteBatchFromList = async () => {
     try {
       await deleteBatch(id);
@@ -140,7 +146,6 @@ const BatchDetails = () => {
     }
     fetchData();
   }, [progressData]);
-
 
   const height = rows.length < 11 ? "h-42" : "h-48";
   return (
@@ -189,7 +194,13 @@ const BatchDetails = () => {
               )}
             </CardBody>
             <CardFooter className="pt-0">
-              <ProgressBar progressValue={progressData==null?0:progressData.batchProgress} />
+              <ProgressBar
+                progressValue={
+                  progressData == null || undefined
+                    ? 0
+                    : progressData.batchProgress
+                }
+              />
             </CardFooter>
           </Card>
           <Card className="mt-6 w-full h-1/3">
@@ -250,7 +261,11 @@ const BatchDetails = () => {
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Delete
                 Trainees From Batch
               </Button>
-              <Modal open={open} handleOpen={deleteHandler} handleClose={handleClose} />
+              <Modal
+                open={open}
+                handleOpen={deleteHandler}
+                handleClose={handleClose}
+              />
             </div>
           </CardHeader>
 

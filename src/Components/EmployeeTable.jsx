@@ -13,7 +13,6 @@ const EmployeeTable = ({
   setSelectedRows,
   handleCheckboxChange,
 }) => {
-
   const selectAllHandler = () => {
     const visibleRows = rows.filter((row) => !row.isHidden);
     const allVisibleRowsChecked = visibleRows.every(
@@ -76,7 +75,7 @@ const EmployeeTable = ({
             const classes = isLast ? "p-1" : "p-1 border-b border-blue-gray-50";
 
             return (
-              <tr key={userName}>
+              <tr key={userId}>
                 <td className={classes}>
                   <div className="w-max">
                     <Typography variant="lead" size="sm">
@@ -122,7 +121,7 @@ const EmployeeTable = ({
                     color="blue-gray"
                     className="font-normal"
                   >
-                    {businessUnit}
+                    {businessUnit == undefined ? "NBU CDEC" : businessUnit}
                   </Typography>
                 </td>
                 <td className={classes}>

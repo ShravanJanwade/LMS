@@ -20,8 +20,8 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
         return (
           (typeof row.userId === "number" &&
             row.userId.toString().includes(searchQuery)) ||
-          row.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.businessUnit.toLowerCase().includes(searchQuery.toLowerCase())
+          row?.userName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row?.businessUnit?.toLowerCase().includes(searchQuery.toLowerCase())
         );
       });
 
@@ -49,7 +49,7 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows }) => {
   useEffect(() => {
     // Preserve initial rows when TABLE_ROWS changes
     setInitialRows(TABLE_ROWS);
-  }, [TABLE_ROWS,setRows]);
+  }, [TABLE_ROWS, setRows]);
 
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

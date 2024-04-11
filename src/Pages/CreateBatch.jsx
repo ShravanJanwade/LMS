@@ -87,8 +87,8 @@ function CreateBatch() {
 
   return (
     <div className="flex justify-center items-center h-full mt-10">
-      <Card color="lightBlue" shadow="regular" className="w-full max-w-lg p-8">
-        <Typography variant="h4" color="blueGray" className="mb-6">
+      <Card className="w-full max-w-lg p-8">
+        <Typography variant="h4" color="blue-gray" className="mb-6">
           Batch Creation
         </Typography>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -146,10 +146,10 @@ function CreateBatch() {
               onChange={(e) => setBatchSize(e.target.value)}
             />
           </div>
-          <Typography variant="body" color="gray">
+          <Typography variant="lead" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" color="lightBlue" size="lg" ripple="light">
+          <Button type="submit" size="lg">
             Create Batch
           </Button>
         </form>

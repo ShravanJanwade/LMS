@@ -9,7 +9,7 @@ function EditBatch() {
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
-  
+
   const id = sessionStorage.getItem("id");
   const navigate = useNavigate();
 
@@ -39,7 +39,12 @@ function EditBatch() {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    if (startDate && endDate && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+    if (
+      startDate &&
+      endDate &&
+      !isNaN(startDate.getTime()) &&
+      !isNaN(endDate.getTime())
+    ) {
       const diffInTime = endDate.getTime() - startDate.getTime();
       let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
 
@@ -98,8 +103,8 @@ function EditBatch() {
 
   return (
     <div className="flex justify-center items-center h-full mt-10">
-      <Card color="lightBlue" shadow="regular" className="w-full max-w-lg p-8">
-        <Typography variant="h4" color="blueGray" className="mb-6">
+      <Card className="w-full max-w-lg p-8">
+        <Typography variant="h4" color="blue-gray" className="mb-6">
           Edit Batch
         </Typography>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -157,10 +162,10 @@ function EditBatch() {
               onChange={(e) => setBatchSize(e.target.value)}
             />
           </div>
-          <Typography variant="body" color="gray">
+          <Typography variant="lead" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" color="lightBlue" size="lg" ripple="light">
+          <Button type="submit" size="lg">
             Update Batch
           </Button>
         </form>

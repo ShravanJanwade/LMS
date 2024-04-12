@@ -7,6 +7,7 @@ import UsersList from "../Pages/UsersList";
 import AdminDashBoard from "../Pages/adminDashBoard";
 import LearningPlan from "../Pages/LearningPlan";
 import LearningResource from "../Pages/LearningResource";
+import ProgressList from "../Pages/ProgressList";
 function AppRoutes() {
   return (
     <Routes>
@@ -18,6 +19,7 @@ function AppRoutes() {
         path="/lms/batches/batchDetails/addUsersToBatch"
         element={<UsersList />}
       />
+      <Route path="/lms/batches/batchDetails/learningPlan/batchWiseProgress" element={<ProgressList/>}/>
       <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
       <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
     </Routes>

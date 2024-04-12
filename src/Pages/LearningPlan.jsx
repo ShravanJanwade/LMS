@@ -19,7 +19,7 @@ import {
   TimelineItem,
   Typography,
 } from "@material-tailwind/react";
-
+import { IoIosPeople } from "react-icons/io";
 import {
   ArchiveBoxIcon,
   BellIcon,
@@ -30,7 +30,7 @@ import { LiaBookSolid } from "react-icons/lia";
 import AnimatedProgressProvider from "../Components/AnimatedProgressProvider";
 import { easeQuadInOut } from "d3-ease";
 import { Link } from "react-router-dom";
-import {Courses} from '../Data/Courses'
+import { Courses } from '../Data/Courses'
 
 
 const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];
@@ -102,17 +102,19 @@ const LearningPlan = () => {
                     </Card>
 
                     <div className="group mt-8 inline-flex flex-wrap items-center gap-3 ">
-                      <Tooltip content="Course Resource">
+                      <Tooltip content="Course Resources">
                         <Link to="/lms/batches/batchDetails/learningPlan/resources">
                           <IconButton className="hover:border-gray-900/10 hover:bg-black-900/10 hover:!opacity-100 group-hover:opacity-70">
                             <LiaBookSolid className="text-[1.5rem]" />
                           </IconButton>
                         </Link>
                       </Tooltip>
-                      <Tooltip content="Course Resource">
-                        <IconButton className="hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
-                          <LiaBookSolid className="text-[1.5rem]" />
-                        </IconButton>
+                      <Tooltip content="Trainee Progress CourseWise[TRAINER,ADMIN]">
+                        <Link to="/lms/batches/batchDetails/learningPlan/batchWiseProgress">
+                          <IconButton className="hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
+                            <IoIosPeople className="text-[1.5rem]" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip content="Course Resource">
                         <IconButton className="hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">

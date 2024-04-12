@@ -9,6 +9,7 @@ const BatchDetailsCards = ({
 }) => {
   let filteredTable = batchData;
 
+  
   // Filter table data based on status
   if (status === "Active") {
     filteredTable = batchData.filter(({ online }) => online);

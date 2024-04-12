@@ -62,6 +62,9 @@ const BatchDetails = () => {
               <Link to="/lms/batches/batchDetails/learningPlan">
               <Button>View Learning Plan</Button>
               </Link>
+              <Link to="/lms/batches/batchDetails/learningPlan/batchWiseProgress">
+              <Button className="ml-5">View BatchWise Trainee Progress</Button>
+              </Link>
             </CardFooter>
           </Card>
         </div>

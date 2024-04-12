@@ -174,7 +174,7 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
         progress<95 ? (
           <RiCheckboxBlankCircleFill size="34" className="text-gray-500/25" />
         ) : (
-          <RiCheckboxCircleFill size="34" className="text-green-200" />
+          <RiCheckboxCircleFill size="34" className="text-green-500 dark:text-green-200" />
         )
       ) : progress<95 ? (
         <AnimatedProgressProvider
@@ -199,7 +199,7 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
           }}
         </AnimatedProgressProvider>
       ) :
-      (<RiCheckboxCircleFill size="34" className="text-green-200" />)
+      (<RiCheckboxCircleFill size="34" className="text-green-200 " />)
     }
     </div>
   );

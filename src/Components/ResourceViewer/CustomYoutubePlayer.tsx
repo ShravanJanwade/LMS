@@ -178,7 +178,7 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
       playerRef.current.seekTo(view?.progress * duration / 100)
       setForwardQuota(999)
     }else{
-      playerRef.current.seekTo( duration -6 )
+      // playerRef.current.seekTo( duration -6 )
     }
     // setCurrentTime((view?.progress*duration)/100)
     setPlayerReady(true);

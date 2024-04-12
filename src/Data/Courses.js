@@ -1,3 +1,5 @@
+
+// http://172.18.4.233:1111/progress/{userID}/course/{courseID} -->
 export const Courses = [
   {
     courseId: "1",
@@ -376,7 +378,7 @@ export const topics = [
   {
     id: 3,
     type: "docx",
-    source: "https://thisisthbs-my.sharepoint.com/personal/venkat_gollapudi_thbs_com/_layouts/15/Doc.aspx?sourcedoc={7f10f696-23dc-426c-9b98-8838f012b28f}&action=embedview",    name: "Testing docx from sharePoint Link",
+    source: "https://thisisthbs-my.sharepoint.com/personal/venkat_gollapudi_thbs_com/_layouts/15/Doc.aspx?sourcedoc={7f10f696-23dc-426c-9b98-8838f012b28f}&action=embedview", name: "Testing docx from sharePoint Link",
     progress: 40,
   },
   {
@@ -384,7 +386,7 @@ export const topics = [
     type: "youtubeVideo",
     source: "https://www.youtube.com/watch?v=C7OQHIpDlvA",
     name: "youtube Test Link",
-    progress: 50,
+    progress: 0,
   },
   {
     id: 5,
@@ -400,5 +402,5 @@ export const topics = [
     name: "unknown type test",
     progress: 50,
   }
- 
+
 ];

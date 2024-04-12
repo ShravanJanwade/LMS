@@ -7,7 +7,6 @@ type View = {
   source: string,
   progress: number
 
-
 }
 interface ViewerContextType {
   view: View // Define the type of 'view'

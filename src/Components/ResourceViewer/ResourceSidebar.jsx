@@ -31,6 +31,7 @@ const ResourceSidebar = () => {
         <br />
         <br />
 
+
         <SideBarIcon icon={<MdMenuOpen size="24" />} text="Dock" />
 
         <Divider />
@@ -41,7 +42,7 @@ const ResourceSidebar = () => {
           className="p-2 w-14 ml-1 mb-1 mt-3 dark:text-green-700 dark:border-green-200 hover:dark:border-gray-200 hover:dark:text-gray-100 hover:bg-green-100 hover:text-gray-100"
           variant="outlined"
         >
-          >>
+          {">>"}
         </Button>
       </Tooltip>
       <Tooltip content="Previous Course" placement="right-end">

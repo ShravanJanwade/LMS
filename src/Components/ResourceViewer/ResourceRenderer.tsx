@@ -189,7 +189,7 @@ const DocxRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ s
           fullWidth={true}
           className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >
-          Add to Cart
+          Notes
         </Button>
       </CardFooter>
     </Card>
@@ -220,7 +220,7 @@ const SharePointVideoRenderer: React.FC<{ source: string }> = ({ source }) => {
           fullWidth={true}
           className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >
-          Add to Cart
+          Notes
         </Button>
       </CardFooter>
     </Card>
@@ -236,7 +236,7 @@ const PdfRenderer = () => {
       >
         <div>
           <object
-            data="https://pdfjs-express.s3-us-west-2.amazonaws.com/docs/choosing-a-pdf-viewer.pdf"
+            data="https://thbsbatch-2.s3.eu-west-2.amazonaws.com/Process%20Training%20_%20ISMS%20training%20_%20Assessment%201%202%201.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240412T060744Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAWL5R3DYERMJHB2G3%2F20240412%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Signature=8f07a9312bfeae546b0e48a3de0ea7284710df1bf8b469116b75d00a15ce345a"
             type="application/pdf"
             width="919"
             height="742 "
@@ -260,7 +260,7 @@ const PdfRenderer = () => {
           fullWidth={true}
           className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >
-          Add to Cart
+          Notes
         </Button>
       </CardFooter>
     </Card>

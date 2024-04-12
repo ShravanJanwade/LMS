@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { viewerContext } from "./viewerContext";
 import {
   Card,
@@ -10,6 +10,7 @@ import {
 } from "@material-tailwind/react";
 
 import CustomYouTubePlayer from "./CustomYoutubePlayer";
+import { CompletionContext } from "./CompletionContext";
 interface Props {
   // Define props interface here
 }
@@ -22,27 +23,43 @@ const ResourceRenderer: React.FC<Props> = (
   const contextValue = useContext(viewerContext);
   let view = contextValue?.view;
   let setView = contextValue?.setView;
+  const { completion, setCompletion } = useContext(CompletionContext);
 
+  const handleClick = () => {
+    setCompletion({ topicId: view.id, progress: 100 })
+  }
   return (
     <div>
-      {view?.type === "ppt" ? (
-        <PptRenderer source={view.source} />
-      ) : view?.type === "docx" ? (
-        <DocxRenderer source={view.source} />
-      ) : view?.type === "pdf" ? (
-        <PdfRenderer />
-      ) : view?.type === "sharePointVideo" ? (
-        <SharePointVideoRenderer source={view.source} />
-      ) : view?.type === "youtubeVideo" ? (
-        <CustomYoutubeRenderer source={view.source} />
-      ) : (
+      {view?.type === "external" ? (
         <ExternalTab />
-      )}
+      )
+        :
+        view?.type === "ppt" ? (
+          <PptRenderer source={view.source} handleClick={handleClick} />
+        ) : view?.type === "docx" ? (
+          <DocxRenderer source={view.source} handleClick={handleClick} />
+        ) : view?.type === "pdf" ? (
+          <PdfRenderer />
+        ) : view?.type === "sharePointVideo" ? (
+          <SharePointVideoRenderer source={view.source} />
+        ) : view?.type === "youtubeVideo" ? (
+          <CustomYoutubeRenderer source={view.source} />
+        ) : (
+          <Welcome />
+        )}
 
       {JSON.stringify(view)}
     </div>
   );
 };
+
+const Welcome: React.FC<{}> = () => {
+  return (
+    <h1>Wwelcome to LMS</h1>
+  )
+}
+
+
 const CustomYoutubeRenderer: React.FC<{ source: string }> = ({ source }) => {
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/;
   // Extracting the video ID using match method
@@ -51,7 +68,7 @@ const CustomYoutubeRenderer: React.FC<{ source: string }> = ({ source }) => {
   const vidId = match ? match[1] : " k1BneeJTDcU";
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[88vh] mx-5 bg-gray-200 dark:bg-[#666666]">
+      <CardHeader shadow={false} floated={false} className="min-h-[120vh] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
           <CustomYouTubePlayer vidId={vidId} />
         </div>
@@ -95,33 +112,27 @@ const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
   return (
     <iframe
       src={embedLink}
-      // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
-      // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
-      // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
-      // src="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
       width="906px"
       height="581px"
     // frameborder="0"
     >
-      This is an embedded{" "}
-      <a target="_blank" href="https://office.com">
-        Microsoft Office
-      </a>{" "}
-      presentation, powered by{" "}
-      <a target="_blank" href="https://office.com/webapps">
-        Office
-      </a>
+     <p>view outside</p>
     </iframe>
   );
 };
 
-const PptRenderer: React.FC<{ source: string }> = ({ source }) => {
+const PptRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
+
+
+
+
+
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
       <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
         <div>
           <object
-            data="https://thisisthbs-my.sharepoint.com/personal/kayalvizhi_navaneethakrishnan_thbs_com/_layouts/15/Doc.aspx?sourcedoc={5e4ff119-a9a3-4187-9f0b-8997c639ea68}&amp;action=embedview&amp;wdAr=1.7777777777777777"
+            data={source}
             type="application/pptx"
             width="906"
             height="742 "
@@ -131,14 +142,14 @@ const PptRenderer: React.FC<{ source: string }> = ({ source }) => {
         </div>
       </CardHeader>
       <CardBody>
-        <input></input>
+        <Button onClick={handleClick} >Mark as Complete</Button>
       </CardBody>
       <CardFooter className="pt-0"></CardFooter>
     </Card>
   );
 };
 
-const DocxRenderer: React.FC<{ source: string }> = ({ source }) => {
+const DocxRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
   console.log("docx link", source)
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
@@ -170,7 +181,7 @@ const DocxRenderer: React.FC<{ source: string }> = ({ source }) => {
         </div>
       </CardHeader>
       <CardBody>
-        <input></input>
+        <Button onClick={handleClick}>Mark as Complete</Button>
       </CardBody>
       <CardFooter className="pt-0 mb-10">
         <Button
@@ -189,8 +200,8 @@ const SharePointVideoRenderer: React.FC<{ source: string }> = ({ source }) => {
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
       <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
-          <iframe 
-          src="https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
+          <iframe
+            src="https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
             width="906"
             height="581"
             frameborder="0"

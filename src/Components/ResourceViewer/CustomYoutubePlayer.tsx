@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 
 
 import YouTube from "react-youtube";
@@ -12,7 +12,7 @@ import {
   Popover,
   PopoverContent,
   PopoverHandler,
-  Progress ,
+  Progress,
   Slider,
   Typography,
 } from "@material-tailwind/react";
@@ -27,6 +27,9 @@ import {
 } from "react-icons/fa";
 
 import { HiMiniSpeakerWave } from "react-icons/hi2";
+import { RiCheckboxCircleFill } from "react-icons/ri";
+import { viewerContext } from "./viewerContext";
+import { CompletionContext } from "./CompletionContext";
 
 interface YouTubePlayerProps {
   vidId: string;
@@ -55,6 +58,11 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
 
 
   const [open, setOpen] = useState<boolean>(false);
+  const contextValue = useContext(viewerContext);
+  let view = contextValue?.view;
+
+  const { completion, setCompletion } = useContext(CompletionContext);
+
   const handleOpen = () => {
     playerRef.current.getPlayerState() === 1 && !completed && setOpen(true);
 
@@ -97,27 +105,49 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     },
   };
 
+
+
+  useEffect(()=>{
+    setCompletion({ topicId: view.id, progress: completionProgress })
+
+    //TODO send axios completion progess to backed
+  },[completionProgress])
+
+
   useEffect(() => {
     if (completionProgress < progress) {
       setCompletionProgress(progress);
+     
+
     }
   }, [progress]);
+
+
 
   useEffect(() => {
     // Calculate progress percentage
 
-    if (playerReady)
+    if (playerReady) {
       playerRef.current.getPlayerState() === 1
         ? setIsPlaying(true)
         : setIsPlaying(false);
-    // console.log(isPlaying);
+      // console.log(isPlaying);
+
+
+
+
+    }
+
     if (duration > 0) {
       const percentage = (currentTime / duration) * 100;
       // console.log(isPlaying)
+
       setProgress(percentage);
     }
-    if (progress > 95) {
+    if (progress > 90) {
       setCompleted(true);
+
+
       setForwardSeekState(true);
       //TODO send axios request saying video completed
     }
@@ -136,9 +166,21 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
   };
   const handleReady = (event: any) => {
     // Add event listener to playArea.current to flip isPlaying state when pressed
+
     playerRef.current = event.target;
     setAudioLevel(playerRef.current.getVolume());
+    setCompletionProgress(view?.progress)
+    console.log(playerRef.current)
+    // setProgress(completionProgress)
     setDuration(event.target.getDuration());
+    // console.log(JSON.stringify(playerRef.current))
+    if (view.progress && !completed) {
+      playerRef.current.seekTo(view?.progress * duration / 100)
+      setForwardQuota(999)
+    }else{
+      playerRef.current.seekTo( duration -6 )
+    }
+    // setCurrentTime((view?.progress*duration)/100)
     setPlayerReady(true);
   };
 
@@ -155,9 +197,11 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     }
   };
   const handleSeekState = () => {
-    setForwardQuota((forwardQuota) => {
-      return forwardQuota + 1;
-    });
+    if (view?.progress === 0) {
+      setForwardQuota((forwardQuota) => {
+        return forwardQuota + 1;
+      });
+    }
     if (forwardQuota < duration / 5 / 4) {
       setForwardSeekState(true);
     } else if (!completed) {
@@ -202,14 +246,14 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     console.log(playerRef.current);
   };
 
-  
+
 
   return (
     <>
       <div className="flex flex-col items-center ">
         <span>
           <YouTube
-          iframeClassName="w-[906px] h-[78vh]"
+            iframeClassName="w-[906px] h-[78vh]"
             videoId={props.vidId}
             opts={opts}
             onStateChange={handleStateChange}
@@ -218,12 +262,12 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
 
           {!completed && (
             <div className="relative">
-               
+
 
 
               <Progress
-              
-              value={completionProgress}
+
+                value={completionProgress}
                 size="md"
                 className="bg-[#eeeeee]"
                 color="blue-gray"
@@ -334,13 +378,7 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
             >
               Video Completed
             </Typography>
-            <video
-              autoPlay
-              muted
-              width="80"
-              height="20"
-              src="../../public/verified.mp4"
-            ></video>
+            <RiCheckboxCircleFill size="100" className="text-green-800 dark:text-green-400" />
           </div>
         )}
       </div>

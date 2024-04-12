@@ -382,9 +382,9 @@ export const topics = [
   {
     id: 4,
     type: "youtubeVideo",
-    source: "https://www.youtube.com/watch?v=k1BneeJTDcU",
+    source: "https://www.youtube.com/watch?v=C7OQHIpDlvA",
     name: "youtube Test Link",
-    progress: 20,
+    progress: 50,
   },
   {
     id: 5,
@@ -395,9 +395,10 @@ export const topics = [
   },
   {
     id: 6,
-    type: "undefined",
+    type: "external",
     source: "www.google.com",
     name: "unknown type test",
     progress: 50,
-  },
+  }
+ 
 ];

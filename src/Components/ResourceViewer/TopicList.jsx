@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
 import { Courses, topics } from "../../Data/Courses";
-import {
-  CircularProgressbar, buildStyles
-} from "react-circular-progressbar";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { easeQuadInOut } from "d3-ease";
+import {
+  RiCheckboxBlankCircleFill,
+  RiCheckboxCircleFill,
+} from "react-icons/ri";
 import {
   Checkbox,
   Card,
@@ -14,10 +16,13 @@ import {
   AccordionBody,
   Typography,
 } from "@material-tailwind/react";
-import TickMark from '../../../public/icons8-tick.gif'
+import TickMark from "../../../public/icons8-tick.gif";
 import useDarkMode from "./useDarkMode";
 import { viewerContext } from "./viewerContext";
 import AnimatedProgressProvider from "../AnimatedProgressProvider";
+import { CompletionContext } from "./CompletionContext";
+import { data } from "autoprefixer";
+import { render } from "react-dom";
 // import topics from '../../Data/Courses'
 // const topics = ['tailwind-css', 'react'];
 const questions = ["jit-compilation", "purge-files", "dark-mode"];
@@ -33,7 +38,7 @@ const TopicList = ({ courseId }) => {
       {/* enter course Name here */}
       <ChannelBlock CourseName={course.courseName} />
       <div className="channel-container ">
-        <Card className=" overflow-auto min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3" >
+        <Card className=" overflow-auto min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3">
           {course.topics.map((topic, index) => (
             <Dropdown
               key={index}
@@ -55,7 +60,9 @@ const Dropdown = ({ header, selections }) => {
       <AccordionHeader
         onClick={() => setExpanded(!expanded)}
         className={
-          expanded ? "dropdown-header-text-selected text-blue-500 dark:text-[#f8f8f8]" : "dropdown-header-text text-gray-500  dark:text-[#949ba4]"
+          expanded
+            ? "dropdown-header-text-selected text-blue-500 dark:text-[#f8f8f8]"
+            : "dropdown-header-text text-gray-500  dark:text-[#949ba4]"
         }
       >
         {header}
@@ -78,14 +85,24 @@ const ResourceBlock = (props) => {
   const contextValue = useContext(viewerContext);
   let view = contextValue?.view;
   let setView = contextValue?.setView;
+  const {completion,setCompletion} = useContext(CompletionContext);
+
   // const [selectedItem, setSelectedItem] = useState(null);
 
   const handleClick = (data) => {
     // Set the view to the clicked data
-    setView(data);
-    // Set the selected item to the clicked data
-    // setSelectedItem(data.id);
+    // setProgress({id:data.id,progress:data.progress})
+    setView({id:data.id,type:data.type,source:data.source,progress:data.progress});
+
   };
+
+  
+
+  useEffect(()=>{
+    console.log(JSON.stringify(completion))
+  },[completion])
+
+
 
   return (
     <Card className="h-full w-[450px] m-1 dark:bg-[#53555f]   bg-gray-200">
@@ -95,8 +112,11 @@ const ResourceBlock = (props) => {
           {props.resources.map((data, index) => {
             const classes = "p-4 border-b border-blue-gray-50 ";
             // Apply conditional styling to highlight the selected item
-            const rowClasses = `   hover:bg-blue-gray-100 hover:dark:bg-[#36373d]  hover:dark:text-green-200 dark:text-gray-100 rounded-lg ${view?.id === data.id ? 'dark:bg-[#45a049] bg-green-200' : ''}`;
-
+            const rowClasses = `   hover:bg-blue-gray-100 hover:dark:bg-[#36373d]  hover:dark:text-green-200 dark:text-gray-100 rounded-lg ${
+              view?.id === data.id ? "dark:bg-[#45a049] bg-green-200" : ""
+            }`;
+           
+            
             return (
               <tr
                 key={index}
@@ -122,7 +142,7 @@ const ResourceBlock = (props) => {
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <CompletionMarker progress={data.progress} type={data.type} />
+                  <CompletionMarker progress={data.id===completion?.topicId?completion.progress :data.progress} type={data.type} renderId={data.id} viewId={view?.id}/>
                 </td>
               </tr>
             );
@@ -133,76 +153,57 @@ const ResourceBlock = (props) => {
   );
 };
 
+const CompletionMarker = ({ progress, type,renderId,viewId }) => {
 
-const  PlayOnceGif = ({ src, alt }) => {
-  const [playOnce, setPlayOnce] = useState(true);
+  
+  // const [indvidualProgress,setIndividualProgress] = useState(progress)
 
-  useEffect(() => {
-    // After the component mounts, wait for the duration of the GIF
-    const gifDuration = 2000; // Adjust this value according to your GIF's duration
-    const timeout = setTimeout(() => {
-      // After the duration, set playOnce to false to stop the GIF from playing
-      setPlayOnce(false);
-    }, gifDuration);
-
-    // Clean up the timeout when the component unmounts
-    return () => clearTimeout(timeout);
-  }, []); // Run this effect only once after the component mounts
-
-  return (
-    <img
-      src={playOnce ? src : ''}
-      alt={alt}
-    />
-  );
-}
+  // const {progress,setProgress} = useContext(CompletionContext);
+  // if(renderId==viewId){
+  //   setProgress({id:viewId,progress:100})
+  //   //TODO-send axios request updating progress
+  // }
+ 
 
 
+  
 
-
-const CompletionMarker = ({ progress, type }) => {
   return (
     <div>
-      {
-        type != "youtubeVideo"
-          ?
-          progress<95 ? <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
-          <path fill="#c8e6c9" d="M44,24c0,11-9,20-20,20S4,35,4,24S13,4,24,4S44,13,44,24z"></path>
-          </svg> : 
-        <PlayOnceGif src="../../../public/icons8-tick.gif" alt="done"/>
-          : 
-          <AnimatedProgressProvider
-            valueStart={0}
-            valueEnd={progress}
-            duration={0.9}
-            easingFunction={easeQuadInOut}
-            repeat
-          >
-            {value => {
-              const roundedValue = Math.round(value);
-              return (
-                <div className="w-7 h-7">
-                  <CircularProgressbar
-                    value={progress}
+      {type != "youtubeVideo" ? (
+        progress<95 ? (
+          <RiCheckboxBlankCircleFill size="34" className="text-gray-500/25" />
+        ) : (
+          <RiCheckboxCircleFill size="34" className="text-green-200" />
+        )
+      ) : progress<95 ? (
+        <AnimatedProgressProvider
+          valueStart={0}
+          valueEnd={progress}
+          duration={0.9}
+          easingFunction={easeQuadInOut}
+          repeat
+        >
+          {(value) => {
+            const roundedValue = Math.round(value);
+            return (
+              <div className="w-7 h-7">
+                <CircularProgressbar
+                  value={progress}
 
                   /* This is important to include, because if you're fully managing the
             animation yourself, you'll want to disable the CSS animation. */
-
-                  />
-                </div>
-
-              );
-            }}
-          </AnimatedProgressProvider>
-      }
+                />
+              </div>
+            );
+          }}
+        </AnimatedProgressProvider>
+      ) :
+      (<RiCheckboxCircleFill size="34" className="text-green-200" />)
+    }
     </div>
-
-
-
-
-
-  )
-}
+  );
+};
 
 const ChannelBlock = (props) => (
   <div className="channel-block ">

@@ -55,4 +55,3 @@ export async function deleteBatch(batchId) {
   }
 }
 
-

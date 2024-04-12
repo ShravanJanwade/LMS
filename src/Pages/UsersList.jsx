@@ -12,7 +12,7 @@ import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 import { fetchEmployees, sendSelectedUsers } from "../Services/allEmployee.js";
-
+import {modalAddTrainees} from "../Data/ModalData.jsx" 
 const UsersList = () => {
   const table = {
     height: "490px",
@@ -118,6 +118,7 @@ const UsersList = () => {
               handleOpen={handleOpen}
               open={open}
               handleClose={handleClose}
+              data={modalAddTrainees}
             />
             <Button
               className="flex items-center gap-3"
@@ -131,6 +132,7 @@ const UsersList = () => {
               handleOpen={handleOpenExcel}
               open={openExcel}
               handleClose={handleExcelClose}
+              data={modalAddTrainees}
             />
           </div>
         </div>

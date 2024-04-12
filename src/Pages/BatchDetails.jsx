@@ -23,6 +23,7 @@ import {
 // import { useBatch } from "../Context/BatchContext";
 import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
+import {modalDeleteBatch,modalDeleteTrainee} from "../Data/ModalData.jsx";
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
   const [rows, setRows] = useState(trainees);
@@ -161,7 +162,7 @@ const BatchDetails = () => {
               {batchDetails ? (
                 <>
                   <Typography
-                    variant="h4"
+                    variant="h5"
                     color="blue-gray"
                     className="mb-5 flex"
                   >
@@ -179,6 +180,7 @@ const BatchDetails = () => {
                         open={deleteOpen}
                         handleOpen={deleteBatchhandler}
                         handleClose={handleDeleteClose}
+                        data={modalDeleteBatch}
                       />
                     </div>
                   </Typography>
@@ -276,6 +278,7 @@ const BatchDetails = () => {
                 open={open}
                 handleOpen={deleteHandler}
                 handleClose={handleClose}
+                data={modalDeleteTrainee}
               />
             </div>
           </CardHeader>

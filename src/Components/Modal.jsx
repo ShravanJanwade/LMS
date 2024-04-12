@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
 
-const Modal = ({ handleOpen, open ,handleClose}) => {
+const Modal = ({ handleOpen, open ,handleClose,data}) => {
   return (
     <>
       <Dialog
@@ -18,12 +18,9 @@ const Modal = ({ handleOpen, open ,handleClose}) => {
           unmount: { scale: 0.9, y: -100 },
         }}
       >
-        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <DialogHeader>{data.title}</DialogHeader>
         <DialogBody>
-          The key to more success is to have a lot of pillows. Put it this way,
-          it took me twenty five years to get these plants, twenty five years of
-          blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-          getting started. I&apos;m up to something. Fan luv.
+          {data.message}
         </DialogBody>
         <DialogFooter>
           <Button
@@ -34,8 +31,8 @@ const Modal = ({ handleOpen, open ,handleClose}) => {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
-            <span>Confirm</span>
+          <Button variant="gradient" color={`${data.delete==true?"red":"green"}`} onClick={handleOpen}>
+            <span>{data.actionText}</span>
           </Button>
         </DialogFooter>
       </Dialog>
@@ -46,6 +43,8 @@ Modal.propTypes = {
   handleOpen: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  data: PropTypes.object.isRequired,
+
 };
 
 export default Modal;

@@ -4,40 +4,41 @@ import BatchDetailsTable from "../Components/BatchDetailsTable";
 import { useState, useEffect } from "react";
 import { fetchBatchData } from "../Services/BatchData";
 import { fetchProgressData } from "../Services/ProgressData";
+
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
   const [status, setStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [progressData, setProgressData] = useState([]);
   const [change, setChange] = useState(false);
+  const [batchData, setBatchData] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
+
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
+
   const statusHandler = (value) => {
     setStatus(value);
   };
+
   const searchHandler = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
-  const [batchData, setBatchData] = useState([]);
 
-  // Function to fetch batch data when the component mounts
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchBatchData();
-      const progress = await fetchProgressData();
-      setProgressData(progress);
-      setBatchData(data);
+      if (!dataFetched) { // Check if data has already been fetched
+        const batch = await fetchBatchData();
+        const progress = await fetchProgressData();
+        setBatchData(batch);
+        setProgressData(progress);
+        setDataFetched(true); // Mark data as fetched
+      }
     }
     fetchData();
-  }, [batchData]);
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchProgressData();
-      setProgressData(data);
-    }
-    fetchData();
-  }, [progressData]);
+  }, [dataFetched]); // Trigger the effect only when dataFetched changes
+
   const changeCardLayout = () => {
     setChange((prev) => !prev);
   };
@@ -70,4 +71,5 @@ const ViewBatches = () => {
     </div>
   );
 };
+
 export default ViewBatches;

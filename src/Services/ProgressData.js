@@ -1,6 +1,6 @@
 export async function fetchProgressData() {
   try {
-    const response = await fetch(`http://localhost:1111/progress/batchwise`);
+    const response = await fetch(`http://172.18.4.233:1111/progress/batchwise`);
     if (!response.ok) {
       // throw new Error("Failed to fetch progress");
       return [];
@@ -16,7 +16,7 @@ export async function fetchProgressData() {
 export async function fetchBatchProgress(batchId) {
   try {
     const response = await fetch(
-      `http://localhost:1111/progress/batch/${batchId}`
+      `http://172.18.4.233:1111/progress/batch/${batchId}`
     );
     if (!response.ok) {
       // throw new Error("Failed to fetch progress");

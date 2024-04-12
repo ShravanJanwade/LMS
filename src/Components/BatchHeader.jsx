@@ -25,7 +25,7 @@ const TABS = [
     value: "Active",
   },
   {
-    label: "UnActive",
+    label: "In-Active",
     value: "Non-Active",
   },
 ];

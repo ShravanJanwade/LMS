@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { viewerContext } from "./viewerContext";
 import {
   Card,
@@ -7,10 +7,16 @@ import {
   CardFooter,
   Typography,
   Button,
+  IconButton,
+  Tooltip,
 } from "@material-tailwind/react";
+import { SiMicrosoftsharepoint } from "react-icons/si";
 
 import CustomYouTubePlayer from "./CustomYoutubePlayer";
 import { CompletionContext } from "./CompletionContext";
+import { RiFilePdf2Fill, RiFilePpt2Fill, RiFileWord2Fill, RiLinkM, RiVideoFill, RiYoutubeFill } from "react-icons/ri";
+import { GiQuillInk } from "react-icons/gi";
+import { ImNewTab } from "react-icons/im";
 interface Props {
   // Define props interface here
 }
@@ -24,14 +30,14 @@ const ResourceRenderer: React.FC<Props> = (
   let view = contextValue?.view;
   let setView = contextValue?.setView;
   const { completion, setCompletion } = useContext(CompletionContext);
-
+  // console.log(JSON.stringify(view))
   const handleClick = () => {
     setCompletion({ topicId: view.id, progress: 100 })
   }
   return (
     <div>
       {view?.type === "external" ? (
-        <ExternalTab />
+        <ExternalTab source={view.source} handleClick={handleClick} name={view.name} />
       )
         :
         view?.type === "ppt" ? (
@@ -39,9 +45,9 @@ const ResourceRenderer: React.FC<Props> = (
         ) : view?.type === "docx" ? (
           <DocxRenderer source={view.source} handleClick={handleClick} />
         ) : view?.type === "pdf" ? (
-          <PdfRenderer />
-        ) : view?.type === "sharePointVideo" ? (
-          <SharePointVideoRenderer source={view.source} />
+          <PdfRenderer source={view.source} handleClick={handleClick} progress={view.progress} />
+        ) : view?.type === "video" ? (
+          <VideoRenderer source={view.source} />
         ) : view?.type === "youtubeVideo" ? (
           <CustomYoutubeRenderer source={view.source} />
         ) : (
@@ -53,9 +59,51 @@ const ResourceRenderer: React.FC<Props> = (
   );
 };
 
+const IconCycle: React.FC<{ size: string }> = ({ size }) => {
+  const icons = [<RiFilePpt2Fill size={size} className="animate-ping" />, <RiFilePdf2Fill size={size} className="animate-ping" />, <RiFileWord2Fill size={size} className="animate-ping" />
+    , <RiLinkM size={size} className="animate-ping" />, <RiYoutubeFill size={size} className="animate-ping" />, <RiVideoFill size={size} className="animate-ping" />];
+  const [currentIconIndex, setCurrentIconIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [icons.length]);
+
+  return <div >{icons[currentIconIndex]}</div>;
+};
+
+
 const Welcome: React.FC<{}> = () => {
   return (
-    <h1>Wwelcome to LMS</h1>
+    <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh]  w-[935px] ">
+      <CardHeader shadow={false} floated={false} className="min-h-[500px] flex justify-center items-center mx-5 bg-gray-200 dark:bg-[#666666]">
+        <IconCycle size="300" />
+      </CardHeader>
+      <CardBody className="animate-pulse">
+
+        <Typography
+          as="div"
+          variant="h1"
+          className="mb-2 h-2 w-full flex justify-center"
+
+        >
+          THIS - Learning Management System
+        </Typography>
+
+      </CardBody>
+      <CardFooter className="pt-12 flex justify-end animate-pulse">
+        <Button
+          disabled
+          tabIndex={-1}
+          className="h-8 w-20 bg-gray-300 shadow-none  hover:shadow-none"
+        >
+          &nbsp;
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -80,8 +128,23 @@ const CustomYoutubeRenderer: React.FC<{ source: string }> = ({ source }) => {
     </Card>
   );
 };
-const ExternalTab = () => {
-  return <div>external player</div>;
+const ExternalTab: React.FC<{ source: string, handleClick: () => void, name: string }> = ({ source, handleClick, name }) => {
+  // console.log(renderToString())
+  console.log(name)
+  return (
+    <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
+      <CardHeader shadow={false} floated={false} className="bg-gray-200 dark:bg-[#666666] flex justify-center items-center w-[906px] h-[742px]">
+        <a href={source} target="_blank" className="w-[906px] h-[742px] flex justify-center flex-col items-center  ">
+          <SiMicrosoftsharepoint size={200} className="mb-10" />
+          <Typography variant="h3" className="text-gray-500 ">Click to safely open "{name}" in a new tab</Typography>
+        </a>
+      </CardHeader>
+      <CardBody className="flex justify-end">
+        <Button onClick={handleClick} className="dark:text-gray-700 dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
+      </CardBody>
+      <CardFooter className="pt-0"></CardFooter>
+    </Card>
+  )
 };
 const convertToEmbedLink = (fileLink: string): string => {
   // Extract the user-specific part of the SharePoint link
@@ -116,17 +179,12 @@ const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
       height="581px"
     // frameborder="0"
     >
-     <p>view outside</p>
+      <p>view outside</p>
     </iframe>
   );
 };
 
 const PptRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
-
-
-
-
-
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
       <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
@@ -144,7 +202,9 @@ const PptRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ so
       <CardBody>
         <Button onClick={handleClick} >Mark as Complete</Button>
       </CardBody>
-      <CardFooter className="pt-0"></CardFooter>
+      <CardFooter className="pt-0">
+
+      </CardFooter>
     </Card>
   );
 };
@@ -152,38 +212,33 @@ const PptRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ so
 const DocxRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
   console.log("docx link", source)
   return (
-    <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
+    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
+      <CardHeader
+        shadow={false}
+        floated={false}
+        className=" mx-5 bg-gray-200 dark:bg-[#666666] h-[600px]"
+      >
         <div>
           <object
             data={source}
-            type="application/docx"
-            width="906"
-            height="742 "
+            type="application/doc"
+            width="919"
+            height="550 "
           >
             <iframe
               src={source}
-              width="906px"
-              height="581px"
-              frameborder="0"
+              width="919"
+              height="525"
             >
-              This is an embedded{" "}
-              <a target="_blank" href="https://office.com">
-                Microsoft Office
-              </a>{" "}
-              document, powered by{" "}
-              <a target="_blank" href="https://office.com/webapps">
-                Office
-              </a>
-              .
+              <p>This browser does not support PDF!</p>
             </iframe>
           </object>
         </div>
       </CardHeader>
       <CardBody>
-        <Button onClick={handleClick}>Mark as Complete</Button>
+        <input></input>
       </CardBody>
-      <CardFooter className="pt-0 mb-10">
+      <CardFooter className="pt-0 ">
         <Button
           ripple={false}
           fullWidth={true}
@@ -195,7 +250,7 @@ const DocxRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ s
     </Card>
   );
 };
-const SharePointVideoRenderer: React.FC<{ source: string }> = ({ source }) => {
+const VideoRenderer: React.FC<{ source: string }> = ({ source }) => {
   return (<div>
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
       <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 bg-gray-200 dark:bg-[#666666]">
@@ -226,23 +281,23 @@ const SharePointVideoRenderer: React.FC<{ source: string }> = ({ source }) => {
     </Card>
   </div>);
 };
-const PdfRenderer = () => {
+const PdfRenderer: React.FC<{ source: string, handleClick: () => void, progress: number }> = ({ source, handleClick, progress }) => {
   return (
-    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
+    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] max-w-[1000px] overflow-auto">
       <CardHeader
         shadow={false}
         floated={false}
-        className=" mx-5 bg-gray-200 dark:bg-[#666666]"
+        className=" mx-5 bg-gray-200 dark:bg-[#666666] "
       >
         <div>
           <object
-            data="https://thbsbatch-2.s3.eu-west-2.amazonaws.com/Process%20Training%20_%20ISMS%20training%20_%20Assessment%201%202%201.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240412T060744Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAWL5R3DYERMJHB2G3%2F20240412%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Signature=8f07a9312bfeae546b0e48a3de0ea7284710df1bf8b469116b75d00a15ce345a"
+            data={source}
             type="application/pdf"
             width="919"
             height="742 "
           >
             <iframe
-              src="https://pdfjs-express.s3-us-west-2.amazonaws.com/docs/choosing-a-pdf-viewer.pdf"
+              src={source}
               width="919"
               height="742"
             >
@@ -251,17 +306,27 @@ const PdfRenderer = () => {
           </object>
         </div>
       </CardHeader>
-      <CardBody>
-        <input></input>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
       </CardBody>
       <CardFooter className="pt-0 ">
-        <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-        >
-          Notes
-        </Button>
+
       </CardFooter>
     </Card>
   );

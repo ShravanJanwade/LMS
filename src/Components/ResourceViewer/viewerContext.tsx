@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 type View = {
   id: number ,
-  type: "ppt" | "pdf" | "youtubeVideo" | "sharePointVideo" | "docx" | "external" | undefined,
+  type: "ppt" | "pdf" | "youtubeVideo" | "video" | "docx" | "external" | undefined,
   name: string,
   source: string,
   progress: number

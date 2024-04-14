@@ -2,7 +2,7 @@
 // http://172.18.4.233:1111/progress/{userID}/course/{courseID} -->
 export const Courses = [
   {
-    courseId: "1",
+    courseId: 1,
     courseName: "Java",
     description: "Java is an Object Oriented Programming Language",
     startDate: "25-05-2024",
@@ -57,7 +57,7 @@ export const Courses = [
     ],
   },
   {
-    courseId: "2",
+    courseId: 2,
     courseName: "Linux",
     description: "Linux Operating System Fundamentals",
     startDate: "15-05-2024",
@@ -117,7 +117,7 @@ export const Courses = [
     ],
   },
   {
-    courseId: "3",
+    courseId: 3,
     courseName: "Azure",
     description: "Microsoft Azure Cloud Computing Platform",
     startDate: "10-06-2024",
@@ -177,7 +177,7 @@ export const Courses = [
     ],
   },
   {
-    courseId: "4",
+    courseId: 4,
     courseName: "Jenkins",
     description: "Jenkins Automation Server Fundamentals",
     startDate: "01-07-2024",
@@ -237,7 +237,7 @@ export const Courses = [
     ],
   },
   {
-    courseId: "5",
+    courseId: 5,
     courseName: "Kubernetes",
     description: "Kubernetes Container Orchestration Platform",
     startDate: "05-08-2024",
@@ -297,7 +297,7 @@ export const Courses = [
     ],
   },
   {
-    courseId: "6",
+    courseId: 5,
     courseName: "Docker",
     description: "Docker Containerization Platform",
     startDate: "01-10-2024",
@@ -359,7 +359,7 @@ export const Courses = [
   // Add more courses similarly
 ];
 
-export const topics = [
+export const resources = [
   {
     id: 1,
     type: "pdf",
@@ -386,20 +386,20 @@ export const topics = [
     type: "youtubeVideo",
     source: "https://www.youtube.com/watch?v=C7OQHIpDlvA",
     name: "youtube Test Link",
-    progress: 0,
+    progress: 70,
   },
   {
     id: 5,
-    type: "sharePointVideo",
+    type: "video",
     source: "https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create",
-    name: "sharepoint stream Test Link",
+    name: "Video",
     progress: 100,
   },
   {
     id: 6,
     type: "external",
-    source: "www.google.com",
-    name: "unknown type test",
+    source: "https://www.google.com",
+    name: "unknowntype test",
     progress: 50,
   }
 

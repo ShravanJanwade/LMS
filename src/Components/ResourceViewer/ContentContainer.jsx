@@ -1,7 +1,7 @@
 import TopNavigation from "./TopNavigation";
 import { BsPlusCircleFill } from "react-icons/bs";
 // import { useState } from 'react';
-import { topics } from "../../Data/Courses";
+import { resources } from "../../Data/Courses";
 import ResourceRenderer from "./ResourceRenderer";
 import { viewerContext } from "./viewerContext";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ const ContentContainer = () => {
       <TopNavigation />
       <div className="flex flex-col justify-center items-center">
         <div className=" min-h-screen ">
-          <ResourceRenderer topics={topics} reqResource={1} />
+          <ResourceRenderer resources={resources} reqResource={1} />
         </div>
       </div>
     </div>

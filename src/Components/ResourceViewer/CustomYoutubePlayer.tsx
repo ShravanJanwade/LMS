@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 
 
-import YouTube from "react-youtube";
+import YouTube  from "react-youtube";
+// import { Options } from 'youtube-player/dist/types';
 import {
   Button,
   Dialog,
@@ -30,6 +31,7 @@ import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import { viewerContext } from "./viewerContext";
 import { CompletionContext } from "./CompletionContext";
+
 
 interface YouTubePlayerProps {
   vidId: string;
@@ -103,21 +105,24 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
       enablejsapi: 1,
       rel: 0, // Don't show related videos
     },
-  };
+  } 
 
 
 
-  useEffect(()=>{
-    setCompletion({ topicId: view.id, progress: completionProgress })
+  useEffect(() => {
+    const progressValue = completed ? 100 : completionProgress;
+
+    // Set the completion progress in the context
+    setCompletion({ topicId: view.id, progress: progressValue });
 
     //TODO send axios completion progess to backed
-  },[completionProgress])
+  }, [completionProgress])
 
 
   useEffect(() => {
     if (completionProgress < progress) {
       setCompletionProgress(progress);
-     
+
 
     }
   }, [progress]);
@@ -132,22 +137,15 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
         ? setIsPlaying(true)
         : setIsPlaying(false);
       // console.log(isPlaying);
-
-
-
-
     }
 
     if (duration > 0) {
       const percentage = (currentTime / duration) * 100;
       // console.log(isPlaying)
-
       setProgress(percentage);
     }
     if (progress > 90) {
       setCompleted(true);
-
-
       setForwardSeekState(true);
       //TODO send axios request saying video completed
     }
@@ -177,7 +175,7 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     if (view.progress && !completed) {
       playerRef.current.seekTo(view?.progress * duration / 100)
       setForwardQuota(999)
-    }else{
+    } else {
       // playerRef.current.seekTo( duration -6 )
     }
     // setCurrentTime((view?.progress*duration)/100)
@@ -262,9 +260,6 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
 
           {!completed && (
             <div className="relative">
-
-
-
               <Progress
 
                 value={completionProgress}
@@ -272,7 +267,6 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
                 className="bg-[#eeeeee]"
                 color="blue-gray"
               />
-
               <Progress
                 value={progress}
                 color="blue"
@@ -385,10 +379,4 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     </>
   );
 };
-
-
-
-
-
-
 export default CustomYouTubePlayer;

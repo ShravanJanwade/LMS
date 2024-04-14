@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
-import { Courses, topics } from "../../Data/Courses";
+import { Courses, resources } from "../../Data/Courses";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { easeQuadInOut } from "d3-ease";
 import {
@@ -28,13 +28,13 @@ import { render } from "react-dom";
 const questions = ["jit-compilation", "purge-files", "dark-mode"];
 const random = ["variants", "plugins"];
 
-const TopicList = ({ courseId }) => {
+const TopicList = ({ courseId,docked }) => {
   const course = Courses.find((course) => course.courseId === courseId);
   console.log(JSON.stringify(course));
   const [darkTheme, setDarkTheme] = useDarkMode();
 
   return (
-    <div className="channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[800px] ">
+    <div className={`channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[${docked? 0:800}px]`}>
       {/* enter course Name here */}
       <ChannelBlock CourseName={course.courseName} />
       <div className="channel-container ">
@@ -43,7 +43,7 @@ const TopicList = ({ courseId }) => {
             <Dropdown
               key={index}
               header={topic.topicName}
-              selections={topics}
+              selections={resources}
             />
           ))}
         </Card>
@@ -92,7 +92,7 @@ const ResourceBlock = (props) => {
   const handleClick = (data) => {
     // Set the view to the clicked data
     // setProgress({id:data.id,progress:data.progress})
-    setView({id:data.id,type:data.type,source:data.source,progress:data.progress});
+    setView({id:data.id,name:data.name,type:data.type,source:data.source,progress:data.progress});
 
   };
 
@@ -176,13 +176,13 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
         ) : (
           <RiCheckboxCircleFill size="34" className="text-green-500 dark:text-green-200" />
         )
-      ) : progress<95 ? (
+      ) : progress<90 ? (
         <AnimatedProgressProvider
           valueStart={0}
           valueEnd={progress}
           duration={0.9}
           easingFunction={easeQuadInOut}
-          repeat
+          
         >
           {(value) => {
             const roundedValue = Math.round(value);
@@ -190,6 +190,7 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
               <div className="w-7 h-7">
                 <CircularProgressbar
                   value={progress}
+                  className="ml-[0.15rem]"
 
                   /* This is important to include, because if you're fully managing the
             animation yourself, you'll want to disable the CSS animation. */

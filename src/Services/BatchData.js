@@ -1,63 +1,79 @@
-export const TABLE_HEAD = [
-  "EmployeeId",
-  "Name",
-  "Designation",
-  "Business Unit",
-  "",
-];
+// export const batchData = [
+//     {
+//       id: 1,
+//       name: "Batch 100",
+//       description:
+//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+//       online: true,
+//       date: "23/04/18",
+//     },
+//     {
+//       id: 2,
+//       name: "Batch 101",
+//       description:
+//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+//       online: false,
+//       date: "23/05/19",
+//     },
+//     {
+//       id: 3,
+//       name: "Batch 102",
+//       description:
+//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+//       online: false,
+//       date: "19/09/17",
+//     },
+//     {
+//       id: 4,
+//       name: "Batch 103",
+//       description:
+//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+//       online: true,
+//       date: "24/12/08",
+//     },
+//     {
+//       id: 5,
+//       name: "Batch 104",
+//       description:
+//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
+//       online: false,
+//       date: "04/10/21",
+//     },
+//   ];
 
-export const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    employeeId: 1001,
-    buisnessUnit: "TELCO",
-    checked: false,
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    employeeId: 1002,
-    checked: false,
+// Define an asynchronous function to fetch batch data
+// Import any necessary libraries if needed
 
-    buisnessUnit: "NBU-CDEC",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    employeeId: 1003,
-    checked: false,
+// Function to fetch batch data from the endpoint
+export async function fetchBatchData() {
+  try {
+    // Fetch data from the endpoint
+    const response = await fetch("http://localhost:1212/batches");
 
-    buisnessUnit: "NBU-CDEC",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    employeeId: 1004,
-    checked: false,
+    // Check if the response is successful
+    if (!response.ok) {
+      throw new Error("Failed to fetch batch data");
+    }
 
-    buisnessUnit: "NBU-CDEC",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
-    employeeId: 1005,
-    checked: false,
-    buisnessUnit: "NBU-CDEC",
-  },
-];
+    // Parse the JSON data
+    const data = await response.json();
+
+    // Get today's date
+    const today = new Date();
+
+    // Iterate over each batch object and update the online property
+    const updatedData = data.map((batch) => {
+      const startDate = new Date(batch.startDate);
+      const endDate = new Date(batch.endDate);
+      const online = startDate <= today && today <= endDate;
+      return { ...batch, online };
+    });
+
+    // Return the updated data
+    return updatedData;
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching batch data:", error);
+    return [];
+  }
+}

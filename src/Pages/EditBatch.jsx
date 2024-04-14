@@ -1,26 +1,51 @@
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
+import { useNavigate } from "react-router-dom";
 
-function CreateBatch() {
+function EditBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
-  const navigate = useNavigate(); // Initialize useHistory hook
+
+  const id = sessionStorage.getItem("id");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    calculateDuration();
-  }, [startDate, endDate]);
+    const fetchBatchDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:1212/batches/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch batch details");
+        }
+        const data = await response.json();
+        setBatchName(data.batchName);
+        setBatchDescription(data.batchDescription);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        setBatchSize(data.batchSize);
+        calculateDuration(data.startDate, data.endDate);
+      } catch (error) {
+        console.error("Error fetching batch details:", error);
+      }
+    };
 
-  const calculateDuration = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    fetchBatchDetails();
+  }, [id]);
 
-    if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
-      const diffInTime = end.getTime() - start.getTime();
+  const calculateDuration = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    if (
+      startDate &&
+      endDate &&
+      !isNaN(startDate.getTime()) &&
+      !isNaN(endDate.getTime())
+    ) {
+      const diffInTime = endDate.getTime() - startDate.getTime();
       let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
 
       if (diffInDays < 1) {
@@ -36,27 +61,21 @@ function CreateBatch() {
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
     setStartDate(newStartDate);
-
-    // Set minimum selectable date for end date input
-    document.getElementById("endDate").setAttribute("min", newStartDate);
-
-    // If end date is before new start date, reset end date
-    if (new Date(endDate) < new Date(newStartDate)) {
-      setEndDate("");
-    }
+    calculateDuration(newStartDate, endDate);
   };
 
   const handleEndDateChange = (e) => {
     const newEndDate = e.target.value;
     setEndDate(newEndDate);
+    calculateDuration(startDate, newEndDate);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:1212/batches", {
-        method: "POST",
+      const response = await fetch(`http://localhost:1212/batches/${id}/edit`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -70,26 +89,23 @@ function CreateBatch() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create batch");
+        throw new Error("Failed to update batch");
       }
 
-      // Optionally, you can redirect to another page after successful creation
-      // history.push('/some-other-page');
-      navigate("/lms/batches"); // Update the redirection link
-      console.log("Batch created successfully");
+      navigate("/lms/batches/batchDetails");
+      console.log("Batch updated successfully");
     } catch (error) {
-      console.error("Error creating batch:", error);
+      console.error("Error updating batch:", error);
     }
   };
 
-  // Get today's date in the format YYYY-MM-DD
   const today = new Date().toISOString().split("T")[0];
 
   return (
     <div className="flex justify-center items-center h-full mt-10">
       <Card className="w-full max-w-lg p-8">
         <Typography variant="h4" color="blue-gray" className="mb-6">
-          Batch Creation
+          Edit Batch
         </Typography>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col">
@@ -121,7 +137,7 @@ function CreateBatch() {
               placeholder="Start Date"
               value={startDate}
               onChange={handleStartDateChange}
-              min={today} // Set minimum selectable date to today's date
+              min={today}
             />
           </div>
           <div className="flex flex-col">
@@ -133,7 +149,7 @@ function CreateBatch() {
               placeholder="End Date"
               value={endDate}
               onChange={handleEndDateChange}
-              min={startDate} // Set minimum selectable date as the start date
+              min={startDate}
             />
           </div>
           <div className="flex flex-col">
@@ -150,7 +166,7 @@ function CreateBatch() {
             Duration: {duration}
           </Typography>
           <Button type="submit" size="lg">
-            Create Batch
+            Update Batch
           </Button>
         </form>
       </Card>
@@ -158,4 +174,4 @@ function CreateBatch() {
   );
 }
 
-export default CreateBatch;
+export default EditBatch;

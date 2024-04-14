@@ -1,5 +1,6 @@
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -9,83 +10,250 @@ import {
   Button,
 } from "@material-tailwind/react";
 import ProgressBar from "../Components/ProgressBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "../Components/SearchBar";
 import EmployeeTable from "../Components/EmployeeTable";
-import { TABLE_HEAD, TABLE_ROWS } from "../Services/BatchData.js";
+import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import Modal from "../Components/Modal";
+import {
+  fetchBatchDetails,
+  deleteTraineesFromBatch,
+  deleteBatch,
+} from "../Services/BatchDetailsData.js";
+// import { useBatch } from "../Context/BatchContext";
+import { fetchTrainees } from "../Services/BatchEmployee.js";
+import { fetchBatchProgress } from "../Services/ProgressData.js";
+import {modalDeleteBatch,modalDeleteTrainee} from "../Data/ModalData.jsx";
 const BatchDetails = () => {
-  const [rows, setRows] = useState(TABLE_ROWS);
+  const [trainees, setTrainees] = useState([]);
+  const [rows, setRows] = useState(trainees);
+  const [selectedRows, setSelectedRows] = useState({});
+  const [fetch, setFetch] = useState(false);
+  const [clearSearch, setClearSearch] = useState(false);
+  // const { id } = useBatch();
+  const id = sessionStorage.getItem("id");
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const deleteHandler = () => {
-    setOpen((prev) => !prev);
+  const [batchDetails, setBatchDetails] = useState(null);
+  const [progressData, setProgressData] = useState([]);
+  const navigate = useNavigate();
+  const handleCheckboxChange = (employeeId) => {
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      [employeeId]: !prevSelectedRows[employeeId],
+    }));
   };
+  const deleteHandler = () => {
+    if (open) {
+      // setFetch((prev) => !prev);
+      deleteHandlerEmployees();
+      // setFetch((prev) => !prev);
+      setClearSearch(true);
+      setTimeout(() => {
+        setFetch((prev) => !prev);
+      }, 1000);
+    }
+    setOpen((prev) => !prev);
+    // ReloadAfterDelay();
+  };
+
   const deleteBatchhandler = () => {
+    if (deleteOpen) {
+      deleteBatchFromList();
+      navigate("/lms/batches");
+    }
     setDeleteOpen((prevs) => !prevs);
   };
+  const handleClose = () => {
+    setOpen((prev) => !prev);
+  };
+  const handleDeleteClose = () => {
+    setDeleteOpen((prev) => !prev);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const batchData = await fetchBatchDetails(id);
+        if (batchData) {
+          setBatchDetails(batchData);
+        } else {
+          throw new Error("Failed to fetch batch details");
+        }
+      } catch (error) {
+        console.error("Error fetching batch details:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [id, fetch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchTrainees(id);
+        if (data) {
+          setTrainees(data);
+        } else {
+          throw new Error("Failed to fetch trainees");
+        }
+      } catch (error) {
+        console.error("Error fetching trainees:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [id, fetch]);
+
+  // Update rows state when trainees change
+  useEffect(() => {
+    setRows(trainees); // Make sure trainees are correctly set to rows state
+  }, [trainees, fetch]);
+
+  const deleteHandlerEmployees = async () => {
+    try {
+      setFetch((prev) => !prev); // Trigger re-fetch of trainees list
+      const selectedUserIds = Object.keys(selectedRows).filter(
+        (userId) => selectedRows[userId]
+      );
+      await deleteTraineesFromBatch(id, selectedUserIds);
+      // After successful deletion, update the UI
+      const updatedTrainees = trainees.filter(
+        (trainee) => !selectedUserIds.includes(trainee.id)
+      );
+      setTrainees(updatedTrainees);
+      setRows(updatedTrainees);
+      setSelectedRows({});
+      setClearSearch(true); // Set clearSearch flag to true to clear search bar
+    } catch (error) {
+      console.error("Error deleting trainees:", error);
+    }
+  };
+
+  const deleteBatchFromList = async () => {
+    try {
+      await deleteBatch(id);
+    } catch (error) {
+      console.error("Error deleting trainees:", error);
+    }
+  };
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchBatchProgress(id);
+      setProgressData(data);
+    }
+    fetchData();
+  }, [progressData]);
+
+  const height = rows.length < 11 ? "h-42" : "h-48";
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
         <div className="flex flex-col w-full m-5">
           <Card className="mt-0 mb-6 w-full m-1 h-1/2">
             <CardBody>
-              <Typography variant="h4" color="blue-gray" className="mb-5 flex">
-                Batch Name: Batch 103
-                <div className="flex justify-end  ml-12 w-80">
-                  <Button onClick={deleteBatchhandler}>Delete Batch</Button>
-                  <Modal open={deleteOpen} handleOpen={deleteBatchhandler} />
-                </div>
-              </Typography>
-              <Typography className="mb-5" variant="h6" color="gray">
-                Batch Description: The place is close to Barceloneta Beach and
-                bus stop just 2 min by walk and near to &quot;Naviglio&quot;
-                where you can enjoy the main night life in Barcelona.
-              </Typography>
-              <Typography className="mb-5">StartDate: 12/04/2024</Typography>
-              <Typography className="mb-5">EndDate: 19/04/2024</Typography>
-              <Typography>Batch Size:50</Typography>
+              {batchDetails ? (
+                <>
+                  <Typography
+                    variant="h5"
+                    color="blue-gray"
+                    className="mb-5 flex"
+                  >
+                    Batch Name: {batchDetails.batchName}
+                    <div className="flex justify-end w-80">
+                      <Link to="/lms/batches/editBatch">
+                        <Button className="mr-2" onClick={deleteBatchhandler}>
+                          Edit Batch
+                        </Button>
+                      </Link>
+                      <Button className="h-10" onClick={deleteBatchhandler}>
+                        Delete Batch
+                      </Button>
+                      <Modal
+                        open={deleteOpen}
+                        handleOpen={deleteBatchhandler}
+                        handleClose={handleDeleteClose}
+                        data={modalDeleteBatch}
+                      />
+                    </div>
+                  </Typography>
+                  <Typography className="mb-5" variant="h6" color="gray">
+                    Batch Description: {batchDetails.batchDescription}
+                  </Typography>
+                  <Typography className="mb-5">
+                    StartDate: {batchDetails.startDate}
+                  </Typography>
+                  <Typography className="mb-5">
+                    EndDate: {batchDetails.endDate}
+                  </Typography>
+                  <Typography>Batch Size:{batchDetails.batchSize}</Typography>
+                </>
+              ) : (
+                <Typography>Loading...</Typography>
+              )}
             </CardBody>
             <CardFooter className="pt-0">
-              <ProgressBar progressValue={62} />
+              <ProgressBar
+                progressValue={
+                  progressData == null || undefined
+                    ? 0
+                    : progressData.batchProgress
+                }
+              />
             </CardFooter>
           </Card>
-          <Card className="mt-6 w-full h-1/3">
-            <CardBody>
-              <Typography variant="h3" color="blue-gray" className="mb-2">
-                Learning Plan for Batch
-              </Typography>
-              <Typography>Type of Plan: Bootcamp</Typography>
-            </CardBody>
-            <CardFooter className="pt-0">
-              <Link to="/lms/batches/batchDetails/learningPlan">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="course-card-wrapper"
+            style={{ zIndex: 1 }}
+          >
+            <Card className="mt-6 w-full">
+              <CardBody>
+                <Typography variant="h3" color="blue-gray" className="mb-2">
+                  Learning Plan for Batch
+                </Typography>
+                <Typography>Type of Plan: Bootcamp</Typography>
+              </CardBody>
+              <CardFooter className="pt-0">
+                <Link to="/lms/batches/batchDetails/learningPlan">
               <Button>View Learning Plan</Button>
-              </Link>
+                </Link>
               <Link to="/lms/batches/batchDetails/learningPlan/batchWiseProgress">
               <Button className="ml-5">View BatchWise Trainee Progress</Button>
               </Link>
             </CardFooter>
-          </Card>
+            </Card>
+          </motion.div>
         </div>
       </div>
-      <div className="w-1/2">
-        <Card className="h-full m-5 mt-10">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mb-0 mt-0 flex items-center justify-between gap-10">
+      <div className="w-1/2 h-full">
+        <Card className="h-full m-1 mt-5">
+          <CardHeader
+            floated={false}
+            shadow={false}
+            className={`rounded-none ${height}`}
+          >
+            <div className="mb-0 mt-0 flex items-center justify-between gap-10 mb-0">
               <div>
                 <Typography variant="h5" color="blue-gray">
                   List of Trainees in the Batch
                 </Typography>
               </div>
 
-              <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+              <div className="flex flex-col items-center justify-between gap-4 md:flex-row mb-0">
                 <div className="flex shrink-0 flex-col gap-0 sm:flex-row">
                   <Link
                     to="/lms/batches/batchDetails/addUsersToBatch"
-                    className="self-end m-3 mr-0"
+                    className="self-end m-1 mr-0"
                   >
-                    <Button className="flex items-center gap-1 w-64" size="sm">
+                    <Button className="flex items-center gap-1 w-60" size="sm">
                       <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add
                       Trainees To Batch
                     </Button>
@@ -93,12 +261,15 @@ const BatchDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row mt-3 ">
               <SearchBar
                 setRows={setRows}
-                TABLE_ROWS={TABLE_ROWS}
-                className="mb-5"
+                TABLE_ROWS={trainees}
+                setSelectedRows={setSelectedRows}
+                rows={rows}
+                clearSearch={clearSearch}
               />
+
               <Button
                 onClick={deleteHandler}
                 className="flex items-center gap-3"
@@ -108,16 +279,22 @@ const BatchDetails = () => {
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Delete
                 Trainees From Batch
               </Button>
-              <Modal open={open} handleOpen={deleteHandler} />
+              <Modal
+                open={open}
+                handleOpen={deleteHandler}
+                handleClose={handleClose}
+                data={modalDeleteTrainee}
+              />
             </div>
           </CardHeader>
 
-          <CardBody>
+          <CardBody className="overflow-auto mt-0 ">
             <EmployeeTable
               TABLE_HEAD={TABLE_HEAD}
               rows={rows}
-              setRows={setRows}
-              className="mt-5"
+              selectedRows={selectedRows}
+              handleCheckboxChange={handleCheckboxChange}
+              setSelectedRows={setSelectedRows}
             />
           </CardBody>
         </Card>

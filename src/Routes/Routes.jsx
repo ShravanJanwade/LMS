@@ -8,12 +8,14 @@ import AdminDashBoard from "../Pages/adminDashBoard";
 import LearningPlan from "../Pages/LearningPlan";
 import LearningResource from "../Pages/LearningResource";
 import ProgressList from "../Pages/ProgressList";
+import EditBatch from "../Pages/EditBatch";
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AdminDashBoard />} />
       <Route path="/lms/batches" element={<ViewBatches />} />
       <Route path="/lms/batches/create-batch" element={<CreateBatch />} />
+      <Route path="/lms/batches/editBatch" element={<EditBatch />} />
       <Route path="/lms/batches/batchDetails" element={<BatchDetails />} />
       <Route
         path="/lms/batches/batchDetails/addUsersToBatch"

@@ -9,6 +9,8 @@ import {
   Tabs,
   TabsHeader,
   Tab,
+  Tooltip,
+  IconButton,
   Typography,
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
@@ -23,7 +25,7 @@ const TABS = [
     value: "Active",
   },
   {
-    label: "UnActive",
+    label: "In-Active",
     value: "Non-Active",
   },
 ];
@@ -33,6 +35,7 @@ const BatchHeader = ({
   card,
   onStatusChange,
   searchHandler,
+  changeCardLayout,
 }) => {
   const [status, setStatus] = useState("All");
 
@@ -57,6 +60,24 @@ const BatchHeader = ({
           </Typography>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+          {card && (
+            <Tooltip content="Change Card Layout">
+              <span
+                onClick={() => {
+                  changeCardLayout();
+                }}
+              >
+                <IconButton variant="text">
+                  <img
+                    width="50"
+                    height="50"
+                    src="https://img.icons8.com/ios/50/rows.png"
+                    alt="rows"
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
           <Button
             variant="outlined"
             onClick={toggleHandler}
@@ -104,6 +125,7 @@ BatchHeader.propTypes = {
   toggleHandler: PropTypes.func.isRequired,
   onStatusChange: PropTypes.func.isRequired,
   searchHandler: PropTypes.func.isRequired,
+  changeCardLayout: PropTypes.func.isRequired,
 };
 
 export default BatchHeader;

@@ -1,15 +1,16 @@
+import { motion } from "framer-motion";
 import { CourseCard } from "./CourseCard";
+// import { useState } from "react";
 import PropTypes from "prop-types";
-
 const BatchDetailsCards = ({
   status,
   searchQuery,
   batchData,
   progressData,
+  change,
 }) => {
   let filteredTable = batchData;
-
-  
+  // const [carousel, setCarousel] = useState(false);
   // Filter table data based on status
   if (status === "Active") {
     filteredTable = batchData.filter(({ online }) => online);
@@ -17,42 +18,64 @@ const BatchDetailsCards = ({
     filteredTable = batchData.filter(({ online }) => !online);
   }
   const progressHandler = (batchId) => {
-    const res = progressData.filter((data) => data.batchId == batchId);
-    return res[0].progressValue;
+    const res = progressData.find((data) => data.batchId === batchId);
+    return res ? res.batchProgress : 0;
   };
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
-    filteredTable = filteredTable.filter(({ name }) =>
-      name.toLowerCase().includes(query)
+    filteredTable = filteredTable.filter(({ batchName }) =>
+      batchName.toLowerCase().includes(query)
     );
-    batchData = batchData.filter(({ name }) =>
-      name.toLowerCase().includes(query)
+    batchData = batchData.filter(({ batchName }) =>
+      batchName.toLowerCase().includes(query)
     );
   }
+  const width = change ? "w-full mr-10" : "";
+  const scale = change ? { scale: 1.04 } : { scale: 1.1 };
 
   return (
     <div className="flex flex-wrap justify-center sm:justify-start space-evenly ml-4 sm:ml-12">
       {status === "All"
-        ? batchData.map(({ id, name, description, online, date }) => (
-            <CourseCard
-              key={id}
-              online={online}
-              progressValue={progressHandler(id)}
-              name={name}
-              description={description}
-              date={date}
-            />
-          ))
-        : filteredTable.map(({ id, name, description, online, date }) => (
-            <CourseCard
-              key={id}
-              online={online}
-              progressValue={progressHandler(id)}
-              name={name}
-              description={description}
-              date={date}
-            />
-          ))}
+        ? batchData.map(
+            ({ batchId, batchName, batchDescription, online, startDate }) => (
+              <motion.div
+                key={batchId}
+                whileHover={scale}
+                className={`course-card-wrapper ${width}`}
+                style={{ zIndex: 1 }}
+              >
+                <CourseCard
+                  online={online}
+                  progressValue={progressHandler(batchId)}
+                  name={batchName}
+                  description={batchDescription}
+                  date={startDate}
+                  batchId={batchId}
+                  change={change}
+                />
+              </motion.div>
+            )
+          )
+        : filteredTable.map(
+            ({ batchId, batchName, batchDescription, online, startDate }) => (
+              <motion.div
+                key={batchId}
+                whileHover={scale}
+                className={`course-card-wrapper ${width}`}
+                style={{ zIndex: 1 }}
+              >
+                <CourseCard
+                  online={online}
+                  progressValue={progressHandler(batchId)}
+                  name={batchName}
+                  description={batchDescription}
+                  date={startDate}
+                  batchId={batchId}
+                  change={change}
+                />
+              </motion.div>
+            )
+          )}
     </div>
   );
 };
@@ -62,6 +85,7 @@ BatchDetailsCards.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   batchData: PropTypes.array.isRequired,
   progressData: PropTypes.array.isRequired,
+  change: PropTypes.array.isRequired,
 };
 
 export default BatchDetailsCards;

@@ -1,86 +1,48 @@
 import BatchHeader from "../Components/BatchHeader";
 import BatchDetailsCards from "../Components/BatchDetailsCards";
 import BatchDetailsTable from "../Components/BatchDetailsTable";
-import { useState } from "react";
-
-const batchData = [
-  {
-    id: 1,
-    name: "Batch 100",
-    description:
-      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-    online: true,
-    date: "23/04/18",
-  },
-  {
-    id: 2,
-    name: "Batch 101",
-    description:
-      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-    online: false,
-    date: "23/05/19",
-  },
-  {
-    id: 3,
-    name: "Batch 102",
-    description:
-      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-    online: false,
-    date: "19/09/17",
-  },
-  {
-    id: 4,
-    name: "Batch 103",
-    description:
-      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-    online: true,
-    date: "24/12/08",
-  },
-  {
-    id: 5,
-    name: "Batch 104",
-    description:
-      "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-    online: false,
-    date: "04/10/21",
-  },
-];
-const progressData = [
-  {
-    batchId: 1,
-    progressValue: 50,
-  },
-  {
-    batchId: 2,
-    progressValue: 90,
-  },
-  {
-    batchId: 3,
-    progressValue: 30,
-  },
-  {
-    batchId: 4,
-    progressValue: 70,
-  },
-  {
-    batchId: 5,
-    progressValue: 10,
-  },
-];
+import { useState, useEffect } from "react";
+import { fetchBatchData } from "../Services/BatchData";
+import { fetchProgressData } from "../Services/ProgressData";
 
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
   const [status, setStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [progressData, setProgressData] = useState([]);
+  const [change, setChange] = useState(false);
+  const [batchData, setBatchData] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
+
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
+
   const statusHandler = (value) => {
     setStatus(value);
   };
+
   const searchHandler = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!dataFetched) { // Check if data has already been fetched
+        const batch = await fetchBatchData();
+        const progress = await fetchProgressData();
+        setBatchData(batch);
+        setProgressData(progress);
+        setDataFetched(true); // Mark data as fetched
+      }
+    }
+    fetchData();
+  }, [dataFetched]); // Trigger the effect only when dataFetched changes
+
+  const changeCardLayout = () => {
+    setChange((prev) => !prev);
+  };
+
   return (
     <div>
       <BatchHeader
@@ -88,6 +50,7 @@ const ViewBatches = () => {
         card={card}
         onStatusChange={statusHandler}
         searchHandler={searchHandler}
+        changeCardLayout={changeCardLayout}
       />
       {card ? (
         <BatchDetailsCards
@@ -95,6 +58,7 @@ const ViewBatches = () => {
           searchQuery={searchQuery}
           batchData={batchData}
           progressData={progressData}
+          change={change}
         />
       ) : (
         <BatchDetailsTable
@@ -107,4 +71,5 @@ const ViewBatches = () => {
     </div>
   );
 };
+
 export default ViewBatches;

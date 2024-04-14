@@ -8,10 +8,27 @@ import {
 import "../styles/ButtonStyle.css";
 import ProgressBar from "./ProgressBar";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-export function CourseCard({ online, progressValue, name, description, date }) {
+import { useBatch } from "../Context/BatchContext";
+import { useNavigate } from "react-router-dom";
+export function CourseCard({
+  online,
+  progressValue,
+  name,
+  description,
+  date,
+  batchId,
+  change,
+}) {
+  const navigate = useNavigate();
+  const { setId } = useBatch();
+  const batchHandler = () => {
+    setId(batchId);
+    sessionStorage.setItem("id", batchId);
+    navigate("/lms/batches/batchDetails");
+  };
+  const width = change ? "w-full" : "w-96 m-5";
   return (
-    <Card className="mt-6 w-96 inline-block m-5">
+    <Card className={`mt-6  h-72 inline-block m-5 ${width}`}>
       <CardBody>
         <div className="flex space-x-4 justify-end inline-block">
           <div className="w-max">
@@ -43,16 +60,14 @@ export function CourseCard({ online, progressValue, name, description, date }) {
         <Typography>{description}</Typography>
       </CardBody>
       <CardFooter className="pt-0 mb-0">
-        <a href="#" className="inline-block">
-          <Link to="/lms/batches/batchDetails">
-            <button className="button learn-more">
-              <span className="circle" aria-hidden="true">
-                <span className="icon arrow"></span>
-              </span>
-              <span className="button-text">Batch Details</span>
-            </button>
-          </Link>
-        </a>
+        {/* <a href="" className="inline-block"> */}
+        <button className="button learn-more" onClick={batchHandler}>
+          <span className="circle" aria-hidden="true">
+            <span className="icon arrow"></span>
+          </span>
+          <span className="button-text">Batch Details</span>
+        </button>
+        {/* </a> */}
         <ProgressBar progressValue={progressValue} />
       </CardFooter>
     </Card>
@@ -64,4 +79,6 @@ CourseCard.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
+  batchId: PropTypes.number.isRequired,
+  change: PropTypes.bool.isRequired,
 };

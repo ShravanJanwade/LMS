@@ -8,9 +8,9 @@ import {
   FaBookReader,
 } from "react-icons/fa";
 import useDarkMode from "./useDarkMode";
-import { IconButton, Typography } from "@material-tailwind/react";
+import { IconButton, Tooltip, Typography } from "@material-tailwind/react";
 import { CiRead, CiUnread } from "react-icons/ci";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { viewerContext } from "./viewerContext";
 
 const TopNavigation = () => {
@@ -31,7 +31,9 @@ const TopNavigation = () => {
 const ThemeIcon = () => {
   const [darkTheme, setDarkTheme] = useDarkMode();
   const handleMode = () => setDarkTheme(!darkTheme);
+  const [firstClick,setFirstClick] = useState(false);
   const topicListRef = useRef();
+  
   useEffect(() => {
     if (darkTheme && topicListRef.current) {
       topicListRef.current.scrollIntoView({
@@ -46,12 +48,43 @@ const ThemeIcon = () => {
       document.body.style.overflow = "auto";
     };
   }, [darkTheme]);
+const handleClick= ()=>{
+  handleMode();
+  setFirstClick(true)
+
+
+}
+
+
+
   return (
-    <span onClick={handleMode} ref={topicListRef}>
+    <span onClick={handleClick} ref={topicListRef}>
       {darkTheme ? (
-        <CiUnread size="32" className="top-navigation-icon" />
+        <CiUnread size="32" className="top-navigation-icon "  />
       ) : (
-        <CiRead size="32" className="top-navigation-icon" />
+        <Tooltip
+        placement="top"
+        open={!firstClick}
+        className="border border-blue-gray-50 bg-gray-300 px-4 py-3 shadow-xl shadow-black/10 "
+        content={
+          <div className="w-80">
+            <Typography color="blue-gray" className="font-medium ">
+              Reading Mode
+            </Typography>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal opacity-80"
+            >
+            To immerse yourself in reading mode, simply toggle the eye button.
+            </Typography>
+          </div>
+        }
+      >
+        <div>
+        <CiRead size="32" className="top-navigation-icon "  />
+        </div>
+      </Tooltip>
       )}
     </span>
   );

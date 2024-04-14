@@ -15,7 +15,7 @@ import { BiSolidDockLeft } from "react-icons/bi";
 import { GiQuillInk } from "react-icons/gi";
 import { PiNotepadBold } from "react-icons/pi";
 
-const ResourceSidebar = ({ courses,docked,setDocked }) => {
+const ResourceSidebar = ({ courses,docked,setDocked,viewProgress,setViewProgress}) => {
   const { courseCompletion, setCourseCompletion } = useContext(
     CourseCompletionContext
   );
@@ -52,7 +52,7 @@ const ResourceSidebar = ({ courses,docked,setDocked }) => {
   return (
     <div className="fixed left-0  w-16 h-96 justify-center mt-40 bg-[#F2F2F2] dark:bg-gray-900 z-20 ">
       <div className="flex flex-col justify-center items-center h-full ">
-        <SideBarIcon icon={<RiDashboard2Fill size="30" />} text="Progress" />
+        <SideBarIcon icon={<RiDashboard2Fill size="30" />} text="Progress" onClick={()=>setViewProgress(!viewProgress)}/>
         <Divider />
         <SideBarIcon icon={<RiInboxFill size="25" />} text="All Resources" />
         <SideBarIcon

@@ -87,7 +87,7 @@ const Welcome: React.FC<{}> = () => {
         <Typography
           as="div"
           variant="h1"
-          className="mb-2 h-2 w-full flex justify-center"
+          className="mb-2 h-2 w-full flex text-gray-500 justify-center"
 
         >
           THIS - Learning Management System

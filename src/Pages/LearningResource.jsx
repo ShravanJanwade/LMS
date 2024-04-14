@@ -16,6 +16,7 @@ const LearningResource = () => {
   const [completion, setCompletion] = useState();
   const [courseCompletion, setCourseCompletion] = useState({courseId:1,progress:12});
   const [docked,setDocked] = useState(false);
+  const [viewProgress,setViewProgress] = useState(false);
 
   //TODO axios call to get courses list and course completion
   const courseProgress = [
@@ -51,9 +52,9 @@ const LearningResource = () => {
       >
         <viewerContext.Provider value={{ view, setView }}>
           <CompletionContext.Provider value={{ completion, setCompletion }}>
-            <ResourceSidebar courses={courseProgress} docked={docked} setDocked={setDocked}/>
+            <ResourceSidebar courses={courseProgress} docked={docked} setDocked={setDocked} viewProgress={viewProgress} setViewProgress={setViewProgress}/>
 
-            <TopicList courseId={courseCompletion.courseId} docked={docked}/>
+            <TopicList courseId={courseCompletion.courseId} docked={docked} setDocked={setDocked} viewProgress={viewProgress}/>
 
             <ContentContainer courseId={courseId} batch={batchId} />
           </CompletionContext.Provider>

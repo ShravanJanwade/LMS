@@ -28,17 +28,42 @@ import { render } from "react-dom";
 const questions = ["jit-compilation", "purge-files", "dark-mode"];
 const random = ["variants", "plugins"];
 
-const TopicList = ({ courseId,docked }) => {
+const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
+  useEffect(() => {
+    console.log("value of docked is ", docked);
+  }, []);
   const course = Courses.find((course) => course.courseId === courseId);
   console.log(JSON.stringify(course));
   const [darkTheme, setDarkTheme] = useDarkMode();
 
-  return (
-    <div className={`channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[${docked? 0:800}px]`}>
+  return viewProgress ? (
+    <div
+      className={
+        docked
+          ? "channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[0px]"
+          : "channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[800px]"
+      }
+    >
       {/* enter course Name here */}
       <ChannelBlock CourseName={course.courseName} />
       <div className="channel-container ">
-        <Card className=" overflow-auto min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3">
+        <Card className=" min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3">
+          progress
+        </Card>
+      </div>
+    </div>
+  ) : (
+    <div
+      className={
+        docked
+          ? "channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[0px]"
+          : "channel-bar bg-gray-300 dark:bg-[#313338] shadow-lg w-[800px]"
+      }
+    >
+      {/* enter course Name here */}
+      <ChannelBlock CourseName={course.courseName} />
+      <div className="channel-container">
+        <Card className=" overflow-y-auto min-h-[680px] w-[480px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-40">
           {course.topics.map((topic, index) => (
             <Dropdown
               key={index}
@@ -67,11 +92,11 @@ const Dropdown = ({ header, selections }) => {
       >
         {header}
       </AccordionHeader>
-      <AccordionBody className="dropdown-selection">
-        <p>
+      <AccordionBody className="dropdown-selection ">
+      
           <ResourceBlock resources={selections} />
           {/* {JSON.stringify(selections)} */}
-        </p>
+    
       </AccordionBody>
     </Accordion>
 
@@ -85,27 +110,28 @@ const ResourceBlock = (props) => {
   const contextValue = useContext(viewerContext);
   let view = contextValue?.view;
   let setView = contextValue?.setView;
-  const {completion,setCompletion} = useContext(CompletionContext);
+  const { completion, setCompletion } = useContext(CompletionContext);
 
   // const [selectedItem, setSelectedItem] = useState(null);
 
   const handleClick = (data) => {
     // Set the view to the clicked data
     // setProgress({id:data.id,progress:data.progress})
-    setView({id:data.id,name:data.name,type:data.type,source:data.source,progress:data.progress});
-
+    setView({
+      id: data.id,
+      name: data.name,
+      type: data.type,
+      source: data.source,
+      progress: data.progress,
+    });
   };
 
-  
-
-  useEffect(()=>{
-    console.log(JSON.stringify(completion))
-  },[completion])
-
-
+  useEffect(() => {
+    console.log(JSON.stringify(completion));
+  }, [completion]);
 
   return (
-    <Card className="h-full w-[450px] m-1 dark:bg-[#53555f]   bg-gray-200">
+    <Card className="h-full w-[450px]  dark:bg-[#53555f]   bg-gray-200">
       <table className="w-full min-w-max table-auto text-left ">
         <thead></thead>
         <tbody>
@@ -115,8 +141,7 @@ const ResourceBlock = (props) => {
             const rowClasses = `   hover:bg-blue-gray-100 hover:dark:bg-[#36373d]  hover:dark:text-green-200 dark:text-gray-100 rounded-lg ${
               view?.id === data.id ? "dark:bg-[#45a049] bg-green-200" : ""
             }`;
-           
-            
+
             return (
               <tr
                 key={index}
@@ -142,7 +167,16 @@ const ResourceBlock = (props) => {
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <CompletionMarker progress={data.id===completion?.topicId?completion.progress :data.progress} type={data.type} renderId={data.id} viewId={view?.id}/>
+                  <CompletionMarker
+                    progress={
+                      data.id === completion?.topicId
+                        ? completion.progress
+                        : data.progress
+                    }
+                    type={data.type}
+                    renderId={data.id}
+                    viewId={view?.id}
+                  />
                 </td>
               </tr>
             );
@@ -153,9 +187,7 @@ const ResourceBlock = (props) => {
   );
 };
 
-const CompletionMarker = ({ progress, type,renderId,viewId }) => {
-
-  
+const CompletionMarker = ({ progress, type, renderId, viewId }) => {
   // const [indvidualProgress,setIndividualProgress] = useState(progress)
 
   // const {progress,setProgress} = useContext(CompletionContext);
@@ -163,26 +195,24 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
   //   setProgress({id:viewId,progress:100})
   //   //TODO-send axios request updating progress
   // }
- 
-
-
-  
 
   return (
     <div>
       {type != "youtubeVideo" ? (
-        progress<95 ? (
+        progress < 95 ? (
           <RiCheckboxBlankCircleFill size="34" className="text-gray-500/25" />
         ) : (
-          <RiCheckboxCircleFill size="34" className="text-green-500 dark:text-green-200" />
+          <RiCheckboxCircleFill
+            size="34"
+            className="text-green-500 dark:text-green-200"
+          />
         )
-      ) : progress<90 ? (
+      ) : progress < 90 ? (
         <AnimatedProgressProvider
           valueStart={0}
           valueEnd={progress}
           duration={0.9}
           easingFunction={easeQuadInOut}
-          
         >
           {(value) => {
             const roundedValue = Math.round(value);
@@ -199,9 +229,9 @@ const CompletionMarker = ({ progress, type,renderId,viewId }) => {
             );
           }}
         </AnimatedProgressProvider>
-      ) :
-      (<RiCheckboxCircleFill size="34" className="text-green-200 " />)
-    }
+      ) : (
+        <RiCheckboxCircleFill size="34" className="text-green-200 " />
+      )}
     </div>
   );
 };

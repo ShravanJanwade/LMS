@@ -209,7 +209,7 @@
 
   .dropdown-selection {
     @apply flex flex-row items-center justify-evenly
-    mt-1 mr-auto ml-2
+    mt-1 mr-auto
     transition duration-300 ease-in-out
     cursor-pointer;
   }

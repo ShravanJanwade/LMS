@@ -2,8 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa";
 import { Courses, resources } from "../../Data/Courses";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+
 import { easeQuadInOut } from "d3-ease";
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import RadialSeparators from "./RadialSeperators";
 import {
   RiCheckboxBlankCircleFill,
   RiCheckboxCircleFill,
@@ -48,7 +54,7 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
       <ChannelBlock CourseName={course.courseName} />
       <div className="channel-container ">
         <Card className=" min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3">
-          progress
+         <Progress />
         </Card>
       </div>
     </div>
@@ -63,12 +69,13 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
       {/* enter course Name here */}
       <ChannelBlock CourseName={course.courseName} />
       <div className="channel-container">
-        <Card className=" overflow-y-auto min-h-[680px] w-[480px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-40">
+        <Card className=" overflow-y-auto min-h-[680px] overflow-x-hidden w-[480px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-40">
           {course.topics.map((topic, index) => (
             <Dropdown
               key={index}
               header={topic.topicName}
               selections={resources}
+          
             />
           ))}
         </Card>
@@ -76,6 +83,40 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
     </div>
   );
 };
+
+
+
+const Progress = () =>{
+  return(
+    <div className="min-w-[455px]">
+    <div className="w-52 m-4 flex flex-col justify-center items-center bg-gray-900 rounded-3xl  p-5 ">
+    <CircularProgressbarWithChildren
+
+    value={80}
+    text={`${80}%`}
+    strokeWidth={10}
+    styles={buildStyles({
+      strokeLinecap: "butt",
+    })}
+  >
+    <RadialSeparators
+      count={12}
+      style={{
+        background: "#fff",
+        width: "2px",
+        // This needs to be equal to props.strokeWidth
+        height: `${10}%`,
+      }}
+    />
+  </CircularProgressbarWithChildren>
+  <Typography className="mt-5 text-blue-gray-300">
+    Course Progress
+  </Typography>
+  </div>
+  OTHER METRICS COMING SOON
+  </div>
+  )
+}
 
 const Dropdown = ({ header, selections }) => {
   const [expanded, setExpanded] = useState(true);
@@ -92,11 +133,9 @@ const Dropdown = ({ header, selections }) => {
       >
         {header}
       </AccordionHeader>
-      <AccordionBody className="dropdown-selection ">
-      
-          <ResourceBlock resources={selections} />
-          {/* {JSON.stringify(selections)} */}
-    
+      <AccordionBody className="dropdown-selection  ">
+        <ResourceBlock resources={selections}  />
+        {/* {JSON.stringify(selections)} */}
       </AccordionBody>
     </Accordion>
 

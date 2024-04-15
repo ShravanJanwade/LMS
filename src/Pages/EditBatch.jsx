@@ -16,7 +16,7 @@ function EditBatch() {
   useEffect(() => {
     const fetchBatchDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:1212/batches/${id}`);
+        const response = await fetch(`http://172.18.4.243:8078/batch/id/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch batch details");
         }
@@ -74,7 +74,7 @@ function EditBatch() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:1212/batches/${id}/edit`, {
+      const response = await fetch(`http://172.18.4.243:8078/batch/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -42,6 +42,11 @@ const ViewBatches = () => {
   const changeCardLayout = () => {
     setChange((prev) => !prev);
   };
+  useEffect(() => {
+    return () => {
+      setDataFetched(false); // Reset dataFetched when component unmounts
+    };
+  }, []);
 
   return (
     <div>

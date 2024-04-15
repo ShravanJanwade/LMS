@@ -55,7 +55,7 @@ function CreateBatch() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:1212/batches", {
+      const response = await fetch("http://172.18.4.243:8078/batch", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

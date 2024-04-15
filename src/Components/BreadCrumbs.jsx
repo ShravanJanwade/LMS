@@ -1,7 +1,7 @@
+import React from 'react';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+
 const BreadCrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -27,6 +27,7 @@ const BreadCrumbs = () => {
             key={name}
             to={routeTo}
             className={`opacity-60 ${isLast ? "font-semibold" : ""}`}
+            data-testid={isLast ? 'current-page-link' : null} // Set data-testid for the current page link
           >
             <span>{name}</span>
           </Link>

@@ -1,7 +1,8 @@
+import {BatchIp} from "./IpAddress"
 export async function fetchTrainees(batchId) {
   try {
     const response = await fetch(
-      `http://localhost:1212/batches/${batchId}/users`
+      `${BatchIp}/batch/employee-details/${batchId}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch trainees");

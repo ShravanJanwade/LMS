@@ -1,11 +1,12 @@
-// jest.config.js
+const {defaults} = require('jest-config');
 
-module.exports = {
-  testEnvironment: 'jest-environment-jsdom', // Set test environment to jest-environment-jsdom
+/** @type {import('jest').Config} */
+const config = {
+  testEnvironment: 'jsdom',
+  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mts', 'cts'],
   transform: {
-    '^.+\\.jsx?$': 'babel-jest', // Transform .jsx files using babel-jest
-  },
-  moduleNameMapper: {
-    '\\.(css|less|sass|scss)$': '<rootDir>/src/__mocks__/mock.css', // Mock CSS files
+    '^.+\\.jsx?$': 'babel-jest',
   },
 };
+
+module.exports = config;

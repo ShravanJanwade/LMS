@@ -7,14 +7,14 @@ import {
   CardBody,
 } from "@material-tailwind/react";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 import { useState, useEffect } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 import { fetchEmployees, sendSelectedUsers } from "../Services/allEmployee.js";
-import {modalAddTrainees} from "../Data/ModalData.jsx" 
+import { modalAddTrainees } from "../Data/ModalData.jsx";
 const UsersList = () => {
   const table = {
     height: "490px",

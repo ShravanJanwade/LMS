@@ -1,3 +1,4 @@
+import React from "react";
 import BatchHeader from "../Components/BatchHeader";
 import BatchDetailsCards from "../Components/BatchDetailsCards";
 import BatchDetailsTable from "../Components/BatchDetailsTable";
@@ -28,7 +29,8 @@ const ViewBatches = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (!dataFetched) { // Check if data has already been fetched
+      if (!dataFetched) {
+        // Check if data has already been fetched
         const batch = await fetchBatchData();
         const progress = await fetchProgressData();
         setBatchData(batch);
@@ -47,7 +49,6 @@ const ViewBatches = () => {
       setDataFetched(false); // Reset dataFetched when component unmounts
     };
   });
-  
 
   return (
     <div>

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
@@ -67,7 +68,6 @@ function CreateBatch() {
       // Handle failure case if needed
     }
   };
-
 
   // Get today's date in the format YYYY-MM-DD
   const today = new Date().toISOString().split("T")[0];

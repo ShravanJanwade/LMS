@@ -5,6 +5,7 @@ import {
 import "react-vertical-timeline-component/style.min.css";
 import React, { useEffect, useState } from "react";
 import { GiBookshelf } from "react-icons/gi";
+import ProgressService from '../Services/Progress/ProgressService'
 import {
   Button,
   Card,
@@ -38,7 +39,9 @@ const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];
 
 const LearningPlan = () => {
 
-
+  useEffect(() => {
+    ProgressService.setProgress({ userID: 1, resourceID: 1,progress:10 })
+  }, [])
 
 
 
@@ -111,7 +114,7 @@ const LearningPlan = () => {
                       </Tooltip>
                       <Tooltip content="Trainee Progress CourseWise[TRAINER,ADMIN]">
                         <Link to="/lms/batches/batchDetails/learningPlan/batchWiseProgress">
-                          <IconButton className="hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
+                          <IconButton className="hover:border-gray-900/10 hover:bg-black-900/10 hover:!opacity-100 group-hover:opacity-70">
                             <IoIosPeople className="text-[1.5rem]" />
                           </IconButton>
                         </Link>

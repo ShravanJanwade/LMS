@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+import { getBatchDetails,updateBatch } from "../Services/BatchData";
+
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
@@ -15,25 +15,18 @@ function EditBatch() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBatchDetails = async () => {
-      try {
-        const response = await fetch(`http://localhost:1212/batches/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch batch details");
-        }
-        const data = await response.json();
+    const fetchData = async () => {
+      const data = await getBatchDetails(id);
+      if (data) {
         setBatchName(data.batchName);
         setBatchDescription(data.batchDescription);
         setStartDate(data.startDate);
         setEndDate(data.endDate);
         setBatchSize(data.batchSize);
         calculateDuration(data.startDate, data.endDate);
-      } catch (error) {
-        console.error("Error fetching batch details:", error);
       }
     };
-
-    fetchBatchDetails();
+    fetchData();
   }, [id]);
 
   const calculateDuration = (start, end) => {
@@ -74,29 +67,18 @@ function EditBatch() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch(`http://localhost:1212/batches/${id}/edit`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          batchName,
-          batchDescription,
-          startDate,
-          endDate,
-          batchSize,
-        }),
-      });
+    const success = await updateBatch(id, {
+      batchName,
+      batchDescription,
+      startDate,
+      endDate,
+      batchSize,
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to update batch");
-      }
-
+    if (success) {
       navigate("/lms/batches/batchDetails");
-      console.log("Batch updated successfully");
-    } catch (error) {
-      console.error("Error updating batch:", error);
+    } else {
+      // Handle failure case if needed
     }
   };
 

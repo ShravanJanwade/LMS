@@ -1,54 +1,8 @@
-// export const batchData = [
-//     {
-//       id: 1,
-//       name: "Batch 100",
-//       description:
-//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-//       online: true,
-//       date: "23/04/18",
-//     },
-//     {
-//       id: 2,
-//       name: "Batch 101",
-//       description:
-//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-//       online: false,
-//       date: "23/05/19",
-//     },
-//     {
-//       id: 3,
-//       name: "Batch 102",
-//       description:
-//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-//       online: false,
-//       date: "19/09/17",
-//     },
-//     {
-//       id: 4,
-//       name: "Batch 103",
-//       description:
-//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-//       online: true,
-//       date: "24/12/08",
-//     },
-//     {
-//       id: 5,
-//       name: "Batch 104",
-//       description:
-//         "Batch Description-Because itapos;s about motivating the doers.Because Iapos;m here to follow my dreams and inspire others.",
-//       online: false,
-//       date: "04/10/21",
-//     },
-//   ];
-
-// Define an asynchronous function to fetch batch data
-// Import any necessary libraries if needed
-
-// Function to fetch batch data from the endpoint
+import {BatchIp} from "./IpAddress"
 export async function fetchBatchData() {
   try {
     // Fetch data from the endpoint
-    const response = await fetch("http://localhost:1212/batches");
+    const response = await fetch(`${BatchIp}/batch`);
 
     // Check if the response is successful
     if (!response.ok) {
@@ -75,5 +29,63 @@ export async function fetchBatchData() {
     // Handle errors
     console.error("Error fetching batch data:", error);
     return [];
+  }
+}
+
+// batchAPI.js
+export async function createBatch(data) {
+  try {
+    const response = await fetch(`${BatchIp}/batch`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create batch");
+    }
+
+    console.log("Batch created successfully");
+    return true; // Indicate successful creation
+  } catch (error) {
+    console.error("Error creating batch:", error);
+    return false; // Indicate failure
+  }
+}
+// batchAPI.js
+export async function getBatchDetails(id) {
+  try {
+    const response = await fetch(`${BatchIp}/batch/id/${id}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch batch details");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching batch details:", error);
+    return null;
+  }
+}
+
+export async function updateBatch(id, data) {
+  try {
+    const response = await fetch(`${BatchIp}/batch/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update batch");
+    }
+
+    console.log("Batch updated successfully");
+    return true; // Indicate successful update
+  } catch (error) {
+    console.error("Error updating batch:", error);
+    return false; // Indicate failure
   }
 }

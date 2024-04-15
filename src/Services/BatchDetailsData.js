@@ -1,6 +1,7 @@
+import { BatchIp } from "./IpAddress";
 export async function fetchBatchDetails(batchId) {
   try {
-    const response = await fetch(`http://localhost:1212/batches/${batchId}`);
+    const response = await fetch(`${BatchIp}/batch/id/${batchId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch batch details");
     }
@@ -36,7 +37,7 @@ export async function deleteTraineesFromBatch(batchId, selectedUsers) {
 // deleteBatch.js
 export async function deleteBatch(batchId) {
   try {
-    const response = await fetch(`http://localhost:1212/batches/${batchId}`, {
+    const response = await fetch(`${BatchIp}/batch/batch-id/${batchId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -54,4 +55,3 @@ export async function deleteBatch(batchId) {
     throw new Error(`Error deleting batch: ${error.message}`);
   }
 }
-

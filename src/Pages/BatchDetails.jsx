@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -25,7 +25,7 @@ import {
 // import { useBatch } from "../Context/BatchContext";
 import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
-import {modalDeleteBatch,modalDeleteTrainee} from "../Data/ModalData.jsx";
+import { modalDeleteBatch, modalDeleteTrainee } from "../Data/ModalData.jsx";
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
   const [rows, setRows] = useState(trainees);
@@ -37,7 +37,7 @@ const BatchDetails = () => {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [batchDetails, setBatchDetails] = useState(null);
-  const [progressData, setProgressData] = useState([]);
+  const [progressData, setProgressData] = useState(0);
   const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
@@ -149,7 +149,11 @@ const BatchDetails = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await fetchBatchProgress(id);
-      setProgressData(data);
+      if (data) {
+        setProgressData(data.batchProgress);
+      }else{
+        setProgressData(0);
+      }
     }
     fetchData();
   }, [progressData]);
@@ -202,13 +206,7 @@ const BatchDetails = () => {
               )}
             </CardBody>
             <CardFooter className="pt-0">
-              <ProgressBar
-                progressValue={
-                  progressData == null || undefined
-                    ? 0
-                    : progressData.batchProgress
-                }
-              />
+              <ProgressBar progressValue={progressData==(null || undefined)?0:progressData} />
             </CardFooter>
           </Card>
           <motion.div

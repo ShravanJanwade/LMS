@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { Input } from "@material-tailwind/react";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [initialRows, setInitialRows] = useState(TABLE_ROWS);

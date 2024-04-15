@@ -5,7 +5,8 @@ import {
   Tooltip,
   IconButton,
 } from "@material-tailwind/react";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const EmployeeTable = ({
   TABLE_HEAD,
   rows,

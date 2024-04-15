@@ -1,6 +1,7 @@
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const BreadCrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);

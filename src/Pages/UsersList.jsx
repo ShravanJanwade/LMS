@@ -6,6 +6,8 @@ import {
   Button,
   CardBody,
 } from "@material-tailwind/react";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import { useState, useEffect } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";

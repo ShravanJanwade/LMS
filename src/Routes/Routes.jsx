@@ -1,4 +1,6 @@
 // Routes.js
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import CreateBatch from "../Pages/CreateBatch"; // Import your CreateBatch component
 import ViewBatches from "../Pages/ViewBatches";

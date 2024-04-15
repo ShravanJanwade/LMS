@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import { CourseCard } from "./CourseCard";
 // import { useState } from "react";
 import PropTypes from "prop-types";

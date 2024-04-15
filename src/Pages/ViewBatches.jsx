@@ -4,7 +4,8 @@ import BatchDetailsTable from "../Components/BatchDetailsTable";
 import { useState, useEffect } from "react";
 import { fetchBatchData } from "../Services/BatchData";
 import { fetchProgressData } from "../Services/ProgressData";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
   const [status, setStatus] = useState("All");

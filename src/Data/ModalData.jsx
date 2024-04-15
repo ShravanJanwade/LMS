@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 export const modalDeleteBatch={
     title:'Delete Batch',
     message:'Are you sure you want to delete this batch?',

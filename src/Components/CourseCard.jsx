@@ -10,6 +10,8 @@ import ProgressBar from "./ProgressBar";
 import PropTypes from "prop-types";
 import { useBatch } from "../Context/BatchContext";
 import { useNavigate } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 export function CourseCard({
   online,
   progressValue,

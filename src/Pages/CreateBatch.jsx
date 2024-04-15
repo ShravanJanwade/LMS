@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 function CreateBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");

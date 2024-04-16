@@ -18,3 +18,9 @@ export const modalAddTrainees={
     actionText:'Add Trainees',
     delete:false
 }
+export const modalAddTraineesExcel={
+    title:'Excel Upload',
+    message:'Select the file you want to upload',
+    actionText:'Upload file',
+    delete:false
+}

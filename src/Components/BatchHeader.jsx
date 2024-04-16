@@ -3,7 +3,7 @@ import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 import {
   Input,
   Button,
@@ -110,7 +110,12 @@ const BatchHeader = ({
           </TabsHeader>
         </Tabs>
         <div className="w-full sm:w-72 md:w-96 mr-5">
+          <label
+            htmlFor="search-input"
+            className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal ..."
+          ></label>
           <Input
+            id="search-input" // Add an id to the Input component
             label="Search"
             icon={<MagnifyingGlassIcon className="h-5 w-5" />}
             className="w-full"

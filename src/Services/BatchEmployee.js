@@ -2,7 +2,7 @@ import {BatchIp} from "./IpAddress"
 export async function fetchTrainees(batchId) {
   try {
     const response = await fetch(
-      `${BatchIp}/batch/employee-details/${batchId}`
+      `${BatchIp}/batch/batch-details/employees/${batchId}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch trainees");

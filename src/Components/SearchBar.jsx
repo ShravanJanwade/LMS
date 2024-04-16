@@ -21,8 +21,8 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
     } else {
       const filteredRows = initialRows.filter((row) => {
         return (
-          (typeof row.empId === "number" &&
-            row.empId.toString().includes(searchQuery)) ||
+          (typeof row.employeeId === "number" &&
+            row.employeeId.toString().includes(searchQuery)) ||
           row?.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row?.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row?.businessUnit?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -38,11 +38,11 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
 
       // Map selected status from previous selected rows to new filtered rows
       initialRows.forEach((row) => {
-        if (prevSelectedRows[row.empId] !== undefined) {
-          newSelectedRows[row.empId] = prevSelectedRows[row.empId];
+        if (prevSelectedRows[row.employeeId] !== undefined) {
+          newSelectedRows[row.employeeId] = prevSelectedRows[row.employeeId];
         } else {
           // If a row was not previously selected, default it to false
-          newSelectedRows[row.empId] = false;
+          newSelectedRows[row.employeeId] = false;
         }
       });
 

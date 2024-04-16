@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { useBatch } from "../Context/BatchContext";
 import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 
 export function CourseCard({
   online,
@@ -34,7 +34,7 @@ export function CourseCard({
   const width = change ? "w-full" : "w-96 m-5";
 
   return (
-    <div onClick={batchHandler} style={{ cursor: 'pointer' }}>
+    <div onClick={batchHandler} style={{ cursor: "pointer" }}>
       <Card className={`mt-6  h-72 inline-block m-5 ${width}`}>
         <CardBody>
           <div className="flex space-x-4 justify-end inline-block">

@@ -151,14 +151,15 @@ const BatchDetails = () => {
       const data = await fetchBatchProgress(id);
       if (data) {
         setProgressData(data.batchProgress);
-      }else{
+      } else {
         setProgressData(0);
       }
     }
     fetchData();
   }, [progressData]);
 
-  const height = rows.length < 11 ? "h-42" : "h-48";
+  const height =
+    rows.length < 11 ? "h-42" : rows.length <= 25 ? "h-48" : "h-full";
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
@@ -206,7 +207,11 @@ const BatchDetails = () => {
               )}
             </CardBody>
             <CardFooter className="pt-0">
-              <ProgressBar progressValue={progressData==(null || undefined)?0:progressData} />
+              <ProgressBar
+                progressValue={
+                  progressData == (null || undefined) ? 0 : progressData
+                }
+              />
             </CardFooter>
           </Card>
           <motion.div
@@ -270,10 +275,12 @@ const BatchDetails = () => {
                 className="flex items-center gap-3"
                 color="red"
                 size="sm"
+                disabled={Object.values(selectedRows).every((value) => !value)} // Disable button if no trainees are selected
               >
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Delete
                 Trainees From Batch
               </Button>
+
               <Modal
                 open={open}
                 handleOpen={deleteHandler}

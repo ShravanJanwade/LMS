@@ -38,4 +38,28 @@ export async function fetchEmployees(batchId) {
       throw error; // Propagate error to caller if needed
     }
   }
+  export async function sendExcelUserFile(file, batchId) {
+    try {
+      // Create a new FormData object
+      const formData = new FormData();
+      // Append the file to the FormData object
+      formData.append('file', file);
+  
+      const response = await fetch(`${BatchIp}/batch/existing-batch/bulk/batch-id/${batchId}`, {
+        method: 'POST',
+        body: formData // Send the FormData object as the request body
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add users to batch');
+      }
+      // Handle response if needed
+    } catch (error) {
+      console.error('Error adding users to batch:', error);
+      throw error; // Propagate error to caller if needed
+    }
+  }
+  
+  
+
   

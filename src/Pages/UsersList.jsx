@@ -7,14 +7,16 @@ import {
   CardBody,
 } from "@material-tailwind/react";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 import { useState, useEffect } from "react";
 import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 import { fetchEmployees, sendSelectedUsers } from "../Services/allEmployee.js";
-import {modalAddTrainees} from "../Data/ModalData.jsx" 
+import { modalAddTrainees } from "../Data/ModalData.jsx";
+import { modalAddTraineesExcel } from "../Data/ModalData.jsx";
+import FileModal from "../Components/FileModal.jsx";
 const UsersList = () => {
   const table = {
     height: "490px",
@@ -112,10 +114,12 @@ const UsersList = () => {
               className="flex items-center gap-3"
               size="sm"
               onClick={handleOpen}
+              disabled={Object.values(selectedRows).every((value) => !value)} // Disable button if no employees are selected
             >
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               To Batch
             </Button>
+
             <Modal
               handleOpen={handleOpen}
               open={open}
@@ -125,16 +129,17 @@ const UsersList = () => {
             <Button
               className="flex items-center gap-3"
               size="sm"
-              onClick={handleOpen}
+              onClick={handleOpenExcel}
             >
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
               Through Excel
             </Button>
-            <Modal
+            <FileModal
               handleOpen={handleOpenExcel}
               open={openExcel}
               handleClose={handleExcelClose}
-              data={modalAddTrainees}
+              data={modalAddTraineesExcel}
+              setFetch={setFetch}
             />
           </div>
         </div>

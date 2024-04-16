@@ -14,27 +14,29 @@ export async function fetchBatchDetails(batchId) {
 }
 // BatchEmployee.js
 export async function deleteTraineesFromBatch(batchId, selectedUsers) {
-  console.log(selectedUsers);
+  console.log({ userIds: selectedUsers });
   try {
-    const response = await fetch(`http://localhost:1212/batches/${batchId}/users`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selectedUsers), // send the selectedUsers directly
-    });
+    const response = await fetch(
+      `${BatchIp}/batch/batch-id/employees/${batchId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedUsers), // send the selectedUsers directly
+      }
+    );
     if (!response.ok) {
       console.log("Couldn't delete");
       throw new Error("Failed to delete trainees from batch");
     }
     // Return response data if needed
-    console.log(await response.json());
+    console.log(response.json());
     return response.json();
   } catch (error) {
     throw new Error(`Error deleting trainees from batch: ${error.message}`);
   }
 }
-
 // deleteBatch.js
 export async function deleteBatch(batchId) {
   try {
@@ -46,7 +48,7 @@ export async function deleteBatch(batchId) {
       body: JSON.stringify(), // send the selectedUsers directly
     });
     if (!response.ok) {
-      console.log("Couldn't delete")
+      console.log("Couldn't delete");
       throw new Error("Failed to delete batch");
     }
     // Return response data if needed

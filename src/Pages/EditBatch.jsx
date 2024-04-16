@@ -1,7 +1,8 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { getBatchDetails,updateBatch } from "../Services/BatchData";
+import { getBatchDetails, updateBatch } from "../Services/BatchData";
 
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
@@ -120,7 +121,6 @@ function EditBatch() {
               placeholder="Start Date"
               value={startDate}
               onChange={handleStartDateChange}
-              min={today}
             />
           </div>
           <div className="flex flex-col">

@@ -6,12 +6,15 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import checkmark from "../assets/completed.gif"
 import PropTypes from "prop-types";
 import { sendExcelUserFile } from '../Services/allEmployee';
-
+import "../styles/checkmarkAnimation.css";
 const FileModal = ({ handleOpen, open, handleClose, data, setFetch }) => {
   const [file, setFile] = useState(null);
   const [fileSelected, setFileSelected] = useState(false);
+  const [uploading, setUploading] = useState(false); // State to track if uploading is in progress
+  const [uploadComplete, setUploadComplete] = useState(false); // State to track if upload is complete
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -26,13 +29,24 @@ const FileModal = ({ handleOpen, open, handleClose, data, setFetch }) => {
     }
   };
 
-  const handleFileUpload = () => {
-    // Do something with the selected file
-    console.log("Selected file:", file);
-    const id = sessionStorage.getItem("id");
-    sendExcelUserFile(file, id);
-    setFetch(prev => !prev);
-    handleClose(); // Close the modal after file upload
+  const handleFileUpload = async () => {
+    if (!file) return; // Don't proceed if no file is selected
+    try {
+      setUploading(true); // Set uploading state to true when upload starts
+      const id = sessionStorage.getItem("id");
+      await sendExcelUserFile(file, id);
+      setFetch(prev => !prev);
+      // Set uploadComplete to true upon successful upload
+      setUploadComplete(true);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    } finally {
+      setUploading(false); // Set uploading state to false when upload completes
+      // Close the modal after a short delay to display the completed animation
+      setTimeout(() => {
+        handleClose();
+      }, 2000); // Adjust the delay time as needed
+    }
   };
 
   return (
@@ -56,14 +70,25 @@ const FileModal = ({ handleOpen, open, handleClose, data, setFetch }) => {
             color="red"
             onClick={handleClose}
             className="mr-1"
+            disabled={uploading || uploadComplete} // Disable Cancel button while uploading or after upload completion
           >
             <span>Cancel</span>
           </Button>
           {/* Conditionally render the button based on whether a file is selected */}
-          {fileSelected && (
+          {fileSelected && !uploading && !uploadComplete && (
             <Button variant="gradient" color={`${data.delete ? "red" : "green"}`} onClick={handleFileUpload}>
               <span>{data.actionText}</span>
             </Button>
+          )}
+          {/* Render an animated icon/message while uploading */}
+          {uploading && (
+            <div>Uploading... {/* You can use an animated icon here */}</div>
+          )}
+          {/* Render a completed checkmark animation after upload completion */}
+          {uploadComplete && (
+            <div className="checkmark-animation">
+              <img src={checkmark} alt="Checkmark GIF" />
+            </div>
           )}
         </DialogFooter>
       </Dialog>

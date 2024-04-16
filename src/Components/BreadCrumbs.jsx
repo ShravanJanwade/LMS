@@ -1,3 +1,4 @@
+import React from 'react';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -26,6 +27,7 @@ const BreadCrumbs = () => {
             key={name}
             to={routeTo}
             className={`opacity-60 ${isLast ? "font-semibold" : ""}`}
+            data-testid={isLast ? 'current-page-link' : null} // Set data-testid for the current page link
           >
             <span>{name}</span>
           </Link>

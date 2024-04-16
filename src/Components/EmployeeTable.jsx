@@ -5,7 +5,8 @@ import {
   Tooltip,
   IconButton,
 } from "@material-tailwind/react";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const EmployeeTable = ({
   TABLE_HEAD,
   rows,
@@ -16,14 +17,14 @@ const EmployeeTable = ({
   const selectAllHandler = () => {
     const visibleRows = rows.filter((row) => !row.isHidden);
     const allVisibleRowsChecked = visibleRows.every(
-      (row) => selectedRows[row.userId]
+      (row) => selectedRows[row.employeeId]
     );
 
     // Toggle the selection status of visible rows
     const newSelectedRows = { ...selectedRows };
 
     visibleRows.forEach((row) => {
-      newSelectedRows[row.userId] = !allVisibleRowsChecked;
+      newSelectedRows[row.employeeId] = !allVisibleRowsChecked;
     });
 
     // Update the selectedRows state directly to ensure the select all checkbox state is updated
@@ -70,16 +71,16 @@ const EmployeeTable = ({
       </thead>
       <tbody>
         {rows.map(
-          ({ userName, email, designation, businessUnit, userId }, index) => {
+          ({ firstName, email, lastName, businessUnit, employeeId }, index) => {
             const isLast = index === rows.length - 1;
             const classes = isLast ? "p-1" : "p-1 border-b border-blue-gray-50";
 
             return (
-              <tr key={userId}>
+              <tr key={employeeId}>
                 <td className={classes}>
                   <div className="w-max">
                     <Typography variant="lead" size="sm">
-                      {userId}
+                      {employeeId}
                     </Typography>
                   </div>
                 </td>
@@ -91,7 +92,7 @@ const EmployeeTable = ({
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {userName}
+                        {firstName}
                       </Typography>
                       <Typography
                         variant="small"
@@ -110,7 +111,7 @@ const EmployeeTable = ({
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {designation}
+                      {lastName}
                     </Typography>
                   </div>
                 </td>
@@ -127,8 +128,8 @@ const EmployeeTable = ({
                 <td className={classes}>
                   <Checkbox
                     color="green"
-                    checked={selectedRows[userId]}
-                    onChange={() => handleCheckboxChange(userId)}
+                    checked={selectedRows[employeeId]}
+                    onChange={() => handleCheckboxChange(employeeId)}
                   />
                 </td>
               </tr>

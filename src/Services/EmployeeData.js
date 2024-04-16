@@ -1,7 +1,7 @@
 export const TABLE_HEAD = [
   "EmployeeId",
-  "Name",
-  "Designation",
+  "First Name",
+  "Last Name",
   "Business Unit",
   "",
 ];

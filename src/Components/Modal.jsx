@@ -6,7 +6,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 const Modal = ({ handleOpen, open ,handleClose,data}) => {
   return (
     <>

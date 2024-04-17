@@ -5,10 +5,11 @@ import ViewBatches from "../Pages/ViewBatches";
 import BatchDetails from "../Pages/BatchDetails";
 import UsersList from "../Pages/UsersList";
 import AdminDashBoard from "../Pages/adminDashBoard";
-import LearningPlan from "../Pages/LearningPlan";
+// import LearningPage from "../Pages/LearningPage";
 import LearningResource from "../Pages/LearningResource";
 import ProgressList from "../Pages/ProgressList";
 import EditBatch from "../Pages/EditBatch";
+import LearningPlan from "../Pages/LearningPlan";
 function AppRoutes() {
   return (
     <Routes>

@@ -20,6 +20,7 @@ export const Courses = [
         progress: 100,
       },
       {
+        topicId: "2",
         topicName: "Exception Handling",
         description: "Handling exceptions in Java programs",
         startDate: "28-05-2024",
@@ -27,6 +28,7 @@ export const Courses = [
         progress: 80,
       },
       {
+        topicId: "3",
         topicName: "Multithreading",
         description: "Introduction to multithreading concepts in Java",
         startDate: "01-06-2024",
@@ -34,6 +36,7 @@ export const Courses = [
         progress: 60,
       },
       {
+        topicId: "4",
         topicName: "Collections Framework",
         description: "Working with collections in Java",
         startDate: "04-06-2024",

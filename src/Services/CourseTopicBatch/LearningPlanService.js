@@ -1,16 +1,38 @@
 import axios from "./axios"
 
-
-
-const getBatchProgress = async () => {
+const getLearningPlanDetails = async (batchID) => {
     try {
-        const response = await axios.get('/batch-progress')
-        console.log(response)
+        const response = await axios.get(`/learning-plan/dto/${batchID}`)
+        // console.log(response)
+        return response
     }
     catch (error) {
         console.error(error)
     }
 }
+const courseDeets = async (courseID) => {
+    try {
+        const response = await axios.get(`/course/id/${courseID}`)
+        return response.data
+    }
+    catch (error) {
+        console.error(error)
+    }
+}
+const courseWiseTopicList = async (courseID) =>{
+    try {
+        const response = await axios.get(`/topic/course/${courseID}`)
+       return response;
+    }
+    catch (error) {
+        console.error(error)
+    }
+}
+
+
+
+
+
 
 const getBatchProgressByID = async ({ batchID }) => {
     try {
@@ -45,8 +67,7 @@ const getUserProgressByID = async ({ userID }) => {
 const getUserProgressOfTopicsByID = async ({ userID, topicID }) => {
     try {
         const response = await axios.get(`/user-progress/${userID}/topic/${topicID}`)
-       console.log( response.data)
-        return response.data
+        console.log(response)
     } catch (error) {
         console.error(error)
     }
@@ -64,7 +85,7 @@ const getUserProgressOfResourcesByID = async ({ userID, resourceID }) => {
 const getUserProgressOfCoursesByID = async ({ userID, courseID }) => {
     try {
         const response = await axios.get(`/user-progress/${userID}/course/${courseID}`)
-        return response.data
+        console.log(response)
     } catch (error) {
         console.error(error)
     }
@@ -116,17 +137,11 @@ const setProgress = async ({ userID, resourceID, progress }) => {
 
 
 
-const ProressService = {
-    getBatchProgress,
-    getBatchProgressByID,
-    getAllUserBatchProgressByID,
-    getUserProgressByID,
-    getUserProgressOfTopicsByID,
-    getUserProgressOfResourcesByID,
-    getUserProgressOfCoursesByID,
-    getUserProgressOfTopicsByArray,
-    getUserProgressOfCoursesByArray,
-    setProgress
+const LearningPlanService = {
+    getLearningPlanDetails,
+    courseWiseTopicList,
+    courseDeets
+
 
 }
-export default ProressService
+export default LearningPlanService

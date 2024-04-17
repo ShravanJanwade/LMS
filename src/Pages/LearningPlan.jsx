@@ -6,6 +6,7 @@ import "react-vertical-timeline-component/style.min.css";
 import React, { useEffect, useState } from "react";
 import { GiBookshelf } from "react-icons/gi";
 import ProgressService from '../Services/Progress/ProgressService'
+import ProgressComponent from "./ProgressComponent";
 import {
   Button,
   Card,
@@ -32,22 +33,18 @@ import AnimatedProgressProvider from "../Components/AnimatedProgressProvider";
 import { easeQuadInOut } from "d3-ease";
 import { Link } from "react-router-dom";
 import { Courses } from '../Data/Courses'
+import LearningPlanService from "../Services/CourseTopicBatch/LearningPlanService";
 
 
 const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];
+const batchID = sessionStorage.getItem("id");
+// console.log(id)
 
-
-const LearningPlan = () => {
-
-  useEffect(() => {
-    ProgressService.setProgress({ userID: 1, resourceID: 1,progress:10 })
-  }, [])
-
-
-
+const LearningPlan = ({courseProgressHandler}) => {
   return (
     <div className="w-full">
       <VerticalTimeline lineColor="black" layout="1-column-left">
+
         {Courses.map((data, key) => {
           //  setSelected(colorCodes[Math.floor(Math.random() * colorCodes.length)])
           //    console.log(data.colorCodes.map(()=>))
@@ -67,27 +64,19 @@ const LearningPlan = () => {
 
             // icon={<WorkIcon />}
             >
+
               <Card className={`min-h-52 max-h-96 w-[900px] flex-row  mr-52 bg-[#A6A6A6]`} >
                 <CardHeader
                   shadow={false}
                   floated={false}
                   className="m-0 w-3/5 shrink-0 rounded-r-none p-3 overflow-y-auto bg-[#F2F2F2]"
                 >
-                  <TopicsTimeLine topics={data.topics} />
+
+                  {/* <TopicsTimeLine topics={data.topics} /> */}
                 </CardHeader>
 
                 <CardBody className="relative flex flex-col justify-between w-full md:w-4/5">
-                  <AnimatedProgressProvider
-                    valueStart={0}
-                    valueEnd={data.progress}
-                    duration={0.5}
-                    easingFunction={easeQuadInOut}
-                    repeat
-                  >
-                    {value => (
-                      <Progress className="absolute -m-6" value={value} color="green" />
-                    )}
-                  </AnimatedProgressProvider>
+                  <ProgressComponent courseId={data.courseId}/>
                   <div className="flex flex-col justify-center items-center">
                     <Card className="p-4 border border-blue-gray-100 bg-[#F2F2F2]">
                       <Typography variant="h4" color="blue-gray" className="mb-2">

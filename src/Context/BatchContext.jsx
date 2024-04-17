@@ -1,5 +1,6 @@
 // BatchContext.js
-
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import { createContext, useContext, useState, useEffect } from "react";
 
 const BatchContext = createContext();

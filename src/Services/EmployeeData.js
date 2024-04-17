@@ -1,10 +1,17 @@
 export const TABLE_HEAD = [
   "EmployeeId",
-  "Name",
-  "Designation",
+  "First Name",
+  "Last Name",
   "Business Unit",
   "",
 ];
+export const PROGRESS_HEAD=[
+  "EmployeeId",
+  "First Name",
+  "Last Name",
+  "Business Unit",
+  "Progress",
+]
 
 export const TABLE_ROWS = [
   {

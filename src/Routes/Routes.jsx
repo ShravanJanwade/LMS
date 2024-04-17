@@ -1,4 +1,6 @@
 // Routes.js
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import CreateBatch from "../Pages/CreateBatch"; // Import your CreateBatch component
 import ViewBatches from "../Pages/ViewBatches";
@@ -21,7 +23,7 @@ function AppRoutes() {
         path="/lms/batches/batchDetails/addUsersToBatch"
         element={<UsersList />}
       />
-      <Route path="/lms/batches/batchDetails/learningPlan/batchWiseProgress" element={<ProgressList/>}/>
+      <Route path="/lms/batches/batchDetails/batchUsersProgress" element={<ProgressList/>}/>
       <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
       <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
     </Routes>

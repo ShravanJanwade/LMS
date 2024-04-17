@@ -1,6 +1,7 @@
+import { BatchIp } from "./IpAddress";
 export async function fetchBatchDetails(batchId) {
   try {
-    const response = await fetch(`http://172.18.4.243:8078/batch/id/${batchId}`);
+    const response = await fetch(`${BatchIp}/batch/id/${batchId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch batch details");
     }
@@ -13,17 +14,20 @@ export async function fetchBatchDetails(batchId) {
 }
 // BatchEmployee.js
 export async function deleteTraineesFromBatch(batchId, selectedUsers) {
-  console.log({userIds:selectedUsers});
+  console.log({ userIds: selectedUsers });
   try {
-    const response = await fetch(`http://localhost:1212/batches/${batchId}/users`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({userIds:selectedUsers}), // send the selectedUsers directly
-    });
+    const response = await fetch(
+      `${BatchIp}/batch/batch-id/employees/${batchId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedUsers), // send the selectedUsers directly
+      }
+    );
     if (!response.ok) {
-      console.log("Couldn't delete")
+      console.log("Couldn't delete");
       throw new Error("Failed to delete trainees from batch");
     }
     // Return response data if needed
@@ -36,7 +40,7 @@ export async function deleteTraineesFromBatch(batchId, selectedUsers) {
 // deleteBatch.js
 export async function deleteBatch(batchId) {
   try {
-    const response = await fetch(`http://172.18.4.243:8078/batch/batch-id/${batchId}`, {
+    const response = await fetch(`${BatchIp}/batch/batch-id/${batchId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +48,7 @@ export async function deleteBatch(batchId) {
       body: JSON.stringify(), // send the selectedUsers directly
     });
     if (!response.ok) {
-      console.log("Couldn't delete")
+      console.log("Couldn't delete");
       throw new Error("Failed to delete batch");
     }
     // Return response data if needed
@@ -54,4 +58,3 @@ export async function deleteBatch(batchId) {
     throw new Error(`Error deleting batch: ${error.message}`);
   }
 }
-

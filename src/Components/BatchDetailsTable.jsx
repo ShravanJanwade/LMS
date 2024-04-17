@@ -1,4 +1,6 @@
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import {
   Card,
   Typography,
@@ -45,50 +47,46 @@ const BatchDetailsTable = ({
   };
   const handleSort = (columnIndex) => {
     let newSortBy = { column: columnIndex, ascending: true };
-
+  
     if (sortBy.column === columnIndex) {
       newSortBy.ascending = !sortBy.ascending;
     }
-
+  
     setSortBy(newSortBy);
   };
   if (sortBy.column !== null) {
     filteredRows.sort((a, b) => {
       let valueA, valueB;
-
+  
       if (sortBy.column === 1) {
         valueA = progressHandler(a.batchId);
         valueB = progressHandler(b.batchId);
+      } else if (sortBy.column === 3) {
+        valueA = a.startDate;
+        valueB = b.startDate;
       } else {
-        const dateA = parseDate(a.startDate);
-        const dateB = parseDate(b.startDate);
-
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-
-        if (dateA < dateB) return sortBy.ascending ? -1 : 1;
-        if (dateA > dateB) return sortBy.ascending ? 1 : -1;
-        return 0;
+        valueA = a[TABLE_HEAD[sortBy.column]];
+        valueB = b[TABLE_HEAD[sortBy.column]];
       }
-
-      if (sortBy.ascending) {
-        return valueA - valueB;
-      } else {
-        return valueB - valueA;
-      }
+  
+      if (valueA < valueB) return sortBy.ascending ? -1 : 1;
+      if (valueA > valueB) return sortBy.ascending ? 1 : -1;
+      return 0;
     });
   }
+  
 
   function parseDate(dateString) {
     const parts = dateString.split("/");
     if (parts.length === 3) {
-      const day = parseInt(parts[0]);
+      const day = parseInt(parts[2]);
       const month = parseInt(parts[1]);
-      const year = parseInt(parts[2]);
+      const year = parseInt(parts[0]);
       return new Date(2000 + year, month - 1, day); // Adjust year based on your data
     }
     return null;
   }
+  
 
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
@@ -202,19 +200,6 @@ const BatchDetailsTable = ({
           </tbody>
         </table>
       </CardBody>
-      <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-        <Typography variant="small" color="blue-gray" className="font-normal">
-          Page 1 of 10
-        </Typography>
-        <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
-            Previous
-          </Button>
-          <Button variant="outlined" size="sm">
-            Next
-          </Button>
-        </div>
-      </CardFooter>
     </Card>
   );
 };

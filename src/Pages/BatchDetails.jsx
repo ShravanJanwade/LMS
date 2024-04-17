@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-unused-vars
+import React from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -23,7 +25,7 @@ import {
 // import { useBatch } from "../Context/BatchContext";
 import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
-import {modalDeleteBatch,modalDeleteTrainee} from "../Data/ModalData.jsx";
+import { modalDeleteBatch, modalDeleteTrainee } from "../Data/ModalData.jsx";
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
   const [rows, setRows] = useState(trainees);
@@ -35,7 +37,7 @@ const BatchDetails = () => {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [batchDetails, setBatchDetails] = useState(null);
-  const [progressData, setProgressData] = useState([]);
+  const [progressData, setProgressData] = useState(0);
   const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
@@ -147,12 +149,17 @@ const BatchDetails = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await fetchBatchProgress(id);
-      setProgressData(data);
+      if (data) {
+        setProgressData(data.batchProgress);
+      } else {
+        setProgressData(0);
+      }
     }
     fetchData();
   }, [progressData]);
 
-  const height = rows.length < 11 ? "h-42" : "h-48";
+  const height =
+    rows.length < 11 ? "h-42" : rows.length <= 25 ? "h-48" : "h-full";
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
@@ -202,9 +209,7 @@ const BatchDetails = () => {
             <CardFooter className="pt-0">
               <ProgressBar
                 progressValue={
-                  progressData == null || undefined
-                    ? 0
-                    : progressData.batchProgress
+                  progressData == (null || undefined) ? 0 : progressData
                 }
               />
             </CardFooter>
@@ -225,8 +230,8 @@ const BatchDetails = () => {
                 <Link to="/lms/batches/batchDetails/learningPlan">
               <Button>View Learning Plan</Button>
                 </Link>
-              <Link to="/lms/batches/batchDetails/learningPlan/batchWiseProgress">
-              <Button className="ml-5">View BatchWise Trainee Progress</Button>
+              <Link to="/lms/batches/batchDetails/batchUsersProgress">
+              <Button className="ml-5">View Batch Trainee Progress</Button>
               </Link>
             </CardFooter>
             </Card>
@@ -275,10 +280,12 @@ const BatchDetails = () => {
                 className="flex items-center gap-3"
                 color="red"
                 size="sm"
+                disabled={Object.values(selectedRows).every((value) => !value)} // Disable button if no trainees are selected
               >
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Delete
                 Trainees From Batch
               </Button>
+
               <Modal
                 open={open}
                 handleOpen={deleteHandler}

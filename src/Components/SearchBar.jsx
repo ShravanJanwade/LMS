@@ -1,7 +1,10 @@
+// SearchBar.js
 import { useState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { Input } from "@material-tailwind/react";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 
 const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,9 +21,10 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
     } else {
       const filteredRows = initialRows.filter((row) => {
         return (
-          (typeof row.userId === "number" &&
-            row.userId.toString().includes(searchQuery)) ||
-          row?.userName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (typeof row.employeeId === "number" &&
+            row.employeeId.toString().includes(searchQuery)) ||
+          row?.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row?.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row?.businessUnit?.toLowerCase().includes(searchQuery.toLowerCase())
         );
       });
@@ -34,11 +38,11 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
 
       // Map selected status from previous selected rows to new filtered rows
       initialRows.forEach((row) => {
-        if (prevSelectedRows[row.userId] !== undefined) {
-          newSelectedRows[row.userId] = prevSelectedRows[row.userId];
+        if (prevSelectedRows[row.employeeId] !== undefined) {
+          newSelectedRows[row.employeeId] = prevSelectedRows[row.employeeId];
         } else {
           // If a row was not previously selected, default it to false
-          newSelectedRows[row.userId] = false;
+          newSelectedRows[row.employeeId] = false;
         }
       });
 
@@ -61,10 +65,13 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
   return (
     <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
       <div className="w-full md:w-72">
+        <label htmlFor="searchInput" className="sr-only">Search</label>
         <Input
+          id="searchInput"
           value={searchQuery}
           onChange={searchQueryHandler}
-          label="Search"
+          label=""
+          placeholder="Search"
           icon={<MagnifyingGlassIcon className="h-5 w-5" />}
         />
       </div>

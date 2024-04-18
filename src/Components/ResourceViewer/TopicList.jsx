@@ -29,18 +29,53 @@ import AnimatedProgressProvider from "../AnimatedProgressProvider";
 import { CompletionContext } from "./CompletionContext";
 import { data } from "autoprefixer";
 import { render } from "react-dom";
+import { CourseCompletionContext } from "./CourseContext";
+import ProgressService from "../../Services/Progress/ProgressService";
 // import topics from '../../Data/Courses'
 // const topics = ['tailwind-css', 'react'];
 const questions = ["jit-compilation", "purge-files", "dark-mode"];
 const random = ["variants", "plugins"];
 
 const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
-  useEffect(() => {
-    console.log("value of docked is ", docked);
-  }, []);
+  const { courseCompletion, setCourseCompletion } = useContext(
+    CourseCompletionContext
+  );
+
   const course = Courses.find((course) => course.courseId === courseId);
-  console.log(JSON.stringify(course));
+
   const [darkTheme, setDarkTheme] = useDarkMode();
+
+  //TODO get userID from context
+  const userID = 11660;
+  //TODO get batch iD from session
+  const batchID = 1;
+
+  useEffect(() => {
+    const fetchData = async ({ userID, batchID, courseID }) => {
+      try {
+        const data = await ProgressService.getUserProgressOfCoursesByID({
+          userID,
+          courseID,
+          batchID,
+        });
+
+        // Check if courseProgress is NaN, if so, set progress to 0
+        const progress = isNaN(data?.courseProgress)
+          ? 0
+          : Math.floor(data?.courseProgress);
+
+        setCourseCompletion((prevState) => ({
+          ...prevState,
+          progress: progress,
+        }));
+      } catch (error) {
+        // Handle error
+        console.error("Error fetching user progress:", error);
+      }
+    };
+
+    fetchData({ userID, batchID, courseID: courseCompletion.courseId });
+  }, [courseCompletion.courseId]);
 
   return viewProgress ? (
     <div
@@ -51,10 +86,11 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
       }
     >
       {/* enter course Name here */}
-      <ChannelBlock CourseName={course.courseName} />
+      <ChannelBlock CourseName={course?.courseName} />
       <div className="channel-container ">
         <Card className=" min-h-[800px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-36 p-3">
-         <Progress />
+          {/* TODO set partitions as number of topics in a course */}
+          <Progress courseCompletion={courseCompletion} partitions={6} />
         </Card>
       </div>
     </div>
@@ -67,15 +103,14 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
       }
     >
       {/* enter course Name here */}
-      <ChannelBlock CourseName={course.courseName} />
+      <ChannelBlock CourseName={course?.courseName} />
       <div className="channel-container">
         <Card className=" overflow-y-auto min-h-[680px] overflow-x-hidden w-[480px] max-h-screen bg-[#D5D5D5] dark:bg-[#36373d]  pb-40">
-          {course.topics.map((topic, index) => (
+          {course?.topics.map((topic, index) => (
             <Dropdown
               key={index}
-              header={topic.topicName}
+              header={topic?.topicName}
               selections={resources}
-          
             />
           ))}
         </Card>
@@ -84,39 +119,36 @@ const TopicList = ({ courseId, docked, setDocked, viewProgress }) => {
   );
 };
 
-
-
-const Progress = () =>{
-  return(
+const Progress = ({ courseCompletion, partitions }) => {
+  return (
     <div className="min-w-[455px]">
-    <div className="w-52 m-4 flex flex-col justify-center items-center bg-gray-900 rounded-3xl  p-5 ">
-    <CircularProgressbarWithChildren
-
-    value={80}
-    text={`${80}%`}
-    strokeWidth={10}
-    styles={buildStyles({
-      strokeLinecap: "butt",
-    })}
-  >
-    <RadialSeparators
-      count={12}
-      style={{
-        background: "#fff",
-        width: "2px",
-        // This needs to be equal to props.strokeWidth
-        height: `${10}%`,
-      }}
-    />
-  </CircularProgressbarWithChildren>
-  <Typography className="mt-5 text-blue-gray-300">
-    Course Progress
-  </Typography>
-  </div>
-  OTHER METRICS COMING SOON
-  </div>
-  )
-}
+      <div className="w-52 m-4 flex flex-col justify-center items-center bg-gray-900 rounded-3xl  p-5 ">
+        <CircularProgressbarWithChildren
+          value={courseCompletion.progress}
+          text={`${courseCompletion.progress}%` || 0}
+          strokeWidth={10}
+          styles={buildStyles({
+            strokeLinecap: "butt",
+          })}
+        >
+          <RadialSeparators
+            count={partitions}
+            style={{
+              background: "#fff",
+              width: "2px",
+              // This needs to be equal to props.strokeWidth
+              height: `${10}%`,
+            }}
+          />
+        </CircularProgressbarWithChildren>
+        <Typography className="mt-5 text-blue-gray-300">
+          Course Progress
+        </Typography>
+      </div>
+      OTHER METRICS COMING SOON
+    </div>
+  );
+};
 
 const Dropdown = ({ header, selections }) => {
   const [expanded, setExpanded] = useState(true);
@@ -134,7 +166,7 @@ const Dropdown = ({ header, selections }) => {
         {header}
       </AccordionHeader>
       <AccordionBody className="dropdown-selection  ">
-        <ResourceBlock resources={selections}  />
+        <ResourceBlock resources={selections} />
         {/* {JSON.stringify(selections)} */}
       </AccordionBody>
     </Accordion>
@@ -150,19 +182,22 @@ const ResourceBlock = (props) => {
   let view = contextValue?.view;
   let setView = contextValue?.setView;
   const { completion, setCompletion } = useContext(CompletionContext);
-
+  
   // const [selectedItem, setSelectedItem] = useState(null);
+
+ 
 
   const handleClick = (data) => {
     // Set the view to the clicked data
     // setProgress({id:data.id,progress:data.progress})
-    setView({
+    setView(prevView=>({
+      ...prevView,
       id: data.id,
       name: data.name,
       type: data.type,
       source: data.source,
-      progress: data.progress,
-    });
+      
+    }));
   };
 
   useEffect(() => {
@@ -182,6 +217,7 @@ const ResourceBlock = (props) => {
             }`;
 
             return (
+           
               <tr
                 key={index}
                 className={rowClasses}
@@ -206,15 +242,10 @@ const ResourceBlock = (props) => {
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <CompletionMarker
-                    progress={
-                      data.id === completion?.topicId
-                        ? completion.progress
-                        : data.progress
-                    }
-                    type={data.type}
-                    renderId={data.id}
-                    viewId={view?.id}
+                  <CompletionMarkerRenderer
+                   
+                    data={data}
+                  
                   />
                 </td>
               </tr>
@@ -226,14 +257,63 @@ const ResourceBlock = (props) => {
   );
 };
 
+const CompletionMarkerRenderer = ({  data }) => {
+  const contextValue = useContext(viewerContext);
+  let view = contextValue?.view;
+  let setView = contextValue?.setView;
+  const { completion, setCompletion } = useContext(CompletionContext);
+  const [backendProgress,setBackendProgress]=useState(0);
+
+  
+
+    //TODO get userID from auth context
+    const userID = 11660;
+    // }
+    useEffect(() => {
+      const fetchData = async ({ userID, resourceID }) => {
+        try {
+          const data = await ProgressService.getUserProgressOfResourcesByID({
+            userID,
+            resourceID,
+          });
+          console.log("from resource block", data);
+          setBackendProgress(data.resourceProgress)
+         
+          console.log(data.resourceProgress)
+         
+        } catch (error) {
+          // Handle error
+          console.error("Error fetching user progress:", error);
+        }
+      };
+      // console.log("outside fetch",data)
+      setCompletion({resourceId:data.id,progress:backendProgress})
+      setView(prevView => ({ ...prevView, progress: backendProgress }));
+     
+      console.log("executing fetch for ", data.id);
+      fetchData({ userID, resourceID: data.id });
+    }, []);
+  return (
+    <div>
+      <CompletionMarker
+        progress={
+          data.id === completion?.resourceId ? completion.progress :backendProgress
+        }
+        type={data.type}
+        renderId={data.id}
+        viewId={view?.id}
+      />
+    </div>
+  );
+};
+
 const CompletionMarker = ({ progress, type, renderId, viewId }) => {
   // const [indvidualProgress,setIndividualProgress] = useState(progress)
 
   // const {progress,setProgress} = useContext(CompletionContext);
   // if(renderId==viewId){
   //   setProgress({id:viewId,progress:100})
-  //   //TODO-send axios request updating progress
-  // }
+  // const [progress, setProgress] = useState();
 
   return (
     <div>

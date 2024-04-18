@@ -113,7 +113,7 @@ const CustomYouTubePlayer: React.FC<YouTubePlayerProps> = (props) => {
     const progressValue = completed ? 100 : completionProgress;
 
     // Set the completion progress in the context
-    setCompletion({ topicId: view.id, progress: progressValue });
+    setCompletion({ resourceId: view.id, progress: progressValue });
 
     //TODO send axios completion progess to backed
   }, [completionProgress])

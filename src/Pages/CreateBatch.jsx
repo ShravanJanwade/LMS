@@ -1,7 +1,8 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
-
+import { createBatch } from "../Services/BatchData";
 function CreateBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
@@ -50,35 +51,21 @@ function CreateBatch() {
     const newEndDate = e.target.value;
     setEndDate(newEndDate);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("http://172.18.4.243:8078/batch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          batchName,
-          batchDescription,
-          startDate,
-          endDate,
-          batchSize,
-        }),
-      });
+    const success = await createBatch({
+      batchName,
+      batchDescription,
+      startDate,
+      endDate,
+      batchSize,
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to create batch");
-      }
-
-      // Optionally, you can redirect to another page after successful creation
-      // history.push('/some-other-page');
-      navigate("/lms/batches"); // Update the redirection link
-      console.log("Batch created successfully");
-    } catch (error) {
-      console.error("Error creating batch:", error);
+    if (success) {
+      navigate("/lms/batches");
+    } else {
+      // Handle failure case if needed
     }
   };
 

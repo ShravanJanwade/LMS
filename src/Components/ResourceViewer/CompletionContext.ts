@@ -1,18 +1,18 @@
 import { createContext, useContext } from "react";
 
 type Completion = {
-  topicId: number;
+  resourceId: number;
   progress: number;
 };
 
 interface CompletionContextType {
   completion: Completion;
-  setCompletion: React.Dispatch<React.SetStateAction<Completion>>; // Define the type of 'setView'
+  setCompletion: React.Dispatch<React.SetStateAction<Completion>>; // 
 }
 
 const defaultContext = {
   completion: {
-    topicId: 0,
+    resourceId: 0,
     progress: 0,
   },
   setCompletion: (completion: Completion) => {},

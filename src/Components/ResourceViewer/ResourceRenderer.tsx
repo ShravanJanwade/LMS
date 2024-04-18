@@ -32,7 +32,7 @@ const ResourceRenderer: React.FC<Props> = (
   const { completion, setCompletion } = useContext(CompletionContext);
   // console.log(JSON.stringify(view))
   const handleClick = () => {
-    setCompletion({ topicId: view.id, progress: 100 })
+    setCompletion({ resourceId: view.id, progress: 100 })
   }
   return (
     <div>

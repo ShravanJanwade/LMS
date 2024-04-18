@@ -12,7 +12,7 @@ export const Courses = [
     difficultyLevel: "moderate",
     topics: [
       {
-        topicId: "1",
+        topicId: 1,
         topicName: "Introduction to OOPS",
         description: "OOPS - Object Oriented Programming System",
         startDate: "25-05-2024",
@@ -20,7 +20,7 @@ export const Courses = [
         progress: 100,
       },
       {
-        topicId: "2",
+        topicId:2,
         topicName: "Exception Handling",
         description: "Handling exceptions in Java programs",
         startDate: "28-05-2024",
@@ -28,7 +28,7 @@ export const Courses = [
         progress: 80,
       },
       {
-        topicId: "3",
+        topicId:3,
         topicName: "Multithreading",
         description: "Introduction to multithreading concepts in Java",
         startDate: "01-06-2024",
@@ -36,7 +36,7 @@ export const Courses = [
         progress: 60,
       },
       {
-        topicId: "4",
+        topicId:4,
         topicName: "Collections Framework",
         description: "Working with collections in Java",
         startDate: "04-06-2024",
@@ -44,6 +44,7 @@ export const Courses = [
         progress: 40,
       },
       {
+        topicId:5,
         topicName: "File Handling",
         description: "Reading from and writing to files in Java",
         startDate: "07-06-2024",
@@ -51,6 +52,7 @@ export const Courses = [
         progress: 20,
       },
       {
+        topicId:6,
         topicName: "GUI Programming with Swing",
         description: "Creating graphical user interfaces using Swing library",
         startDate: "10-06-2024",
@@ -70,7 +72,7 @@ export const Courses = [
     difficultyLevel: "beginner",
     topics: [
       {
-        topicId: "1",
+        topicId: 7,
         topicName: "Introduction to Linux",
         description: "Basic overview of Linux operating system",
         startDate: "15-05-2024",
@@ -78,7 +80,7 @@ export const Courses = [
         progress: 100,
       },
       {
-        topicId: "2",
+        topicId: 8,
         topicName: "File System Management",
         description: "Working with files and directories in Linux",
         startDate: "18-05-2024",
@@ -86,7 +88,7 @@ export const Courses = [
         progress: 80,
       },
       {
-        topicId: "3",
+        topicId: 9,
         topicName: "Shell Scripting",
         description: "Writing and executing shell scripts in Linux",
         startDate: "21-05-2024",
@@ -94,7 +96,7 @@ export const Courses = [
         progress: 60,
       },
       {
-        topicId: "4",
+        topicId: 10,
         topicName: "Networking Basics",
         description: "Introduction to networking concepts in Linux",
         startDate: "24-05-2024",
@@ -102,7 +104,7 @@ export const Courses = [
         progress: 40,
       },
       {
-        topicId: "5",
+        topicId: 11,
         topicName: "User and Group Management",
         description: "Managing users and groups in Linux",
         startDate: "27-05-2024",
@@ -110,7 +112,7 @@ export const Courses = [
         progress: 20,
       },
       {
-        topicId: "6",
+        topicId: 12,
         topicName: "System Administration Tasks",
         description: "Performing system administration tasks in Linux",
         startDate: "30-05-2024",
@@ -130,7 +132,7 @@ export const Courses = [
     difficultyLevel: "intermediate",
     topics: [
       {
-        topicId: "1",
+        topicId: 13,
         topicName: "Introduction to Azure",
         description: "Overview of Microsoft Azure cloud services",
         startDate: "10-06-2024",
@@ -138,7 +140,7 @@ export const Courses = [
         progress: 100,
       },
       {
-        topicId: "2",
+        topicId: 14,
         topicName: "Azure Virtual Machines",
         description: "Creating and managing virtual machines in Azure",
         startDate: "13-06-2024",
@@ -146,7 +148,7 @@ export const Courses = [
         progress: 80,
       },
       {
-        topicId: "3",
+        topicId: 15,
         topicName: "Azure Storage",
         description: "Working with Azure storage services",
         startDate: "16-06-2024",
@@ -154,7 +156,7 @@ export const Courses = [
         progress: 60,
       },
       {
-        topicId: "4",
+        topicId: 16,
         topicName: "Azure App Services",
         description: "Deploying and managing web applications on Azure",
         startDate: "19-06-2024",
@@ -162,7 +164,7 @@ export const Courses = [
         progress: 40,
       },
       {
-        topicId: "5",
+        topicId: 17,
         topicName: "Azure Functions",
         description: "Developing serverless functions with Azure Functions",
         startDate: "22-06-2024",
@@ -170,7 +172,7 @@ export const Courses = [
         progress: 20,
       },
       {
-        topicId: "6",
+        topicId: 18,
         topicName: "Azure Networking",
         description: "Configuring networking in Azure",
         startDate: "25-06-2024",
@@ -190,7 +192,7 @@ export const Courses = [
     difficultyLevel: "advanced",
     topics: [
       {
-        topicId: "1",
+        topicId: 19,
         topicName: "Introduction to Jenkins",
         description: "Overview of Jenkins automation server",
         startDate: "01-07-2024",
@@ -198,7 +200,7 @@ export const Courses = [
         progress: 100,
       },
       {
-        topicId: "2",
+        topicId: 20,
         topicName: "Pipeline as Code",
         description: "Writing Jenkins pipelines as code",
         startDate: "04-07-2024",
@@ -369,41 +371,42 @@ export const resources = [
     source:
       "https://docs.aws.amazon.com/pdfs/AWSEC2/latest/UserGuide/ec2-ug.pdf",
     name: "Testing pdf document",
-    progress: 96,
+   
   },
   {
     id: 2,
     type: "ppt",
     source: "https://thisisthbs-my.sharepoint.com/:p:/r/personal/kayalvizhi_navaneethakrishnan_thbs_com/Documents/BootcampTraining/Introduction%20to%20Software%20Testing.pptx?d=wca173598a5394e589705bc71521ac86f&csf=1&web=1&e=9Wke5L",
     name: "Testing ppt from sharePoint Link",
-    progress: 60,
+  
   },
   {
     id: 3,
     type: "docx",
     source: "https://thisisthbs-my.sharepoint.com/personal/venkat_gollapudi_thbs_com/_layouts/15/Doc.aspx?sourcedoc={7f10f696-23dc-426c-9b98-8838f012b28f}&action=embedview", name: "Testing docx from sharePoint Link",
-    progress: 40,
+  
   },
   {
     id: 4,
     type: "youtubeVideo",
     source: "https://www.youtube.com/watch?v=C7OQHIpDlvA",
     name: "youtube Test Link",
-    progress: 70,
+    progress:89
+
   },
   {
     id: 5,
     type: "video",
     source: "https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create",
     name: "Video",
-    progress: 100,
+  
   },
   {
     id: 6,
     type: "external",
     source: "https://www.google.com",
     name: "unknowntype test",
-    progress: 50,
+   
   }
 
 ];

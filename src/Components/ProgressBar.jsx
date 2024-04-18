@@ -1,6 +1,8 @@
+import React from 'react';
 import { Progress } from "@material-tailwind/react";
 import PropTypes from "prop-types";
 import { Typography } from "@material-tailwind/react";
+
 const ProgressBar = ({ progressValue }) => {
   return (
     <div className="w-full">

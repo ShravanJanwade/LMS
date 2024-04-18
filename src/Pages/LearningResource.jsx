@@ -22,23 +22,23 @@ const LearningResource = () => {
   const courseProgress = [
     {
       courseId: 1,
-      progress: 30,
+      
     },
     {
       courseId: 2,
-      progress: 30,
+      
     },
     {
       courseId: 3,
-      progress: 49,
+      
     },
     {
       courseId: 4,
-      progress: 49,
+      
     },
     {
       courseId: 5,
-      progress: 42,
+      
     },
   ];
   // useEffect(()=>{

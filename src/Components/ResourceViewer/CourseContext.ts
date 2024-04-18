@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 type Course = {
     courseId: number;
-    progress: number;
+    progress: number | undefined;
 };
 
 interface CourseCompletionContextType {

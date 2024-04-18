@@ -32,6 +32,7 @@ import AnimatedProgressProvider from "../Components/AnimatedProgressProvider";
 import { easeQuadInOut } from "d3-ease";
 import { Link } from "react-router-dom";
 import { Courses } from '../Data/Courses'
+import ProgressCourse from "../Components/ProgressCourse";
 
 
 const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];
@@ -39,9 +40,15 @@ const colorCodes = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70d6ff"];
 
 const LearningPlan = () => {
 
-  useEffect(() => {
-    ProgressService.setProgress({ userID: 1, resourceID: 1,progress:10 })
-  }, [])
+  //TODO-get user ID from auth after integration
+  const userID=11660;
+
+  //TODO - get batchID from session storage after integration
+  const batchID = 1;
+
+
+
+ 
 
 
 
@@ -77,17 +84,8 @@ const LearningPlan = () => {
                 </CardHeader>
 
                 <CardBody className="relative flex flex-col justify-between w-full md:w-4/5">
-                  <AnimatedProgressProvider
-                    valueStart={0}
-                    valueEnd={data.progress}
-                    duration={0.5}
-                    easingFunction={easeQuadInOut}
-                    repeat
-                  >
-                    {value => (
-                      <Progress className="absolute -m-6" value={value} color="green" />
-                    )}
-                  </AnimatedProgressProvider>
+                  
+                <ProgressCourse courseID={data.courseId} batchID={batchID} userID={userID}/>
                   <div className="flex flex-col justify-center items-center">
                     <Card className="p-4 border border-blue-gray-100 bg-[#F2F2F2]">
                       <Typography variant="h4" color="blue-gray" className="mb-2">

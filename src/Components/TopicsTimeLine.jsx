@@ -18,11 +18,17 @@ import {
   ArchiveBoxIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/solid";
-import AnimatedProgressProvider from "./AnimatedProgressProvider";
-import { easeQuadInOut } from "d3-ease";
+
+import ProgressTopic from "./ProgressTopic";
 
 
 export function TopicsTimeLine(props) {
+  //TODO - get userID from auth
+  const userID = 11660
+  //TODO get batch ID from session
+  const batchID= 1;
+
+
   return (
     <div className="w-full">
       <Timeline>
@@ -31,26 +37,8 @@ export function TopicsTimeLine(props) {
             <TimelineConnector className="mt-6 !w-[150px ] " />
             <TimelineHeader className="relative rounded-xl border border-blue-gray-50 bg-white py-3 pl-4 pr-8 shadow-lg shadow-blue-gray-900/5">
               <TimelineIcon className="p-0 h-[3.3rem] w-[3.3rem]" variant="ghost">
-                <AnimatedProgressProvider
-                  valueStart={0}
-                  valueEnd={data.progress}
-                  duration={0.5}
-                  easingFunction={easeQuadInOut}
-                  repeat
-                >
-                  {value => {
-                    const roundedValue = Math.round(value);
-                    return (
-                      <CircularProgressbar
-                        value={value}
-                        text={`${roundedValue}%`}
-                        /* This is important to include, because if you're fully managing the
-                  animation yourself, you'll want to disable the CSS animation. */
-                        // styles={buildStyles({ pathTransition: "none" })}
-                      />
-                    );
-                  }}
-                </AnimatedProgressProvider>
+               
+                <ProgressTopic userID={userID} batchID={batchID} topicID={data.topicId} />
 
               </TimelineIcon>
               <div className="flex flex-col gap-1">

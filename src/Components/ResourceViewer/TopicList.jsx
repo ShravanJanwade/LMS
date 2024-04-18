@@ -276,7 +276,7 @@ const CompletionMarkerRenderer = ({  data }) => {
             userID,
             resourceID,
           });
-          console.log("from resource block", data);
+          console.log("from completion resources block", data);
           setBackendProgress(data.resourceProgress)
          
           console.log(data.resourceProgress)

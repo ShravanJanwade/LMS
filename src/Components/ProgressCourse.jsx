@@ -11,15 +11,14 @@ const [progress,setProgress] = useState(null);
         const fetchData = async ({userID,batchID,courseID})=>{
           
             const progress = await ProgressService.getUserProgressOfCoursesByID({ userID, courseID,batchID })
-            // console.log("progress",progress)
+            console.log("progress",progress)
             setProgress(progress.courseProgress)
         }
         fetchData({userID,courseID,batchID})
       }, [])
   return (
     <div>
-        {/* remove */}
-        
+       
           <AnimatedProgressProvider
                     valueStart={0}
                     valueEnd={progress}

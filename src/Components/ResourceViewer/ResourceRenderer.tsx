@@ -17,6 +17,7 @@ import { CompletionContext } from "./CompletionContext";
 import { RiFilePdf2Fill, RiFilePpt2Fill, RiFileWord2Fill, RiLinkM, RiVideoFill, RiYoutubeFill } from "react-icons/ri";
 import { GiQuillInk } from "react-icons/gi";
 import { ImNewTab } from "react-icons/im";
+import ProgressService from "../../Services/Progress/ProgressService";
 interface Props {
   // Define props interface here
 }
@@ -30,31 +31,49 @@ const ResourceRenderer: React.FC<Props> = (
   let view = contextValue?.view;
   let setView = contextValue?.setView;
   const { completion, setCompletion } = useContext(CompletionContext);
+  //TODO get userID from auth context
+  const userId = 11660
   // console.log(JSON.stringify(view))
   const handleClick = () => {
+    ProgressService.setProgress({ userID: userId, resourceID: view?.id, progress: 100 }).then(
+      () => {
+        console.log("completion updated successfully")
+      }
+    ).catch((error) => {
+      console.error("error", error)
+    })
+
+
+
+
     setCompletion({ resourceId: view.id, progress: 100 })
+    console.log("completion context", completion)
   }
+
+
+
+
   return (
     <div>
       {view?.type === "external" ? (
-        <ExternalTab source={view.source} handleClick={handleClick} name={view.name} />
+        <ExternalTab source={view.source} handleClick={handleClick} name={view.name} progress={view.progress} />
       )
         :
         view?.type === "ppt" ? (
-          <PptRenderer source={view.source} handleClick={handleClick} />
+          <PptRenderer source={view.source} handleClick={handleClick} progress={view.progress} />
         ) : view?.type === "docx" ? (
-          <DocxRenderer source={view.source} handleClick={handleClick} />
+          <DocxRenderer source={view.source} handleClick={handleClick} progress={view.progress} />
         ) : view?.type === "pdf" ? (
           <PdfRenderer source={view.source} handleClick={handleClick} progress={view.progress} />
         ) : view?.type === "video" ? (
-          <VideoRenderer source={view.source} />
+          <VideoRenderer source={view.source} handleClick={handleClick} progress={view.progress} />
         ) : view?.type === "youtubeVideo" ? (
           <CustomYoutubeRenderer source={view.source} />
         ) : (
           <Welcome />
         )}
 
-      {JSON.stringify(view)}
+      {/* {JSON.stringify(view)} */}
     </div>
   );
 };
@@ -116,19 +135,37 @@ const CustomYoutubeRenderer: React.FC<{ source: string }> = ({ source }) => {
   const vidId = match ? match[1] : " k1BneeJTDcU";
   return (
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[120vh] mx-5 bg-gray-200 dark:bg-[#666666]">
+      <CardHeader shadow={false} floated={false} className="min-h-[750px] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
           <CustomYouTubePlayer vidId={vidId} />
         </div>
       </CardHeader>
-      <CardBody>
-        <input></input>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        {/* <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button> */}
       </CardBody>
-      <CardFooter className="pt-0"></CardFooter>
+      <CardFooter className="pt-0 ">
+
+      </CardFooter>
     </Card>
   );
 };
-const ExternalTab: React.FC<{ source: string, handleClick: () => void, name: string }> = ({ source, handleClick, name }) => {
+const ExternalTab: React.FC<{ source: string, handleClick: () => void, name: string, progress: number }> = ({ source, handleClick, name, progress }) => {
   // console.log(renderToString())
   console.log(name)
   return (
@@ -139,11 +176,30 @@ const ExternalTab: React.FC<{ source: string, handleClick: () => void, name: str
           <Typography variant="h3" className="text-gray-500 ">Click to safely open "{name}" in a new tab</Typography>
         </a>
       </CardHeader>
-      <CardBody className="flex justify-end">
-        <Button onClick={handleClick} className="dark:text-gray-700 dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
       </CardBody>
-      <CardFooter className="pt-0"></CardFooter>
+      <CardFooter className="pt-0 ">
+
+      </CardFooter>
     </Card>
+
   )
 };
 const convertToEmbedLink = (fileLink: string): string => {
@@ -184,76 +240,120 @@ const IframeCustom: React.FC<{ source: string }> = ({ source }) => {
   );
 };
 
-const PptRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
+const PptRenderer: React.FC<{ source: string, handleClick: () => void, progress: number }> = ({ source, handleClick, progress }) => {
   return (
-    <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className=" mx-5 bg-gray-200 dark:bg-[#666666] ">
-        <div>
-          <object
-            data={source}
-            type="application/pptx"
-            width="906"
-            height="742 "
-          >
-            <IframeCustom source={source} />
-          </object>
-        </div>
-      </CardHeader>
-      <CardBody>
-        <Button onClick={handleClick} >Mark as Complete</Button>
-      </CardBody>
-      <CardFooter className="pt-0">
-
-      </CardFooter>
-    </Card>
-  );
-};
-
-const DocxRenderer: React.FC<{ source: string, handleClick: () => void }> = ({ source, handleClick }) => {
-  console.log("docx link", source)
-  return (
-    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
+    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] max-w-[1000px] overflow-auto">
       <CardHeader
         shadow={false}
         floated={false}
-        className=" mx-5 bg-gray-200 dark:bg-[#666666] h-[600px]"
+        className=" mx-5 bg-gray-200 dark:bg-[#666666] "
       >
         <div>
           <object
             data={source}
-            type="application/doc"
+            type="application/pdf"
             width="919"
-            height="550 "
+            height="742 "
           >
             <iframe
               src={source}
               width="919"
-              height="525"
+              height="742"
             >
               <p>This browser does not support PDF!</p>
             </iframe>
           </object>
         </div>
       </CardHeader>
-      <CardBody>
-        <input></input>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
       </CardBody>
       <CardFooter className="pt-0 ">
-        <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-        >
-          Notes
-        </Button>
+
+      </CardFooter>
+    </Card>
+
+
+
+
+
+
+
+
+  );
+};
+
+const DocxRenderer: React.FC<{ source: string, handleClick: () => void, progress: number }> = ({ source, handleClick, progress }) => {
+  console.log("docx link", source)
+  return (
+    <Card className="mx-2 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] max-w-[1000px] overflow-auto">
+      <CardHeader
+        shadow={false}
+        floated={false}
+        className=" mx-5 bg-gray-200 dark:bg-[#666666] "
+      >
+        <div>
+          <object
+            data={source}
+            type="application/doc"
+            width="919"
+            height="742 "
+          >
+            <iframe
+              src={source}
+              width="919"
+              height="742"
+            >
+              <p>This browser does not support PDF!</p>
+            </iframe>
+          </object>
+        </div>
+      </CardHeader>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
+      </CardBody>
+      <CardFooter className="pt-0 ">
+
       </CardFooter>
     </Card>
   );
 };
-const VideoRenderer: React.FC<{ source: string }> = ({ source }) => {
+const VideoRenderer: React.FC<{ source: string, handleClick: () => void, progress: number }> = ({ source, handleClick, progress }) => {
   return (<div>
     <Card className="mx-52 my-2  bg-gray-50 dark:bg-gray-600 h-[91vh] overflow-auto">
-      <CardHeader shadow={false} floated={false} className="min-h-[78vh] mx-5 bg-gray-200 dark:bg-[#666666]">
+      <CardHeader shadow={false} floated={false} className="min-h-[570px] mx-5 bg-gray-200 dark:bg-[#666666]">
         <div>
           <iframe
             src="https://thisisthbs-my.sharepoint.com/personal/shrivatsa_koulgi_thbs_com/_layouts/15/embed.aspx?UniqueId=b9b3471b-6ff1-479d-9c94-46385d29d30b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
@@ -266,17 +366,27 @@ const VideoRenderer: React.FC<{ source: string }> = ({ source }) => {
           </iframe>
         </div>
       </CardHeader>
-      <CardBody>
-        <input></input>
+      <CardBody className="flex justify-between ">
+        <div className="flex justify-start">
+          <div className="w-[100px] flex justify-between">
+            <Tooltip content="Add Notes" >
+              <IconButton className="dark:text-gray-700" variant="outlined">
+                <GiQuillInk size="24" className="text-gray-900" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip content="Open in New Tab" >
+              <a href={source} target="_blank">
+                <IconButton className="dark:text-gray-700" variant="outlined">
+                  <ImNewTab size="20" className="text-gray-900" />
+                </IconButton>
+              </a>
+            </Tooltip>
+          </div>
+        </div>
+        <Button onClick={handleClick} disabled={progress <= 95} className="dark:text-gray-900  dark:bg-green-500 bg-green-400" >Mark as Complete</Button>
       </CardBody>
-      <CardFooter className="pt-0">
-        <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-        >
-          Notes
-        </Button>
+      <CardFooter className="pt-0 ">
+
       </CardFooter>
     </Card>
   </div>);

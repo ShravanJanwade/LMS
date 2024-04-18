@@ -56,9 +56,9 @@ const ResourceSidebar = ({ courses,docked,setDocked,viewProgress,setViewProgress
   return (
     <div className="fixed left-0  w-16 h-96 justify-center mt-40 bg-[#F2F2F2] dark:bg-gray-900 z-20 ">
       <div className="flex flex-col justify-center items-center h-full ">
-        <SideBarIcon icon={<RiDashboard2Fill size="30" />} text="Progress" onClick={()=>setViewProgress(!viewProgress)}/>
+        <SideBarIcon icon={<RiDashboard2Fill size="30" />} text="Progress" onClick={()=>{setDocked(false);setViewProgress(!viewProgress)}}/>
         <Divider />
-        <SideBarIcon icon={<RiInboxFill size="25" />} text="All Resources" onClick={()=>{viewProgress?setViewProgress(false):null}}/>
+        <SideBarIcon icon={<RiInboxFill size="25" />} text="All Resources" onClick={()=>{setDocked(false);viewProgress?setViewProgress(false):null}}/>
         <SideBarIcon
           icon={<BsDashCircle  size="24"/>}
           text="Incomplete Resources"

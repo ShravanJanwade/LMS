@@ -51,7 +51,7 @@ export function TopicsTimeLine(props) {
                   color="gray"
                   className="text-xs" // Applying text-xs class to reduce text size
                 >
-                  Duration: {data.startDate} to {data.endDate}     TOpic id{JSON.stringify(data.topicId)}
+                  Duration: {data.startDate} to {data.endDate}     
                 </Typography>
               </div>
             </TimelineHeader>

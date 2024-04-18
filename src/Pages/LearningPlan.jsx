@@ -85,7 +85,7 @@ const LearningPlan = () => {
                   className="m-0 w-3/5 shrink-0 rounded-r-none p-3 overflow-y-auto bg-[#F2F2F2]"
                 >
 
-                  {/* <TopicsTimeLine topics={data.topics} /> */}
+                  <TopicsTimeLine topics={data.topics} />
                 </CardHeader>
 
                 <CardBody className="relative flex flex-col justify-between w-full md:w-4/5">

@@ -8,7 +8,7 @@ export const Courses = [
     startDate: "25-05-2024",
     endDate: "25-06-2024",
     trainerName: "Maqdum Sharieff",
-    progress: 50,
+    // progress: 0,
     difficultyLevel: "moderate",
     topics: [
       {
@@ -68,7 +68,7 @@ export const Courses = [
     startDate: "15-05-2024",
     endDate: "30-06-2024",
     trainerName: "John Doe",
-    progress: 20,
+    // progress: 20,
     difficultyLevel: "beginner",
     topics: [
       {

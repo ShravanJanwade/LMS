@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import BreadCrumbs from "./Components/BreadCrumbs";
 import { BatchProvider } from "./Context/BatchContext";
 function App() {
+  
   return (
     <BatchProvider>
       <Router>

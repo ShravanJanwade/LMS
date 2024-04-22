@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BatchHeader from "../Components/BatchHeader";
 import BatchDetailsCards from "../Components/BatchDetailsCards";
 import BatchDetailsTable from "../Components/BatchDetailsTable";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchBatchData } from "../Services/BatchData";
 import { fetchProgressData } from "../Services/ProgressData";
 
@@ -13,7 +13,10 @@ const ViewBatches = () => {
   const [progressData, setProgressData] = useState([]);
   const [change, setChange] = useState(false);
   const [batchData, setBatchData] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false); // Track if data has been fetched
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   const toggleHandler = () => {
     setCard((prev) => !prev);
   };
@@ -26,28 +29,47 @@ const ViewBatches = () => {
     setSearchQuery(e.target.value.toLowerCase());
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      if (!dataFetched) {
-        // Check if data has already been fetched
-        const batch = await fetchBatchData();
-        const progress = await fetchProgressData();
+  const fetchData = async () => {
+    try {
+      const batch = await fetchBatchData();
+      const progress = await fetchProgressData();
+      if (batch) {
         setBatchData(batch);
         setProgressData(progress);
-        setDataFetched(true); // Mark data as fetched
+        setError(null);
+        setLoading(false);
+      } else {
+        throw new Error("Couldn't fetch batch data from backend");
       }
+    } catch (error) {
+      setLoading(false);
+      setError("Couldn't fetch Batch Data");
+      console.error("Error fetching data:", error);
     }
+  };
+
+  useEffect(() => {
     fetchData();
-  }, [dataFetched]); // Trigger the effect only when dataFetched changes
+  }, []);
 
   const changeCardLayout = () => {
     setChange((prev) => !prev);
   };
+
   useEffect(() => {
     return () => {
-      setDataFetched(false); // Reset dataFetched when component unmounts
+      // Cleanup function to reset dataFetched when component unmounts
+      setBatchData([]);
+      setProgressData([]);
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    // Refetch data when navigating back to this page
+    const unblock = navigate("/lms/batches", { replace: true });
+    fetchData();
+    return unblock;
+  }, [navigate]);
 
   return (
     <div>
@@ -58,7 +80,15 @@ const ViewBatches = () => {
         searchHandler={searchHandler}
         changeCardLayout={changeCardLayout}
       />
-      {card ? (
+      {loading ? (
+        <div className="text-blue-600 text-center mt-4 text-lg font-semibold">
+          Loading...
+        </div>
+      ) : error ? (
+        <div className="text-red-600 text-center mt-4 text-lg font-semibold">
+          {error}
+        </div>
+      ) : card ? (
         <BatchDetailsCards
           status={status}
           searchQuery={searchQuery}
@@ -77,5 +107,4 @@ const ViewBatches = () => {
     </div>
   );
 };
-
 export default ViewBatches;

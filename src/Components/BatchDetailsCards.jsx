@@ -87,7 +87,7 @@ BatchDetailsCards.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   batchData: PropTypes.array.isRequired,
   progressData: PropTypes.array.isRequired,
-  change: PropTypes.array.isRequired,
+  change: PropTypes.bool.isRequired,
 };
 
 export default BatchDetailsCards;

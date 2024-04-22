@@ -1,21 +1,18 @@
-import {BatchIp} from "./IpAddress"
+import { BatchIp, myHeaders } from "./IpAddress";
 export async function fetchBatchData() {
   try {
-    // Fetch data from the endpoint
-    const response = await fetch(`${BatchIp}/batch`);
+   
+    const response = await fetch(`${BatchIp}/batch`, {
+      headers: myHeaders,
+    });
 
-    // Check if the response is successful
     if (!response.ok) {
       throw new Error("Failed to fetch batch data");
     }
 
-    // Parse the JSON data
     const data = await response.json();
 
-    // Get today's date
     const today = new Date();
-
-    // Iterate over each batch object and update the online property
     const updatedData = data.map((batch) => {
       const startDate = new Date(batch.startDate);
       const endDate = new Date(batch.endDate);
@@ -23,12 +20,10 @@ export async function fetchBatchData() {
       return { ...batch, online };
     });
 
-    // Return the updated data
     return updatedData;
   } catch (error) {
-    // Handle errors
     console.error("Error fetching batch data:", error);
-    return [];
+    return null;
   }
 }
 

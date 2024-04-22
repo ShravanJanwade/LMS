@@ -29,6 +29,8 @@ const UsersList = () => {
   const [open, setOpen] = useState(false);
   const [openExcel, setOpenExcel] = useState(false);
   const [fetch, setFetch] = useState(false);
+  const [error,setError]=useState(null);
+  const [loading, setLoading] = useState(true); // State variable to track loading state
   const handleOpen = () => {
     if (open) {
       // setFetch((prev) => !prev);
@@ -56,13 +58,18 @@ const UsersList = () => {
     const fetchData = async () => {
       try {
         const data = await fetchEmployees(id);
-        if (data) {
+        if(data){
           setEmployees(data);
-        } else {
-          throw new Error("Failed to fetch trainees");
+          setLoading(false); // Set loading to false when data is fetched successfully
+          setError(null); // Clear any previous errors
+        }else{
+          throw new Error("Couldn't fetch all employees")
         }
+      
       } catch (error) {
         console.error("Error fetching trainees:", error);
+        setError("Error fetching employees"); // Set error message
+        setLoading(false); // Set loading to false even if there is an error
       }
     };
 
@@ -151,6 +158,8 @@ const UsersList = () => {
           selectedRows={selectedRows}
           handleCheckboxChange={handleCheckboxChange}
           setSelectedRows={setSelectedRows}
+          error={error}
+          loading={loading}
         />
       </CardBody>
     </Card>

@@ -38,6 +38,8 @@ const BatchDetails = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [batchDetails, setBatchDetails] = useState(null);
   const [progressData, setProgressData] = useState(0);
+  const [error,setError]=useState(null);
+  const [loading,setLoading]=useState(true);
   const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
@@ -51,6 +53,7 @@ const BatchDetails = () => {
       deleteHandlerEmployees();
       // setFetch((prev) => !prev);
       setClearSearch(true);
+      setSelectedRows({});
       setTimeout(() => {
         setFetch((prev) => !prev);
       }, 1000);
@@ -99,10 +102,14 @@ const BatchDetails = () => {
         const data = await fetchTrainees(id);
         if (data) {
           setTrainees(data);
+          setLoading(false);
+          setError(null);
         } else {
           throw new Error("Failed to fetch trainees");
         }
       } catch (error) {
+        setError("Error  Fetching Batch Employees");
+        setLoading(false);
         console.error("Error fetching trainees:", error);
       }
     };
@@ -302,6 +309,8 @@ const BatchDetails = () => {
               selectedRows={selectedRows}
               handleCheckboxChange={handleCheckboxChange}
               setSelectedRows={setSelectedRows}
+              error={error}
+              loading={loading}
             />
           </CardBody>
         </Card>

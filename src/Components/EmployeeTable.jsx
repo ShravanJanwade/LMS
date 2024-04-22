@@ -13,6 +13,8 @@ const EmployeeTable = ({
   selectedRows,
   setSelectedRows,
   handleCheckboxChange,
+  error,
+  loading,
 }) => {
   const selectAllHandler = () => {
     const visibleRows = rows.filter((row) => !row.isHidden);
@@ -30,7 +32,22 @@ const EmployeeTable = ({
     // Update the selectedRows state directly to ensure the select all checkbox state is updated
     setSelectedRows(newSelectedRows);
   };
+ 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Typography variant="h5">Loading...</Typography>
+      </div>
+    );
+  }
 
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Typography className="text-red-500" variant="h5">{error}</Typography>
+      </div>
+    );
+  }
   return (
     <table className="w-full min-w-max table-auto text-left">
       <thead>
@@ -147,6 +164,8 @@ EmployeeTable.propTypes = {
   selectedRows: PropTypes.object.isRequired,
   handleCheckboxChange: PropTypes.func.isRequired,
   setSelectedRows: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 export default EmployeeTable;

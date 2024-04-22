@@ -79,7 +79,8 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
               Bulk Upload Users
             </Typography>
           </ListItem>
-          <ListItem className="cursor-pointer">
+         <Link to="/lms/batches">
+         <ListItem className="cursor-pointer">
             <ListItemPrefix>
               <PresentationChartBarIcon color="white" className="h-5 w-5" />
             </ListItemPrefix>
@@ -90,6 +91,7 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
               Batch List
             </Typography>
           </ListItem>
+         </Link>
           <ListItem className="cursor-pointer">
             <Link to="/dashboard/admin/userlist" className="flex items-center cursor-pointer">
               <UserCircleIcon color="white" className="h-5 w-5 mr-4" />

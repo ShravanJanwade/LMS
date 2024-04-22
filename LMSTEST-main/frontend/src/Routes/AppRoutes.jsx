@@ -28,7 +28,14 @@ import EnterNewPassword from "../Pages/EnterNewPassword";
 import AuthService from "../Api/services/AuthService";
 import UserListPage from "../Components/AdminDashBoard/Userslist";
 import useAuth from "../Hooks/useAuth";
-
+import CreateBatch from "../Pages/CreateBatch"; // Import your CreateBatch component
+import ViewBatches from "../Pages/ViewBatches";
+import BatchDetails from "../Pages/BatchDetails";
+import UsersList from "../Pages/UsersList";
+import LearningPlan from "../Pages/LearningPlan";
+import LearningResource from "../Pages/LearningResource";
+import ProgressList from "../Pages/ProgressList";
+import EditBatch from "../Pages/EditBatch";
 function AppRoutes() {
   const auth = useAuth();
   return (
@@ -68,8 +75,19 @@ function AppRoutes() {
           <Route path="/" element={<PagesLayout />}>
             {/* Admin pages here */}
             <Route path="/resources" element={<Resources />} />
-            <Route path="/user-list" element={<UserListPage />} /> {/* Route to UserListPage */}
+            <Route path="/dashboard/admin/userlist" element={<UserListPage />} /> {/* Route to UserListPage */}
             <Route path="/batch-list" element={<BatchList />}></Route>
+            <Route path="/lms/batches" element={<ViewBatches />} />
+      <Route path="/lms/batches/create-batch" element={<CreateBatch />} />
+      <Route path="/lms/batches/editBatch" element={<EditBatch />} />
+      <Route path="/lms/batches/batchDetails" element={<BatchDetails />} />
+      <Route
+        path="/lms/batches/batchDetails/addUsersToBatch"
+        element={<UsersList />}
+      />
+      <Route path="/lms/batches/batchDetails/batchUsersProgress" element={<ProgressList/>}/>
+      <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
+      <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
           </Route>
         </Route>
 

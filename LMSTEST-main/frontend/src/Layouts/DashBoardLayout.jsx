@@ -22,7 +22,7 @@ const DashBoardLayout = () => {
   }, []);
   return (
     <main className="App">
-      <header>DashBoardLayout</header>
+      {/* <header>DashBoardLayout</header> */}
       <Outlet />
     </main>
   );

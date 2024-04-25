@@ -1,4 +1,5 @@
-import {ProgressIp, myHeaders} from "./IpAddress"
+import {getProgressIp, myHeaders} from "./IpAddress"
+const ProgressIp=getProgressIp();
 export async function fetchProgressData() {
   try {
     const response = await fetch(`${ProgressIp}/batch-progress`,{headers:myHeaders});

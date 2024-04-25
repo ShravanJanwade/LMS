@@ -1,5 +1,6 @@
 // traineesAPI.js
-import {BatchIp} from './IpAddress'
+import {getBatchIp} from './IpAddress'
+const BatchIp=getBatchIp();
 export async function fetchEmployees(batchId) {
     try {
       const response = await fetch(`${BatchIp}/batch/remaining-employees/batch-id/${batchId}`);

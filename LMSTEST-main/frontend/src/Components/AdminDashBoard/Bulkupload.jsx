@@ -31,7 +31,7 @@ export function BulkUploadForm({setShowBulkUpload}) {
       const formData = new FormData();
       formData.append('file', file);
   
-      const response = await fetch('http://172.18.4.185:4321/user/upload', {
+      const response = await fetch(`${import.meta.env.VITE_API_GOWSIC}/user/upload`, {
         method: 'POST',
         body: formData,
       });

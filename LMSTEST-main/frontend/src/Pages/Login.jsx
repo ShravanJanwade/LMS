@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
+import logo from "../Assets/logo.png";
 
 import {
   Card,
@@ -154,9 +155,9 @@ const Login = () => {
           navigate(from);
         } else {
           // Default dashboard based on user role
-          if (role == "ADMIN") {
+          if (role === "ADMIN") {
             navigate("/dashboard/admin");
-          } else if (role === "TRAINER") {
+          } else if (role == "TRAINER") {
             navigate("/dashboard/trainer");
           } else if (role === "USER") {
             console.log("yello");
@@ -170,9 +171,21 @@ const Login = () => {
   };
 
   const isFormValid = isUsernameValid && isPasswordValid;
+  
+
 
   return (
-    <div className="flex items-center justify-center flex-col">
+    <div className="flex items-center justify-center flex-col" style={{userSelect:"none"}}>
+      
+<div className="z-10 h-[100px] bg-white flex flex-col justify-center items-center absolute left-1 w-[150px] top-3">
+  <img
+    src={logo}
+    alt="logo"
+    className="h-16 w-auto max-w-full"
+  />
+
+          
+       </div>
       {message ? (
         <Alert
           className={`w-96 h-26 text-sm m-5 p-5`}
@@ -187,6 +200,10 @@ const Login = () => {
             unmount: { y: 100 },
           }}
         >
+
+
+        
+
           <Typography colors="white">
             <div dangerouslySetInnerHTML={{ __html: message }} />
           </Typography>
@@ -197,7 +214,7 @@ const Login = () => {
       )}
       <LoadingBar color="#4caf50" ref={refLoading} />
       <div
-        className="flex justify-center items-center mt-24"
+        className="flex justify-center items-center mt-2"
         style={{
           position: "fixed",
           top: "50%",
@@ -209,12 +226,19 @@ const Login = () => {
           <CardHeader
             variant="gradient"
             color="gray"
-            className="mb-4 grid h-28 place-items-center"
+            className="mb-8  h-28 flex justify-center items-center py-8"
           >
-            <Typography variant="h3" color="white">
-              Log In
+            <Typography variant="h3" color="white" className="text-center">
+              Learning Management System
             </Typography>
           </CardHeader>
+          {/* <CardHeader
+            variant="gradient"
+            color="gray"
+            className="mb-8 h-20 flex justify-center items-center py-8"
+          >
+           
+          </CardHeader> */}
           <CardBody className=" pl-3 pr-3 h-1/2">
             <div className=" flex flex-col gap-4">
               <form className=" flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -283,5 +307,6 @@ const Login = () => {
     </div>
   );
 };
+
 
 export default Login;

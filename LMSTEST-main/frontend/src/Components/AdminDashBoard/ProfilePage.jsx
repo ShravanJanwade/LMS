@@ -16,7 +16,7 @@ export function ProfilePage() {
           {auth.username}
         </Typography>
         <Typography variant="subtitle1" color="white">
-          Employee ID: 11543
+        {auth.employeeID}
         </Typography>
         <Typography variant="subtitle1" color="white">
           Email: {auth.email}

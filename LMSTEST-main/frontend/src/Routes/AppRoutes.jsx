@@ -36,6 +36,14 @@ import LearningPlan from "../Pages/LearningPlan";
 import LearningResource from "../Pages/LearningResource";
 import ProgressList from "../Pages/ProgressList";
 import EditBatch from "../Pages/EditBatch";
+import BulkUpload from "../Components/LearnPlan/Upload";
+import { CreatePlan } from "../Components/LearnPlan/CreatePlan";
+import { Course } from "../Components/LearnPlan/Course";
+import { Topics } from "../Components/LearnPlan/topics";
+import { LearningPath } from "../Components/LearnPlan/learningPath";
+import NavbarDefault from "../Components/LearningResource/Navbar";
+import ChangePassword from "../Pages/ChangePassword";
+
 function AppRoutes() {
   const auth = useAuth();
   return (
@@ -51,6 +59,7 @@ function AppRoutes() {
           <Route path="/roleSelect" element={<RoleSelect />}></Route>
           <Route path="/enter-new-password" element={<EnterNewPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Route>
 
         {/* TRAINEE:  trainee acces paths */}
@@ -75,19 +84,17 @@ function AppRoutes() {
           <Route path="/" element={<PagesLayout />}>
             {/* Admin pages here */}
             <Route path="/resources" element={<Resources />} />
-            <Route path="/dashboard/admin/userlist" element={<UserListPage />} /> {/* Route to UserListPage */}
+            <Route
+              path="/dashboard/admin/userlist"
+              element={<UserListPage />}
+            />{" "}
+            {/* Route to UserListPage */}
             <Route path="/batch-list" element={<BatchList />}></Route>
-            <Route path="/lms/batches" element={<ViewBatches />} />
-      <Route path="/lms/batches/create-batch" element={<CreateBatch />} />
-      <Route path="/lms/batches/editBatch" element={<EditBatch />} />
-      <Route path="/lms/batches/batchDetails" element={<BatchDetails />} />
-      <Route
-        path="/lms/batches/batchDetails/addUsersToBatch"
-        element={<UsersList />}
-      />
-      <Route path="/lms/batches/batchDetails/batchUsersProgress" element={<ProgressList/>}/>
-      <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
-      <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
+            <Route path="/bulkcourse" element={<BulkUpload />} />
+            <Route path="/learnplan" element={<CreatePlan />} />
+            <Route path="/course" element={<Course />} />
+            <Route path="/learnpath" element={<LearningPath />} />
+            <Route path="/topic" element={<Topics />} />
           </Route>
         </Route>
 
@@ -101,6 +108,40 @@ function AppRoutes() {
           </Route>
           <Route path="/" element={<PagesLayout />}>
             {/* Trainer pages here */}
+            <Route path="/learningresource" element={<NavbarDefault />} />
+          </Route>
+        </Route>
+        <Route element={<RequireAuth allowedRoles={["ADMIN", "TRAINER"]} />}>
+          <Route path="/" element={<PagesLayout />}>
+            <Route path="/lms/batches" element={<ViewBatches />} />
+            <Route path="/lms/batches/create-batch" element={<CreateBatch />} />
+            <Route path="/lms/batches/editBatch" element={<EditBatch />} />
+            <Route
+              path="/lms/batches/batchDetails"
+              element={<BatchDetails />}
+            />
+            <Route
+              path="/lms/batches/batchDetails/addUsersToBatch"
+              element={<UsersList />}
+            />
+            <Route
+              path="/lms/batches/batchDetails/batchUsersProgress"
+              element={<ProgressList />}
+            />
+          </Route>
+        </Route>
+        <Route
+          element={<RequireAuth allowedRoles={["ADMIN", "TRAINER", "USER"]} />}
+        >
+          <Route path="/" element={<PagesLayout />}>
+            <Route
+              path="lms/batches/batchDetails/learningPlan"
+              element={<LearningPlan />}
+            />
+            <Route
+              path="/lms/batches/batchDetails/learningPlan/resources"
+              element={<LearningResource />}
+            />
           </Route>
         </Route>
 

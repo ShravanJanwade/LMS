@@ -23,6 +23,7 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
   const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [showUserList, setShowUserList] = useState(false);
 
+
   const handleOpenBulkUploadForm = () => {
     setShowBulkUpload(true);
   };
@@ -41,16 +42,16 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
   const { auth } = useAuth();
   return (
     <>
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 bg-black text-white">
+      <Card className=" w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 bg-black text-white h-full">
         <List>
-          <img src={logo} alt="logo" />
+          <img src={logo} alt="logo" className="white" />
           <Typography
             color="blue-gray"
             className="mr-auto text-white font-normal"
           >
-            Welcome {auth.username}
+            {/* Welcome {auth.username} */}
           </Typography>
-          <ListItem className="cursor-pointer">
+          <ListItem >
             <ListItemPrefix>
               <PresentationChartBarIcon color="white" className="h-5 w-5" />
             </ListItemPrefix>
@@ -62,7 +63,7 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
             </Typography>
           </ListItem>
           <ListItem
-            className="cursor-pointer"
+           
             onClick={handleOpenBulkUploadForm}
           >
             <ListItemPrefix>
@@ -80,7 +81,7 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
             </Typography>
           </ListItem>
          <Link to="/lms/batches">
-         <ListItem className="cursor-pointer">
+         <ListItem >
             <ListItemPrefix>
               <PresentationChartBarIcon color="white" className="h-5 w-5" />
             </ListItemPrefix>
@@ -92,8 +93,8 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
             </Typography>
           </ListItem>
          </Link>
-          <ListItem className="cursor-pointer">
-            <Link to="/dashboard/admin/userlist" className="flex items-center cursor-pointer">
+          <ListItem >
+            <Link to="/dashboard/admin/userlist" className="flex items-center ">
               <UserCircleIcon color="white" className="h-5 w-5 mr-4" />
               <Typography
                 color="blue-gray"
@@ -114,7 +115,8 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
               Profile
             </Typography>
           </ListItem>
-          <ListItem>
+          <ListItem  >
+          <Link to="/change-password" className="flex items-center ">
             <ListItemPrefix>
               <Cog6ToothIcon color="white" className="h-5 w-5" />
             </ListItemPrefix>
@@ -122,8 +124,9 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
               color="blue-gray"
               className="mr-auto text-white font-normal"
             >
-              Settings
+             Change Password
             </Typography>
+            </Link>
           </ListItem>
           <ListItem onClick={handleLogout}>
             <ListItemPrefix>
@@ -131,7 +134,7 @@ export function Sidebar({ setViewProfile, setShowLogoutPopup }) {
             </ListItemPrefix>
             <Typography
               color="blue-gray"
-              className="mr-auto text-white font-normal"
+              className="mr-auto text-white font-normal flex-grow"
             >
               Log Out
             </Typography>

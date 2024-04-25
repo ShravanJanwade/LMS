@@ -3,7 +3,7 @@ import axios from "../axios";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import useAuth from "../../Hooks/useAuth";
-
+// import axios from 'axios'
 const register = async (
   employeeId,
   firstName,
@@ -15,7 +15,7 @@ const register = async (
 ) => {
   try {
     console.log("yello");
-    const response = await axios.post("/api/v1/auth/register", {
+    const response = await axios.post(`${import.meta.env.VITE_API_GOWSIC}/api/v1/auth/register`, {
       firstname: firstName,
       lastname: lastName,
       email: signupEmail,
@@ -94,7 +94,7 @@ const login = async (loginEmail, loginPassword, setAuth, setMessage) => {
   try {
     console.log(loginEmail);
     console.log(loginPassword);
-    const response = await axios.post("/api/v1/auth/authenticate", {
+    const response = await axios.post(`${import.meta.env.VITE_API_GOWSIC}/api/v1/auth/authenticate`, {
       email: loginEmail,
       password: loginPassword,
     });
@@ -175,7 +175,7 @@ const logout = async (setAuth, navigate) => {
 
 const sendForgotMail = async (email, setMessage) => {
   try {
-    const response = await axios.post("/api/v1/auth/forgotpassword", {
+    const response = await axios.post(`${import.meta.env.VITE_API_GOWSIC}/api/v1/auth/forgotpassword`, {
       email: email,
     });
     console.log(response);
@@ -206,7 +206,7 @@ const sendForgotMail = async (email, setMessage) => {
 
 const verifyPasswordToken = async (token, setMessage) => {
   try {
-    const response = await axios.post("/api/v1/auth/verifypasswordtoken", {
+    const response = await axios.post(`${import.meta.env.VITE_API_GOWSIC}/api/v1/auth/verifypasswordtoken`, {
       token: token,
     });
     console.log(response);
@@ -237,7 +237,7 @@ const verifyPasswordToken = async (token, setMessage) => {
 
 const resetPasswordWithToken = async (token, password, setMessage) => {
   try {
-    const response = await axios.post("/api/v1/auth/resetpassword", {
+    const response = await axios.post(`${import.meta.env.VITE_API_GOWSIC}/api/v1/auth/resetpassword`, {
       token: token,
       newPassword: password,
     });

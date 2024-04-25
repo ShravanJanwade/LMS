@@ -13,7 +13,7 @@ export function LogoutDialog({showLogoutPopup , setShowLogoutPopup}) {
  
  
   return (
-    <div>
+    <div className="">
       <Dialog open={showLogoutPopup} >
         <DialogHeader>Logout</DialogHeader>
         <DialogBody>

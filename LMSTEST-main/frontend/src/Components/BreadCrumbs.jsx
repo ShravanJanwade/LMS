@@ -1,14 +1,24 @@
 import React from 'react';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
 
 const BreadCrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
-
+  const { auth, setAuth } = useAuth();
   return (
     <Breadcrumbs>
-      <Link to="/dashboard/admin" className="opacity-60">
+      {/* <Link to="/dashboard/admin" className="opacity-60"> */}
+      <Link
+            to={`/dashboard/${
+              auth.role === "ADMIN"
+                ? "admin"
+                : auth.role === "TRAINER"
+                ? "trainer"
+                : "trainee"
+            }`}
+          >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-4 w-4"

@@ -7,7 +7,7 @@ const UserListPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://172.18.4.185:4321/user/all');
+      const response = await axios.get(`${import.meta.env.VITE_API_GOWSIC}/user/all`);
       setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -30,7 +30,7 @@ const UserListPage = () => {
     try {
       await Promise.all(
         selectedUsers.map(async user => {
-          await axios.put(`http://172.18.4.185:4321/user/updateRoleToTrainer`, selectedUsers.map(user => user.employeeId));
+          await axios.put(`${import.meta.env.VITE_API_GOWSIC}/user/updateRoleToTrainer`, selectedUsers.map(user => user.employeeId));
         })
       );
       await fetchUsers(); 

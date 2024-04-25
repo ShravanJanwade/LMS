@@ -1,9 +1,8 @@
-/// <reference types="vitest" />
-/// <reference types="vite/client" />
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import dotenv from 'dotenv';
 
-
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+dotenv.config(); // Load .env file
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,4 +15,8 @@ export default defineConfig({
     // since parsing CSS is slow
     css: true,
   },
-})
+  define: {
+    'import.meta.env.BATCH_SERVICE_URL': JSON.stringify(process.env.VITE_BATCH_SERVICE_URL),
+    'import.meta.env.PROGRESS_SERVICE_URL': JSON.stringify(process.env.VITE_PROGRESS_SERVICE_URL)
+  },
+});

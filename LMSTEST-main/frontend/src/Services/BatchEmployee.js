@@ -1,4 +1,5 @@
-import {BatchIp} from "./IpAddress"
+import {getBatchIp} from "./IpAddress"
+const BatchIp=getBatchIp();
 export async function fetchTrainees(batchId) {
   try {
     const response = await fetch(

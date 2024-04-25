@@ -10,17 +10,17 @@ const Sidebar = () => {
     return (
         <div className='bg-black px-[25px] h-screen'>
             <img src={logo} alt="" />
-            <div className='px-[15px] py-[30px] flex items-center justify-center border-b-[1px] border-[#EDEDED]/[0.3]'>
-                <h1 className='text-white text-[20px] leading-[24px] font-extrabold cursor-pointer'>Welcome {auth.username}  </h1>
+            <div className='px-[15px] py-[30px] flex items-center justify-center '>
+                
             </div>
-            <div className='flex items-center gap-[15px] py-[20px] border-b-[1px] border-[#EDEDED]/[0.3] cursor-pointer'>
+            <div className='flex items-center gap-[15px] py-[20px] '>
                 <FaTachometerAlt color='white' />
                 <p className='text-[14px] leading-[20px] font-bold text-white'>Dashboard</p>
             </div>
-            <div className='pt-[15px] border-b-[1px] border-[#EDEDED]/[0.3]'>
+            <div>
                
-                <Link to="#" className='flex items-center justify-between gap-[10px] py-[15px] cursor-pointer'>
-                    <div className='flex items-center gap-[10px]'>
+                <Link to="/lms/batches/batchDetails/learningPlan" className='flex items-center justify-between gap-[10px] py-[15px] cursor-pointer'>
+                    <div className='flex items-center gap-[10px]  '>
                         <GiProgression  color='white' /> <p className='text-[14px] leading-[20px] font-normal text-white'>Progress</p>
                     </div>
                     <FaChevronRight color='white' />
@@ -33,7 +33,7 @@ const Sidebar = () => {
                 <FaChevronRight color='white' />
             </Link>
             </div>
-            <div className='pt-[15px] border-b-[1px] border-[#EDEDED]/[0.3]'>
+            <div >
                 
                <Link to="#" className='flex items-center justify-between gap-[10px] py-[15px] cursor-pointer'>
                     <div className='flex items-center gap-[10px]'>
@@ -50,9 +50,7 @@ const Sidebar = () => {
                     </div>
                     <FaChevronRight color='white' />
                 </Link>
-                <div className='flex items-center gap-[10px] py-[15px]  cursor-pointer'>
-                    <FaRegChartBar color='white' /> <p className='text-[14px] leading-[20px] font-normal text-white'>Anlyitics</p>
-                </div>
+                
                
             </div>
             

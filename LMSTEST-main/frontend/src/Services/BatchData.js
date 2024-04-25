@@ -1,7 +1,8 @@
-import { BatchIp, myHeaders } from "./IpAddress";
+import { getBatchIp, myHeaders } from "./IpAddress";
+const BatchIp=getBatchIp();
 export async function fetchBatchData() {
   try {
-   
+   console.log("Batch IP"+BatchIp);
     const response = await fetch(`${BatchIp}/batch`, {
       headers: myHeaders,
     });

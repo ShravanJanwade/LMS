@@ -75,6 +75,7 @@ export function EnterNewPassword() {
 
       // Decode token and set email
       const decodedToken = await AuthService.decodeToken(tokenFromUrl);
+      console.log(decodedToken);
       setEmail(decodedToken?.sub);
     };
 

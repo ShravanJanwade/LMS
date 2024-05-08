@@ -24,7 +24,6 @@ export function CourseCard({
 }) {
   const navigate = useNavigate();
   const { setId } = useBatch();
-
   const batchHandler = () => {
     setId(batchId);
     sessionStorage.setItem("id", batchId);
@@ -35,7 +34,7 @@ export function CourseCard({
 
   return (
     <div onClick={batchHandler} style={{ cursor: "pointer" }}>
-      <Card className={`mt-6  h-72 inline-block m-5 ${width}`}>
+      <Card className={`mt-6  h-72 inline-block m-5 ${width}`} >
         <CardBody>
           <div className="flex space-x-4 justify-end inline-block">
             <div className="w-max">

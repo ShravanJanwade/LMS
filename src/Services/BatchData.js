@@ -1,7 +1,6 @@
 import { BatchIp, myHeaders } from "./IpAddress";
 export async function fetchBatchData() {
   try {
-   
     const response = await fetch(`${BatchIp}/batch`, {
       headers: myHeaders,
     });
@@ -9,8 +8,16 @@ export async function fetchBatchData() {
     if (!response.ok) {
       throw new Error("Failed to fetch batch data");
     }
-
+    if (response.status==204) {
+      // const responseBody = await response.text();
+      // if (response.ok && responseBody.trim() === "Batches are not created yet") {
+      //   return [];
+      // }
+      return [];
+  }
     const data = await response.json();
+
+  
 
     const today = new Date();
     const updatedData = data.map((batch) => {
@@ -26,6 +33,7 @@ export async function fetchBatchData() {
     return null;
   }
 }
+
 
 // batchAPI.js
 export async function createBatch(data) {

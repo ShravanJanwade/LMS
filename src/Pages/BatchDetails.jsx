@@ -40,6 +40,8 @@ const BatchDetails = () => {
   const [progressData, setProgressData] = useState(0);
   const [error,setError]=useState(null);
   const [loading,setLoading]=useState(true);
+  const [loader,setLoader]=useState(false);
+  const [learningPlan,setLearningPlan]=useState(false);
   const navigate = useNavigate();
   const handleCheckboxChange = (employeeId) => {
     setSelectedRows((prevSelectedRows) => ({
@@ -54,6 +56,8 @@ const BatchDetails = () => {
       // setFetch((prev) => !prev);
       setClearSearch(true);
       setSelectedRows({});
+      setLoading(true);
+      setLoader(true);
       setTimeout(() => {
         setFetch((prev) => !prev);
       }, 1000);
@@ -66,6 +70,7 @@ const BatchDetails = () => {
     if (deleteOpen) {
       deleteBatchFromList();
       navigate("/lms/batches");
+      window.location.reload(); // Reload the page after navigating
     }
     setDeleteOpen((prevs) => !prevs);
   };
@@ -81,6 +86,8 @@ const BatchDetails = () => {
         const batchData = await fetchBatchDetails(id);
         if (batchData) {
           setBatchDetails(batchData);
+          setLearningPlan(batchData.learningPlan)
+          setLoading(false);
         } else {
           throw new Error("Failed to fetch batch details");
         }
@@ -103,6 +110,7 @@ const BatchDetails = () => {
         if (data) {
           setTrainees(data);
           setLoading(false);
+          setLoader(false);
           setError(null);
         } else {
           throw new Error("Failed to fetch trainees");
@@ -140,7 +148,9 @@ const BatchDetails = () => {
       setTrainees(updatedTrainees);
       setRows(updatedTrainees);
       setSelectedRows({});
+      setLoading(false);
       setClearSearch(true); // Set clearSearch flag to true to clear search bar
+      setLoader(false);
     } catch (error) {
       console.error("Error deleting trainees:", error);
     }
@@ -163,10 +173,10 @@ const BatchDetails = () => {
       }
     }
     fetchData();
-  }, [progressData]);
+  }, [progressData,rows,trainees]);
 
   const height =
-    rows.length < 11 ? "h-42" : rows.length <= 25 ? "h-48" : "h-full";
+    rows.length < 11 ? "h-42" : rows.length <= 25 ? "h-48" : "h-72";
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2">
@@ -234,9 +244,12 @@ const BatchDetails = () => {
                 <Typography>Type of Plan: Bootcamp</Typography>
               </CardBody>
               <CardFooter className="pt-0">
-                <Link to="/lms/batches/batchDetails/learningPlan">
+                {learningPlan && <Link to="/lms/batches/batchDetails/learningPlan">
               <Button>View Learning Plan</Button>
-                </Link>
+                </Link>}
+                {!learningPlan && <Link to="/lms/batches/batchDetails/learningPlan">
+              <Button>Add Learning Plan</Button>
+                </Link>}
               <Link to="/lms/batches/batchDetails/batchUsersProgress">
               <Button className="ml-5">View Batch Trainee Progress</Button>
               </Link>
@@ -303,7 +316,8 @@ const BatchDetails = () => {
           </CardHeader>
 
           <CardBody className="overflow-auto mt-0 ">
-            <EmployeeTable
+            {loader && "Deleting Employees"}
+            {!loader && <EmployeeTable
               TABLE_HEAD={TABLE_HEAD}
               rows={rows}
               selectedRows={selectedRows}
@@ -311,7 +325,7 @@ const BatchDetails = () => {
               setSelectedRows={setSelectedRows}
               error={error}
               loading={loading}
-            />
+            />}
           </CardBody>
         </Card>
       </div>

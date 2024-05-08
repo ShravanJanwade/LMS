@@ -13,6 +13,20 @@ export async function fetchEmployees(batchId) {
       return null;
     }
   }
+  export async function fetchBatchSize(batchId) {
+    try {
+
+      const response = await fetch(`${BatchIp}/batch/batch-size/${batchId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch trainees");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching trainees:", error);
+      return null;
+    }
+  }
   
   // batchUsers.js
 
@@ -63,6 +77,47 @@ export async function fetchEmployees(batchId) {
     }
   }
   
+  export const  downloadFile = async () => {
+    try {
+      // Make a GET request to the endpoint
+      const response = await fetch(`${BatchIp}/batch/format`, {
+        method: 'GET',
+      });
+  
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+  
+      // Get the content disposition header to extract the filename
+      const contentDisposition = response.headers.get('content-disposition');
+      const filenameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+  
+      // Extract the filename from the content disposition header, if available
+      const filename = filenameMatch ? filenameMatch[1] : 'downloaded_file';
+  
+      // Convert the response to blob
+      const fileBlob = await response.blob();
+  
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(fileBlob);
+  
+      // Create a link element
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+  
+      // Append the link to the document body and trigger the click event
+      document.body.appendChild(link);
+      link.click();
+  
+      // Clean up by removing the link and revoking the URL
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
   
 
   

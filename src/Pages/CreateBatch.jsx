@@ -21,11 +21,17 @@ function CreateBatch() {
     const end = new Date(endDate);
 
     if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
-      const diffInTime = end.getTime() - start.getTime();
-      let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
+      let diffInDays = 0;
+      let currentDate = start;
 
-      if (diffInDays < 1) {
-        diffInDays = 0;
+      // Iterate over each day between start and end dates
+      while (currentDate <= end) {
+        // Check if the current day is not Saturday or Sunday
+        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+          diffInDays++;
+        }
+        // Move to the next day
+        currentDate.setDate(currentDate.getDate() + 1);
       }
 
       setDuration(`${diffInDays} days`);
@@ -71,7 +77,20 @@ function CreateBatch() {
 
   // Get today's date in the format YYYY-MM-DD
   const today = new Date().toISOString().split("T")[0];
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleBatchSizeChange = (e) => {
+    const newSize = parseInt(e.target.value);
+    if (!isNaN(newSize) && newSize >= 1 && newSize <= 5000) {
+      setBatchSize(newSize);
+      setErrorMessage(""); // Clear any previous error message
+    } else if (isNaN(newSize) || newSize < 1) {
+      setBatchSize("");
+      setErrorMessage("Batch size must be between 1 and 5000.");
+    } else {
+      setErrorMessage("Batch size must be between 1 and 5000.");
+    }
+  };
+  
   return (
     <div className="flex justify-center items-center h-full mt-10">
       <Card className="w-full max-w-lg p-8">
@@ -131,12 +150,14 @@ function CreateBatch() {
             <label htmlFor="batchSize">Batch Size:</label>
             <Input
               id="batchSize"
+              type="number"
               size="lg"
               placeholder="Batch Size"
               value={batchSize}
-              onChange={(e) => setBatchSize(e.target.value)}
+              onChange={handleBatchSizeChange}
               required
             />
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           </div>
           <Typography variant="lead" color="gray">
             Duration: {duration}

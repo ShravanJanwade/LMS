@@ -2,6 +2,9 @@ import {ProgressIp, myHeaders} from "./IpAddress"
 export async function fetchProgressData() {
   try {
     const response = await fetch(`${ProgressIp}/batch-progress`,{headers:myHeaders});
+    if (response.status === 204) {
+      return [];
+    }
     if (!response.ok) {
       // throw new Error("Failed to fetch progress");
       return [];

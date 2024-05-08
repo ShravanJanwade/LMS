@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { getBatchDetails, updateBatch } from "../Services/BatchData";
+import {fetchBatchSize } from "../Services/allEmployee.js";
 
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
@@ -11,7 +12,7 @@ function EditBatch() {
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
-
+  const [currentSize,setCurrentSize]=useState(0);
   const id = sessionStorage.getItem("id");
   const navigate = useNavigate();
 
@@ -30,21 +31,26 @@ function EditBatch() {
     fetchData();
   }, [id]);
 
-  const calculateDuration = (start, end) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
+  useEffect(() => {
+    calculateDuration();
+  }, [startDate, endDate]);
 
-    if (
-      startDate &&
-      endDate &&
-      !isNaN(startDate.getTime()) &&
-      !isNaN(endDate.getTime())
-    ) {
-      const diffInTime = endDate.getTime() - startDate.getTime();
-      let diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24)) + 1;
+  const calculateDuration = () => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
-      if (diffInDays < 1) {
-        diffInDays = 0;
+    if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
+      let diffInDays = 0;
+      let currentDate = start;
+
+      // Iterate over each day between start and end dates
+      while (currentDate <= end) {
+        // Check if the current day is not Saturday or Sunday
+        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+          diffInDays++;
+        }
+        // Move to the next day
+        currentDate.setDate(currentDate.getDate() + 1);
       }
 
       setDuration(`${diffInDays} days`);
@@ -52,6 +58,9 @@ function EditBatch() {
       setDuration("");
     }
   };
+  useEffect(()=>{
+    calculateDuration();
+  })
 
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
@@ -67,7 +76,10 @@ function EditBatch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if(currentSize>batchSize){
+      setErrorMessage("Batch size cannot be less than current Employees size which is "+currentSize+". Please delete some employees to reduce the batch size");
+      return;
+    }
     const success = await updateBatch(id, {
       batchName,
       batchDescription,
@@ -84,7 +96,38 @@ function EditBatch() {
   };
 
   const today = new Date().toISOString().split("T")[0];
+  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchBatchSize(id);
+        if(data){
+          setCurrentSize(data.employeeCount);
+        }else{
+          throw new Error("Couldn't fetch batch Size")
+        }
+      
+      } catch (error) {
+        console.error("Error fetching batchSize:", error);
+      }
+    };
 
+    fetchData();
+  }, [id]);
+  const handleBatchSizeChange = (e) => {
+    const newSize = parseInt(e.target.value);
+    if (!isNaN(newSize) && newSize >= 1 && newSize <= 5000) {
+      setBatchSize(newSize);
+      setErrorMessage(""); // Clear any previous error message
+    } else if (isNaN(newSize) || newSize < 1) {
+      setBatchSize("");
+      setErrorMessage("Batch size must be between 1 and 5000.");
+    } else {
+      setErrorMessage("Batch size must be between 1 and 5000.");
+    }
+  };
+  
+  
   return (
     <div className="flex justify-center items-center h-full mt-10">
       <Card className="w-full max-w-lg p-8">
@@ -143,12 +186,14 @@ function EditBatch() {
             <label htmlFor="batchSize">Batch Size:</label>
             <Input
               id="batchSize"
+              type="number"
               size="lg"
               placeholder="Batch Size"
               value={batchSize}
-              onChange={(e) => setBatchSize(e.target.value)}
+              onChange={handleBatchSizeChange}
               required
             />
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           </div>
           <Typography variant="lead" color="gray">
             Duration: {duration}

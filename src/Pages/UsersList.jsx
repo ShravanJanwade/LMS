@@ -13,7 +13,7 @@ import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
-import { fetchEmployees, sendSelectedUsers } from "../Services/allEmployee.js";
+import { fetchEmployees, sendSelectedUsers,fetchBatchSize } from "../Services/allEmployee.js";
 import { modalAddTrainees } from "../Data/ModalData.jsx";
 import { modalAddTraineesExcel } from "../Data/ModalData.jsx";
 import FileModal from "../Components/FileModal.jsx";
@@ -31,14 +31,18 @@ const UsersList = () => {
   const [fetch, setFetch] = useState(false);
   const [error,setError]=useState(null);
   const [loading, setLoading] = useState(true); // State variable to track loading state
-  const handleOpen = () => {
+  const [batchSize,setBatchSize]=useState({});
+  const handleOpen = async() => {
     if (open) {
       // setFetch((prev) => !prev);
       handleAddToBatch();
       setFetch((prev) => !prev);
+      setLoading(true);
       // window.location.reload();
     }
-    setOpen((prev) => !prev);
+    if(!loading){
+      setOpen((prev) => !prev);
+    }
   };
   const handleClose = () => {
     setOpen((prev) => !prev);
@@ -80,19 +84,46 @@ const UsersList = () => {
   useEffect(() => {
     setRows(employees);
   }, [employees, fetch]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchBatchSize(id);
+        if(data){
+          setBatchSize(data);
+        }else{
+          throw new Error("Couldn't fetch batch Size")
+        }
+      
+      } catch (error) {
+        console.error("Error fetching batchSize:", error);
+        setError("Error fetching batchSize"); // Set error message
+      }
+    };
 
+    fetchData();
+  }, [id, fetch,employees]);
   const handleAddToBatch = async () => {
     const selectedUsers = Object.keys(selectedRows).filter(
       (userId) => selectedRows[userId]
     );
-    try {
-      await sendSelectedUsers(selectedUsers, id);
-      setSelectedRows({});
-      setFetch((prev) => !prev);
-      setClearSearch(true); // Set clearSearch flag to true to clear search bar
-    } catch (error) {
-      console.error("Error adding users to batch:", error);
+    const totalSize=batchSize.batchSize;
+    const currentSize=batchSize.employeeCount;
+    const availableSize=totalSize-currentSize;
+    if(selectedUsers.length<=availableSize){
+      try {
+    console.log(selectedUsers,availableSize,selectedUsers.length)
+        await sendSelectedUsers(selectedUsers, id);
+        setSelectedRows({});
+        setFetch((prev) => !prev);
+        setClearSearch(true); // Set clearSearch flag to true to clear search bar
+        console.log("Method reached")
+      } catch (error) {
+        console.error("Error adding users to batch:", error);
+      }
+    }else{
+      alert("The number of employees you are attempting to add exceeds the batch size. Batch Size: " + totalSize + ", Available users to add: " + availableSize + ", However, you are attempting to add: " + selectedUsers.length + " employees.");
     }
+  
   };
 
   return (
@@ -152,7 +183,10 @@ const UsersList = () => {
         </div>
       </CardHeader>
       <CardBody className="overflow-scroll  px-0" style={table}>
-        <EmployeeTable
+        {
+          loading && "Adding Employees"
+        }
+        {!loading && <EmployeeTable
           TABLE_HEAD={TABLE_HEAD}
           rows={rows}
           selectedRows={selectedRows}
@@ -160,7 +194,7 @@ const UsersList = () => {
           setSelectedRows={setSelectedRows}
           error={error}
           loading={loading}
-        />
+        />}
       </CardBody>
     </Card>
   );

@@ -68,6 +68,7 @@ const ViewBatches = () => {
     // Refetch data when navigating back to this page
     const unblock = navigate("/lms/batches", { replace: true });
     fetchData();
+    fetchData();
     return unblock;
   }, [navigate]);
 
@@ -104,6 +105,10 @@ const ViewBatches = () => {
           progressData={progressData}
         />
       )}
+      {!loading && !error && batchData.length==0 && 
+        <div className="text-grey-600 text-center mt-4 text-lg font-semibold">
+          No Batches Created
+          </div>}
     </div>
   );
 };

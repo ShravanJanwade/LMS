@@ -26,12 +26,14 @@ import {
 import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
 import { modalDeleteBatch, modalDeleteTrainee } from "../Data/ModalData.jsx";
+import DeletedModal from "../Components/DeletedModal.jsx";
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
   const [rows, setRows] = useState(trainees);
   const [selectedRows, setSelectedRows] = useState({});
   const [fetch, setFetch] = useState(false);
   const [clearSearch, setClearSearch] = useState(false);
+  const [submitOpen,setSubmitOpen]=useState(false);
   // const { id } = useBatch();
   const id = sessionStorage.getItem("id");
   const [open, setOpen] = useState(false);
@@ -58,9 +60,13 @@ const BatchDetails = () => {
       setSelectedRows({});
       setLoading(true);
       setLoader(true);
+      setSubmitOpen(true);
       setTimeout(() => {
+        setSubmitOpen(false);
+        setLoader(false);
+        setLoading(false);
         setFetch((prev) => !prev);
-      }, 1000);
+      }, 3000);
     }
     setOpen((prev) => !prev);
     // ReloadAfterDelay();
@@ -206,6 +212,7 @@ const BatchDetails = () => {
                         handleClose={handleDeleteClose}
                         data={modalDeleteBatch}
                       />
+                      <DeletedModal submitted={submitOpen}/>
                     </div>
                   </Typography>
                   <Typography className="mb-5" variant="h6" color="gray">

@@ -17,6 +17,7 @@ import { fetchEmployees, sendSelectedUsers,fetchBatchSize } from "../Services/al
 import { modalAddTrainees } from "../Data/ModalData.jsx";
 import { modalAddTraineesExcel } from "../Data/ModalData.jsx";
 import FileModal from "../Components/FileModal.jsx";
+import EmployeesSubmittedModal from "../Components/EmployeesSubmittedModal.jsx";
 const UsersList = () => {
   const table = {
     height: "490px",
@@ -32,12 +33,25 @@ const UsersList = () => {
   const [error,setError]=useState(null);
   const [loading, setLoading] = useState(true); // State variable to track loading state
   const [batchSize,setBatchSize]=useState({});
+  const [submitOpen,setSubmitOpen]=useState(false);
   const handleOpen = async() => {
     if (open) {
       // setFetch((prev) => !prev);
+      const selectedUsers = Object.keys(selectedRows).filter(
+        (userId) => selectedRows[userId]
+      );
+      const totalSize=batchSize.batchSize;
+      const currentSize=batchSize.employeeCount;
+      const availableSize=totalSize-currentSize;
       handleAddToBatch();
       setFetch((prev) => !prev);
+      if(selectedUsers.length<availableSize){
+        setSubmitOpen(true);
+      }
       setLoading(true);
+      setTimeout(() => {
+        setSubmitOpen(false);
+      }, 3000);
       // window.location.reload();
     }
     if(!loading){
@@ -121,6 +135,7 @@ const UsersList = () => {
         console.error("Error adding users to batch:", error);
       }
     }else{
+      setSubmitOpen(false);
       alert("The number of employees you are attempting to add exceeds the batch size. Batch Size: " + totalSize + ", Available users to add: " + availableSize + ", However, you are attempting to add: " + selectedUsers.length + " employees.");
     }
   
@@ -164,6 +179,7 @@ const UsersList = () => {
               handleClose={handleClose}
               data={modalAddTrainees}
             />
+            <EmployeesSubmittedModal submitted={submitOpen}/>
             <Button
               className="flex items-center gap-3"
               size="sm"

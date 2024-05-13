@@ -4,12 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 
 const BreadCrumbs = () => {
   const location = useLocation();
-  let pathnames = location.pathname.split("/").filter((x) => x); // Filter out empty segments
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  const showLMS = false;
 
-  // Remove 'lms' segment if present
-  if (pathnames.includes('lms')) {
-    pathnames = pathnames.filter(segment => segment !== 'lms');
-  }
+  // Check if 'lms' is present and should be shown
+  const showLMSInPath = pathnames.includes('lms') && showLMS;
 
   return (
     <Breadcrumbs>
@@ -24,6 +23,8 @@ const BreadCrumbs = () => {
         </svg>
       </Link>
       {pathnames.map((name, index) => {
+        if (!showLMSInPath && name === 'lms') return null; // Skip rendering 'lms' if it should not be shown
+
         const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
         const isLast = index === pathnames.length - 1;
 
@@ -32,7 +33,7 @@ const BreadCrumbs = () => {
             key={name}
             to={routeTo}
             className={`opacity-60 ${isLast ? "font-semibold" : ""}`}
-            data-testid={isLast ? 'current-page-link' : null} // Set data-testid for the current page link
+            data-testid={isLast ? 'current-page-link' : null}
           >
             <span>{name}</span>
           </Link>

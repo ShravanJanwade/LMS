@@ -16,7 +16,6 @@ export default function Date({ date, setDate }) {
   const dateHandler = (selectedDate) => {
     const formattedDate = format(selectedDate, "yyyy-MM-dd");
     setDate(formattedDate);
-    console.log("Formatted Date-",formattedDate);
   };
   
   return (

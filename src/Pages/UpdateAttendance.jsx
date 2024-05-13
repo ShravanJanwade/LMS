@@ -72,9 +72,6 @@ const UpdateAttendance = () => {
       acc[id] = true;
       return acc;
     }, {});
-    console.log("Present Employees", presentEmployees);
-    console.log("Present Employees Id", presentEmployeeIds);
-    console.log("Selected Rows", selectedRowsData);
 
     // Set the selected rows state
     setSelectedRows((prevSelectedRows) => ({
@@ -91,14 +88,12 @@ const UpdateAttendance = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(batch);
         const data = await fetchUpdatedEmployees(
           batch.id,
           course.id,
           period.name,
           date
         );
-        console.log(data);
         if (data) {
           setEmployees(data);
           setLoading(false); // Set loading to false when data is fetched successfully
@@ -138,7 +133,6 @@ const UpdateAttendance = () => {
       setSelectedRows({});
       setFetch((prev) => !prev);
       setClearSearch(true); // Set clearSearch flag to true to clear search bar
-      console.log("Method reached");
     } catch (error) {
       console.error("Error adding users to batch:", error);
     }

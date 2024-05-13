@@ -40,8 +40,6 @@ const BatchSelectPage = () => {
         period.name,
         date
       );
-      console.log(batch.id, course.id, date, period.name);
-      console.log("Record Found" + recordFound);
       setSessionData();
       if (!recordFound) {
         navigate("/attendance/takeAttendance");
@@ -65,8 +63,6 @@ const BatchSelectPage = () => {
         period.name,
         date
       );
-      console.log(batch.id, course.id, date, period.name);
-      console.log(recordFound);
       setSessionData();
       if (recordFound) {
         navigate("/attendance/updateAttendance");
@@ -83,19 +79,14 @@ const BatchSelectPage = () => {
 
   const batchHandler = (value) => {
     setBatch(value);
-    console.log(batch);
-    console.log(courseData);
-    console.log(sessionStorage.getItem("update"));
   };
 
   const courseHandler = (value) => {
-    console.log(batch);
     setCourse(value);
   };
 
   const periodHandler = (value) => {
     setPeriod(value);
-    console.log(period);
   };
 
   useEffect(() => {
@@ -108,7 +99,6 @@ const BatchSelectPage = () => {
             name: batch.batchName,
           }));
           setBatchData(transformedData);
-          console.log("Batch Data is", batchData);
         } else {
           throw new Error("Failed to fetch batch data");
         }
@@ -134,7 +124,6 @@ const BatchSelectPage = () => {
             name: course.courseName,
           }));
           setCourseData(transformedData);
-          console.log("This is course Data" + courseData);
         } else {
           throw new Error("Failed to fetch course data");
         }
@@ -150,7 +139,6 @@ const BatchSelectPage = () => {
     };
   }, [batch, batchData]);
   useEffect(() => {
-    console.log(date);
     const fetchData = async () => {
       try {
         const periodData = await getPeriodStatus(batch.id, course.id, date);
@@ -168,7 +156,6 @@ const BatchSelectPage = () => {
             }));
   
             setPeriodData(transformedData);
-            console.log("This is period Data" + courseData);
           } else {
             throw new Error("Failed to fetch period data");
           }

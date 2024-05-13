@@ -44,7 +44,6 @@ export async function fetchEmployees(batchId) {
         "type": type,
         "attendance": filteredAttendance,
     };
-    console.log(data);
     try {
         const response = await fetch(`${BatchIp}/attendance/update`, {
           method: "POST",
@@ -57,8 +56,8 @@ export async function fetchEmployees(batchId) {
         if (!response.ok) {
           throw new Error("Failed to update attendance");
         }
-        console.log(data);
-        console.log("Attendance updated successfully");
+
+
         return true; // Indicate successful update
       } catch (error) {
         console.error("Error updating attendance:", error);

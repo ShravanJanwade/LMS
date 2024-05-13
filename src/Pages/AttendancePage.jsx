@@ -68,9 +68,7 @@ const course = JSON.parse(sessionStorage.getItem("course"));
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(batch);
         let data =await fetchEmployees(batch.id);
-        console.log(data);
         if(data){
         setEmployees(data);
         setLoading(false); // Set loading to false when data is fetched successfully
@@ -103,7 +101,6 @@ const course = JSON.parse(sessionStorage.getItem("course"));
         setSelectedRows({});
         setFetch((prev) => !prev);
         setClearSearch(true); // Set clearSearch flag to true to clear search bar
-        console.log("Method reached")
       } catch (error) {
         console.error("Error adding users to batch:", error);
       }

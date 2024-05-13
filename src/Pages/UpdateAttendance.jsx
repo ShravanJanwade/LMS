@@ -59,26 +59,31 @@ const UpdateAttendance = () => {
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
-  useEffect(() => {
+  const initializeSelectedRows = () => {
     const presentEmployees = employees.filter(
       (employee) => employee.status === "present"
     );
-    // Extract employee IDs from the filtered employees
     const presentEmployeeIds = presentEmployees.map(
       (employee) => employee.employeeId
     );
-    // Prepare an object with employee IDs as keys and true as values for selected rows
     const selectedRowsData = presentEmployeeIds.reduce((acc, id) => {
       acc[id] = true;
       return acc;
     }, {});
 
-    // Set the selected rows state
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
       ...selectedRowsData,
     }));
-  }); // Empty dependency array ensures that this effect runs only once after initial render
+  };
+
+  useEffect(() => {
+    initializeSelectedRows();
+  }, [employees]);
+
+  useEffect(() => {
+    initializeSelectedRows();
+  }, []);
 
   const batch = JSON.parse(sessionStorage.getItem("batch"));
   // Retrieve course object from sessionStorage

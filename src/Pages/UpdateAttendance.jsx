@@ -13,14 +13,14 @@ import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
 import {
-    fetchEmployees,
+  fetchUpdatedEmployees,
   sendSelectedUsers,
 } from "../Services/batchEmployee.js";
 import { modalSubmitAttendance } from "../Data/ModalData.jsx";
 import { FaUserCheck } from "react-icons/fa6";
 import SubmittedModal from "../Components/SubmittedModal.jsx";
 import { useNavigate } from "react-router-dom";
-const AttendancePage = () => {
+const UpdateAttendance = () => {
   const table = {
     height: "570px",
   };
@@ -33,21 +33,20 @@ const AttendancePage = () => {
   const [fetch, setFetch] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // State variable to track loading state
-  const [submitOpen,setSubmitOpen]=useState(false);
-  const navigate=useNavigate();
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const navigate = useNavigate();
   const handleOpen = () => {
-
     if (open) {
       // setFetch((prev) => !prev);
       //   handleAddToBatch();
       submitAttendance();
       setFetch((prev) => !prev);
-      setSubmitOpen(true);
-      setTimeout(()=>{
-        setSubmitOpen(false);
-      navigate("/")
-      },2000)
       // window.location.reload();
+      setSubmitOpen(true);
+      setTimeout(() => {
+        setSubmitOpen(false);
+        navigate("/");
+      }, 2000);
     }
     setOpen((prev) => !prev);
   };
@@ -60,23 +59,52 @@ const AttendancePage = () => {
       [employeeId]: !prevSelectedRows[employeeId],
     }));
   };
+  useEffect(() => {
+    const presentEmployees = employees.filter(
+      (employee) => employee.status === "present"
+    );
+    // Extract employee IDs from the filtered employees
+    const presentEmployeeIds = presentEmployees.map(
+      (employee) => employee.employeeId
+    );
+    // Prepare an object with employee IDs as keys and true as values for selected rows
+    const selectedRowsData = presentEmployeeIds.reduce((acc, id) => {
+      acc[id] = true;
+      return acc;
+    }, {});
+    console.log("Present Employees", presentEmployees);
+    console.log("Present Employees Id", presentEmployeeIds);
+    console.log("Selected Rows", selectedRowsData);
+
+    // Set the selected rows state
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      ...selectedRowsData,
+    }));
+  }); // Empty dependency array ensures that this effect runs only once after initial render
+
   const batch = JSON.parse(sessionStorage.getItem("batch"));
-// Retrieve course object from sessionStorage
-const course = JSON.parse(sessionStorage.getItem("course"));
+  // Retrieve course object from sessionStorage
+  const course = JSON.parse(sessionStorage.getItem("course"));
   const period = JSON.parse(sessionStorage.getItem("period"));
   const date = sessionStorage.getItem("date");
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log(batch);
-        let data =await fetchEmployees(batch.id);
+        const data = await fetchUpdatedEmployees(
+          batch.id,
+          course.id,
+          period.name,
+          date
+        );
         console.log(data);
-        if(data){
-        setEmployees(data);
-        setLoading(false); // Set loading to false when data is fetched successfully
-        setError(null); // Clear any previous errors
-        }else{
-          throw new Error("Couldn't fetch all employees")
+        if (data) {
+          setEmployees(data);
+          setLoading(false); // Set loading to false when data is fetched successfully
+          setError(null); // Clear any previous errors
+        } else {
+          throw new Error("Couldn't fetch all employees");
         }
       } catch (error) {
         console.error("Error fetching trainees:", error);
@@ -93,28 +121,38 @@ const course = JSON.parse(sessionStorage.getItem("course"));
     setRows(employees);
   }, [employees, fetch]);
 
-    const submitAttendance = async () => {
-      const selectedUsers = Object.keys(selectedRows).filter(
-        (userId) => selectedRows[userId]
+  const submitAttendance = async () => {
+    const selectedUsers = Object.keys(selectedRows).filter(
+      (userId) => selectedRows[userId]
+    );
+    try {
+      const allUsers = employees.map((employee) => employee.employeeId);
+      await sendSelectedUsers(
+        allUsers,
+        selectedUsers,
+        batch.id,
+        course.id,
+        period,
+        date
       );
-      try {
-        const allUsers = employees.map(employee => employee.employeeId);
-        await sendSelectedUsers(allUsers,selectedUsers, batch.id,course.id,period,date);
-        setSelectedRows({});
-        setFetch((prev) => !prev);
-        setClearSearch(true); // Set clearSearch flag to true to clear search bar
-        console.log("Method reached")
-      } catch (error) {
-        console.error("Error adding users to batch:", error);
-      }
-    };
+      setSelectedRows({});
+      setFetch((prev) => !prev);
+      setClearSearch(true); // Set clearSearch flag to true to clear search bar
+      console.log("Method reached");
+    } catch (error) {
+      console.error("Error adding users to batch:", error);
+    }
+  };
+
   return (
     <Card className="h-full w-full mt-2">
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
-          <Typography variant="h5" color="blue-gray">
-          {`Batch-${batch ? batch.name : 'Batch Not Found'} Course-${course ? course.name : 'Course Not Found'}`}
+            <Typography variant="h5" color="blue-gray">
+              {`Batch-${batch ? batch.name : "Batch Not Found"} Course-${
+                course ? course.name : "Course Not Found"
+              }`}
             </Typography>
             <Typography variant="h5" color="blue-gray">
               Employees list
@@ -149,7 +187,7 @@ const course = JSON.parse(sessionStorage.getItem("course"));
               handleClose={handleClose}
               data={modalSubmitAttendance}
             />
-            <SubmittedModal submitted={submitOpen}/>
+            <SubmittedModal submitted={submitOpen} />
           </div>
         </div>
       </CardHeader>
@@ -168,4 +206,4 @@ const course = JSON.parse(sessionStorage.getItem("course"));
   );
 };
 
-export default AttendancePage;
+export default UpdateAttendance;

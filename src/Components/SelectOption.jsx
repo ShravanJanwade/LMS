@@ -8,7 +8,6 @@ const SelectOption = ({ disabled, selectHandler, data, label }) => {
       selectHandler(event); // Pass the selected value to the selectHandler function
     }
   };
-  const dataArray = Array.isArray(data) ? data : [data];
 
   return (
     <div className="w-full">
@@ -26,32 +25,19 @@ const SelectOption = ({ disabled, selectHandler, data, label }) => {
         disabled={disabled}
         onChange={handleChange}
       >
-        {dataArray.map((item) => {
-          if (item.batchName) {
-            // Check if the item has 'batchName', indicating it's the first type of data
-            return (
-              <Option
-                key={item.batchId}
-                value={item.batchId}
-                className="flex items-center gap-2"
-              >
-                {item.batchName}
-              </Option>
-            );
-          } else if (item.courses) {
-            // Check if the item has 'courses', indicating it's the second type of data
-            return item.courses.map((course) => (
-              <Option
-                key={course.courseId}
-                value={course.courseId}
-                className="flex items-center gap-2"
-              >
-                {course.courseName}
-              </Option>
-            ));
-          }
-          return null; // Return null for unrecognized data format
-        })}
+        {data.length === 0 ? (
+          <Option disabled>No data found</Option>
+        ) : (
+          data.map((option) => (
+            <Option
+              key={option.id}
+              value={{ id: option.id, name: option.name }}
+              className="flex items-center gap-2"
+            >
+              {option.name}
+            </Option>
+          ))
+        )}
       </Select>
     </div>
   );

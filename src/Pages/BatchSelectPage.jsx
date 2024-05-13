@@ -1,83 +1,195 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState,useEffect } from "react";
-import {
-  Card,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
+import { Card, Button, Typography } from "@material-tailwind/react";
 import SelectOption from "../Components/SelectOption";
 import Date from "../Components/Date";
-import { useNavigate } from "react-router-dom";
-import { getBatches, getCourses } from "../Services/AttendanceService";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  getBatches,
+  getCourses,
+  getPeriod,
+  getPeriodStatus,
+} from "../Services/AttendanceService";
+import { attendanceRecordFound } from "../Services/AttendanceService";
 const BatchSelectPage = () => {
-    const [batch,setBatch]=useState(null);
-    const [course,setCourse]=useState(null);
-    const [period,setPeriod]=useState(null);
-    const [batchData,setBatchData]=useState([]);
-    const [courseData,setCourseData]=useState([]);
-    const navigate=useNavigate();
-    const attendanceHandler=()=>{
-        navigate("/attendance/takeAttendance")
-    }
-    const batchHandler=(value)=>{
-        setBatch(value)
-        console.log(batch);
-        // console.log(batchData)
-        console.log(courseData);
-    }
-    const courseHandler=(value)=>{
-        setCourse(value);
-        setTimeout(()=>{
-            console.log(course);
-        },2000)
-    }
-    const periodHandler=(batch)=>{
-        setBatch(batch)
-    }
+  const [batch, setBatch] = useState(null);
+  const [course, setCourse] = useState(null);
+  const [period, setPeriod] = useState(null);
+  const [batchData, setBatchData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [periodData, setPeriodData] = useState([]);
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+  const [update, setUpdate] = useState(0);
+  useEffect(() => {
+    setUpdate(sessionStorage.getItem("update"));
+  });
+  const navigate = useNavigate();
+  const setSessionData = () => {
+    sessionStorage.setItem("batch", JSON.stringify(batch));
+    sessionStorage.setItem("course", JSON.stringify(course));
+    sessionStorage.setItem("period", JSON.stringify(period));
+    sessionStorage.setItem("date", date);
+  };
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const batchData = await getBatches();
-            if (batchData) {
-              setBatchData(batchData);
-              console.log(batchData)
-            } else {
-              throw new Error("Failed to fetch batch data");
-            }
-          } catch (error) {
-            console.error("Error fetching batch data:", error);
+  const takeAttendanceHandler = async () => {
+    try {
+      const recordFound = await attendanceRecordFound(
+        batch.id,
+        course.id,
+        period.name,
+        date
+      );
+      console.log(batch.id, course.id, date, period.name);
+      console.log("Record Found" + recordFound);
+      setSessionData();
+      if (!recordFound) {
+        navigate("/attendance/takeAttendance");
+      } else if (recordFound == true) {
+        setError(
+          "Attendance Record Found. Attendance has already been taken.Click Here to update Attendance."
+        );
+      } else {
+        setError("An error occurred while checking attendance record.");
+      }
+    } catch (error) {
+      console.error("Error checking attendance record:", error);
+      setError("An error occurred while checking attendance record.");
+    }
+  };
+  const updateAttendanceHandler = async () => {
+    try {
+      const recordFound = await attendanceRecordFound(
+        batch.id,
+        course.id,
+        period.name,
+        date
+      );
+      console.log(batch.id, course.id, date, period.name);
+      console.log(recordFound);
+      setSessionData();
+      if (recordFound) {
+        navigate("/attendance/updateAttendance");
+      } else {
+        setError(
+          "No Attendance Record Found. Please Take attendance by clicking here"
+        );
+      }
+    } catch (error) {
+      console.error("Error checking attendance record:", error);
+      setError("An error occurred while checking attendance record.");
+    }
+  };
+
+  const batchHandler = (value) => {
+    setBatch(value);
+    console.log(batch);
+    console.log(courseData);
+    console.log(sessionStorage.getItem("update"));
+  };
+
+  const courseHandler = (value) => {
+    console.log(batch);
+    setCourse(value);
+  };
+
+  const periodHandler = (value) => {
+    setPeriod(value);
+    console.log(period);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const batchData = await getBatches();
+        if (batchData) {
+          const transformedData = batchData.map((batch) => ({
+            id: batch.batchId,
+            name: batch.batchName,
+          }));
+          setBatchData(transformedData);
+          console.log("Batch Data is", batchData);
+        } else {
+          throw new Error("Failed to fetch batch data");
+        }
+      } catch (error) {
+        console.error("Error fetching batch data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const courseData = await getCourses(batch.id);
+        if (courseData) {
+          const transformedData = courseData.courses.map((course) => ({
+            id: course.courseId,
+            name: course.courseName,
+          }));
+          setCourseData(transformedData);
+          console.log("This is course Data" + courseData);
+        } else {
+          throw new Error("Failed to fetch course data");
+        }
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [batch, batchData]);
+  useEffect(() => {
+    console.log(date);
+    const fetchData = async () => {
+      try {
+        const periodData = await getPeriodStatus(batch.id, course.id, date);
+        if (periodData.length == 0 && update==0) {
+          setPeriodData(null);
+          setError(
+            "Attendance Record Found. Attendance has already been taken.Click Here to update Attendance."
+          );
+        }
+        if(update==0){
+          if (periodData) {
+            const transformedData = periodData.map((period) => ({
+              id: period === "First Half" ? 1 : period === "Second Half" ? 2 : 3,
+              name: period,
+            }));
+  
+            setPeriodData(transformedData);
+            console.log("This is period Data" + courseData);
+          } else {
+            throw new Error("Failed to fetch period data");
           }
-        };
-    
-        fetchData();
-    
-        return () => {
-          // Cleanup function
-        };
-      }, []);
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const courseData = await getCourses(batch);
-            if (courseData) {
-              setCourseData(courseData);
-              console.log(courseData)
-            } else {
-              throw new Error("Failed to fetch batch data");
-            }
-          } catch (error) {
-            console.error("Error fetching batch data:", error);
-          }
-        };
-    
-        fetchData();
-    
-        return () => {
-          // Cleanup function
-        };
-      }, [batch]);
-    
+        }else{
+          setPeriodData(getPeriod);
+        }
+        
+      } catch (error) {
+        console.error("Error fetching period data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      // Cleanup function
+    };
+  }, [date]);
+  useEffect(()=>{
+    setError(null);
+  },[date])
   return (
     <div className="flex items-center justify-center h-screen">
       <Card
@@ -97,23 +209,72 @@ const BatchSelectPage = () => {
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Select Batch
             </Typography>
-            <SelectOption disabled={false} selectHandler={batchHandler} data={batchData} label={"Select Batch"}/>
+            <SelectOption
+              disabled={false}
+              selectHandler={batchHandler}
+              data={batchData}
+              label={"Select Batch"}
+            />
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Select Course
             </Typography>
-            <SelectOption disabled={batch!=null?false:true} selectHandler={courseHandler} data={courseData}  label={"Select Course"}/>
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
+            <SelectOption
+              disabled={batch != null ? false : true}
+              selectHandler={courseHandler}
+              data={courseData}
+              label={"Select Course"}
+            />
+            {course && (
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Select Date
+              </Typography>
+            )}
+            {course && <Date date={date} setDate={setDate} />}
+            {error==null && <Typography variant="h6" color="blue-gray" className="-mb-3">
               Half of the day
-            </Typography>
-            <SelectOption disabled={false} selectHandler={periodHandler} data={batchData}  label={"Select Period"}/>
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Select Date
-            </Typography>
-            <Date/>
+            </Typography>}
+            {error==null && <SelectOption
+              disabled={date != null ? false : true}
+              selectHandler={periodHandler}
+              data={periodData}
+              label={"Select Period"}
+            />}
           </div>
-          <Button className="mt-6" fullWidth onClick={attendanceHandler}>
-            Take Attendance
-          </Button>
+          {error && (
+            <Typography color="red" className="mt-4">
+              {error}
+              {update == 0 && (
+                <Link
+                  to="/attendance/updateAttendance"
+                  className="text-blue-500 hover:underline"
+                >
+                  Update Attendance
+                </Link>
+              )}
+              {update == 1 && (
+                <Link
+                  to="/attendance/takeAttendance"
+                  className="text-blue-500 hover:underline"
+                >
+                  Take Attendance
+                </Link>
+              )}
+            </Typography>
+          )}
+          {update == 0 && (
+            <Button className="mt-6" fullWidth onClick={takeAttendanceHandler}>
+              Take Attendance
+            </Button>
+          )}
+          {update == 1 && (
+            <Button
+              className="mt-6"
+              fullWidth
+              onClick={updateAttendanceHandler}
+            >
+              Update Attendance
+            </Button>
+          )}
         </form>
       </Card>
     </div>

@@ -1,4 +1,5 @@
-export const AttendanceIp = "http://172.18.4.233:1212";
+export const AttendanceIp = "http://172.18.4.160:1212";
+export const BatchIp="http://172.18.4.160:1212"
 export const token =
   "eyJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJhYmR1bGxhaCIsInJvbGUiOiJVU0VSIiwic3ViIjoicmFzaGFkdGhic3NzQGdtYWlsLmNvbSIsImlhdCI6MTcxNDQ2NzE3OSwiZXhwIjoxNzE0NTAzMTc5fQ.4XguDHt1Tl-2a60cVtoJqq8rARBZtf7nUWrb503FPQY";
 export const myHeaders = new Headers({

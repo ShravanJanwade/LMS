@@ -10,21 +10,27 @@ import {
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import PropTypes from "prop-types";
 
-export default function Date() {
-  const [date, setDate] = useState();
-
+export default function Date({ date, setDate }) {
+  const dateHandler = (selectedDate) => {
+    const formattedDate = format(selectedDate, "yyyy-MM-dd");
+    setDate(formattedDate);
+    console.log("Formatted Date-",formattedDate);
+  };
+  
   return (
     <div className="">
       <Popover placement="bottom">
-      <PopoverHandler>
+        <PopoverHandler>
           <div className="flex items-center justify-center">
             <Input
-            color="blue"
+              color="blue"
               label={
                 !date ? ( // Display label only if no date is selected
                   <div className="flex items-center justify-center">
-                    <FaCalendarDays className="text-black-1000 mr-2 mt-2" /> {/* Icon */}
+                    <FaCalendarDays className="text-black-1000 mr-2 mt-2" />{" "}
+                    {/* Icon */}
                     <span className="text-center mt-3">Select a Date</span>
                   </div>
                 ) : null // If date is selected, don't display the label
@@ -39,7 +45,7 @@ export default function Date() {
           <DayPicker
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={dateHandler}
             showOutsideDays
             className="border-0"
             classNames={{
@@ -79,3 +85,7 @@ export default function Date() {
     </div>
   );
 }
+Date.propTypes = {
+  date: PropTypes.object,
+  setDate: PropTypes.func,
+};

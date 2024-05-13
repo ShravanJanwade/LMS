@@ -49,7 +49,6 @@ const ProgressList = () => {
       try {
         const data = await fetchBatchDetails(id);
         if (data) {
-          console.log(data);
           setBatch(data);
         } else {
           throw new Error("Failed to fetch batch Name");
@@ -66,7 +65,6 @@ const ProgressList = () => {
       try {
         const data = await fetchBatchUserProgress(id);
         if (data) {
-          console.log(data);
           setUserProgress(data);
         } else {
           throw new Error("Failed to fetch batch Name");

@@ -50,7 +50,6 @@ export async function createBatch(data) {
       throw new Error("Failed to create batch");
     }
 
-    console.log("Batch created successfully");
     return true; // Indicate successful creation
   } catch (error) {
     console.error("Error creating batch:", error);
@@ -85,7 +84,6 @@ export async function updateBatch(id, data) {
       throw new Error("Failed to update batch");
     }
 
-    console.log("Batch updated successfully");
     return true; // Indicate successful update
   } catch (error) {
     console.error("Error updating batch:", error);

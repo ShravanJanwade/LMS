@@ -4,7 +4,12 @@ import { Link, useLocation } from "react-router-dom";
 
 const BreadCrumbs = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split("/").filter((x) => x);
+  let pathnames = location.pathname.split("/").filter((x) => x); // Filter out empty segments
+
+  // Remove 'lms' segment if present
+  if (pathnames.includes('lms')) {
+    pathnames = pathnames.filter(segment => segment !== 'lms');
+  }
 
   return (
     <Breadcrumbs>

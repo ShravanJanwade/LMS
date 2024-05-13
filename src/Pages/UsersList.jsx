@@ -125,12 +125,10 @@ const UsersList = () => {
     const availableSize=totalSize-currentSize;
     if(selectedUsers.length<=availableSize){
       try {
-    console.log(selectedUsers,availableSize,selectedUsers.length)
         await sendSelectedUsers(selectedUsers, id);
         setSelectedRows({});
         setFetch((prev) => !prev);
         setClearSearch(true); // Set clearSearch flag to true to clear search bar
-        console.log("Method reached")
       } catch (error) {
         console.error("Error adding users to batch:", error);
       }

@@ -97,7 +97,6 @@ const BatchDetailsTable = ({
   const { setId } = useBatch();
   const batchHandler = (batchId) => {
     setId(batchId);
-    console.log(batchId);
     navigate("/lms/batches/batchDetails");
   };
   return (

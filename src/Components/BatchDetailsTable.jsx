@@ -1,6 +1,6 @@
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
 import {
   Card,
   Typography,
@@ -40,24 +40,24 @@ const BatchDetailsTable = ({
       : batchData.filter((row) => !row.online);
   const progressHandler = (batchId) => {
     const res = progressData.filter((data) => data.batchId == batchId);
-    if(res==undefined || res==null || res.length==0){
+    if (res == undefined || res == null || res.length == 0) {
       return 0;
     }
     return res[0].batchProgress;
   };
   const handleSort = (columnIndex) => {
     let newSortBy = { column: columnIndex, ascending: true };
-  
+
     if (sortBy.column === columnIndex) {
       newSortBy.ascending = !sortBy.ascending;
     }
-  
+
     setSortBy(newSortBy);
   };
   if (sortBy.column !== null) {
     filteredRows.sort((a, b) => {
       let valueA, valueB;
-  
+
       if (sortBy.column === 1) {
         valueA = progressHandler(a.batchId);
         valueB = progressHandler(b.batchId);
@@ -68,13 +68,12 @@ const BatchDetailsTable = ({
         valueA = a[TABLE_HEAD[sortBy.column]];
         valueB = b[TABLE_HEAD[sortBy.column]];
       }
-  
+
       if (valueA < valueB) return sortBy.ascending ? -1 : 1;
       if (valueA > valueB) return sortBy.ascending ? 1 : -1;
       return 0;
     });
   }
-  
 
   function parseDate(dateString) {
     const parts = dateString.split("/");
@@ -86,7 +85,6 @@ const BatchDetailsTable = ({
     }
     return null;
   }
-  
 
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
@@ -98,6 +96,15 @@ const BatchDetailsTable = ({
   const batchHandler = (batchId) => {
     setId(batchId);
     navigate("/lms/batches/batchDetails");
+  };
+  const [hoveredRow, setHoveredRow] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredRow(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRow(null);
   };
   return (
     <Card className="h-full w-full">
@@ -134,7 +141,17 @@ const BatchDetailsTable = ({
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
                 return (
-                  <tr key={batchName}>
+                  <tr
+                    key={batchName}
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                    style={{
+                      backgroundColor:
+                        hoveredRow === index ? "#e0f7fa" : "transparent",
+                        cursor:'pointer'
+                        // Light blue-gray color
+                    }}
+                  >
                     <td className={classes}>
                       <div className="flex items-center gap-3">
                         <div className="flex flex-col">

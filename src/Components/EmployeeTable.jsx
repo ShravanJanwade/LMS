@@ -6,7 +6,8 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React from "react";
+import { useState } from "react";
 const EmployeeTable = ({
   TABLE_HEAD,
   rows,
@@ -32,7 +33,16 @@ const EmployeeTable = ({
     // Update the selectedRows state directly to ensure the select all checkbox state is updated
     setSelectedRows(newSelectedRows);
   };
- 
+  const [hoveredRow, setHoveredRow] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredRow(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRow(null);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -44,10 +54,13 @@ const EmployeeTable = ({
   if (error) {
     return (
       <div className="flex justify-center items-center h-full">
-        <Typography className="text-red-500" variant="h5">{error}</Typography>
+        <Typography className="text-red-500" variant="h5">
+          {error}
+        </Typography>
       </div>
     );
   }
+
   return (
     <table className="w-full min-w-max table-auto text-left">
       <thead>
@@ -93,7 +106,17 @@ const EmployeeTable = ({
             const classes = isLast ? "p-1" : "p-1 border-b border-blue-gray-50";
 
             return (
-              <tr key={employeeId}>
+              <tr
+                key={employeeId}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+                style={{
+                  backgroundColor:
+                    hoveredRow === index ? "#e0f7fa" : "transparent",
+                  cursor: "pointer",
+                  // Light blue-gray color
+                }}
+              >
                 <td className={classes}>
                   <div className="w-max">
                     <Typography variant="lead" size="sm">

@@ -21,6 +21,10 @@ import EmployeesSubmittedModal from "../Components/EmployeesSubmittedModal.jsx";
 const UsersList = () => {
   const table = {
     height: "490px",
+    marginLeft:"10px",
+    marginRight:'10px',
+    borderRadius:'10px',
+    
   };
 
   const [employees, setEmployees] = useState([]);
@@ -141,7 +145,7 @@ const UsersList = () => {
 
   return (
     <Card className="h-full w-full mt-2">
-      <CardHeader floated={false} shadow={false} className="rounded-none" style={{background:'linear-gradient(135deg, white, 0%, white 50%, #FFCE3A 100%)',marginRight:'0',marginLeft:'0',padding:'15px',borderRadius:'15px'}}>
+      <CardHeader floated={false} shadow={false} className="rounded-none" style={{background:'linear-gradient(135deg, white, 0%, white 50%, #FFCE3A 100%)',marginRight:'20px',marginLeft:'0',padding:'15px',borderRadius:'15px'}}>
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">

@@ -52,7 +52,12 @@ const BatchHeader = ({
   };
 
   return (
-    <CardHeader floated={false} shadow={false} className="rounded-none" style={{background:'linear-gradient(135deg, white, 0%, white 50%, #F9D866 100%)',borderRadius:'15px'}}>
+    <CardHeader floated={false} shadow={false} className="rounded-none" style={{
+      background:'linear-gradient(135deg, white, 0%, white 50%, #F9D866 100%)',
+      borderRadius:'15px',
+      padding:'15px'
+      
+      }}>
       <div className="mb-4 sm:mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 ml-4 sm:ml-12">
         <div>
           <Typography variant="h5" color="blue-gray">

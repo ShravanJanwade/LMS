@@ -5,6 +5,7 @@ import BatchDetailsTable from "../Components/BatchDetailsTable";
 import { useNavigate } from "react-router-dom";
 import { fetchBatchData } from "../Services/BatchData";
 import { fetchProgressData } from "../Services/ProgressData";
+// import CreateBatchBackground from '../assets/CreateBatchBackground.svg'
 
 const ViewBatches = () => {
   const [card, setCard] = useState(true);
@@ -73,7 +74,7 @@ const ViewBatches = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <div >
       <BatchHeader
         toggleHandler={toggleHandler}
         card={card}

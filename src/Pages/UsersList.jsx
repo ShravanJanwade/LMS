@@ -141,7 +141,7 @@ const UsersList = () => {
 
   return (
     <Card className="h-full w-full mt-2">
-      <CardHeader floated={false} shadow={false} className="rounded-none">
+      <CardHeader floated={false} shadow={false} className="rounded-none" style={{background:'linear-gradient(135deg, white, 0%, white 50%, #FFCE3A 100%)',marginRight:'0',marginLeft:'0',padding:'15px',borderRadius:'15px'}}>
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
@@ -165,6 +165,7 @@ const UsersList = () => {
               className="flex items-center gap-3"
               size="sm"
               onClick={handleOpen}
+              style={{background:'#023047'}}
               disabled={Object.values(selectedRows).every((value) => !value)} // Disable button if no employees are selected
             >
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees
@@ -181,6 +182,7 @@ const UsersList = () => {
             <Button
               className="flex items-center gap-3"
               size="sm"
+              style={{background:'#023047'}}
               onClick={handleOpenExcel}
             >
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Trainees

@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Yell from "../assets/Yell.svg"
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import {
@@ -51,7 +52,7 @@ const BatchHeader = ({
   };
 
   return (
-    <CardHeader floated={false} shadow={false} className="rounded-none">
+    <CardHeader floated={false} shadow={false} className="rounded-none" style={{background:'linear-gradient(135deg, white, 0%, white 50%, #F9D866 100%)',borderRadius:'15px'}}>
       <div className="mb-4 sm:mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 ml-4 sm:ml-12">
         <div>
           <Typography variant="h5" color="blue-gray">
@@ -88,7 +89,7 @@ const BatchHeader = ({
             {card ? "Table View" : "Card View"}
           </Button>
           <Link to="/lms/batches/create-batch">
-            <Button className="flex items-center gap-2 mr-5">
+            <Button className="flex items-center gap-2 mr-5" style={{background:'#023047'}}>
               <UserPlusIcon strokeWidth={2} className="h-5 w-5" /> Create New
               Batch
             </Button>

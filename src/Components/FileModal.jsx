@@ -112,6 +112,7 @@ const FileModal = ({ handleOpen, open, handleClose, data, setFetch }) => {
             <label
               htmlFor="file-upload"
               className="bg-blue-900 text-white px-1 py-1 rounded-md cursor-pointer inline-flex items-center space-x-2"
+              style={{background:'#023047'}}
             >
               <MdAttachFile size={24} />
               <span className="truncate">

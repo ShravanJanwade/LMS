@@ -4,6 +4,7 @@ import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { getBatchDetails, updateBatch } from "../Services/BatchData";
 import {fetchBatchSize } from "../Services/allEmployee.js";
+import CreateBatchBackground from '../assets/BatchForm.svg'
 
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
@@ -129,7 +130,15 @@ function EditBatch() {
   
   
   return (
-    <div className="flex justify-center items-center h-full mt-10">
+    <div className="flex justify-center items-center h-full mt-10"   style={{
+      marginTop: '-70px',
+      backgroundImage: `url(${CreateBatchBackground})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      width: '100%',
+      height: '100vh', // Adjust height as needed
+    }}>
       <Card className="w-full max-w-lg p-8">
         <Typography variant="h4" color="blue-gray" className="mb-6">
           Edit Batch
@@ -198,7 +207,7 @@ function EditBatch() {
           <Typography variant="lead" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" size="lg">
+          <Button type="submit" size="lg" style={{background:'#023047'}}>
             Update Batch
           </Button>
         </form>

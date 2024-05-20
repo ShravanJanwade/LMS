@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom"; // Import useHistory hook directly
 import { createBatch } from "../Services/BatchData";
+import CreateBatchBackground from '../assets/BatchForm.svg'
 function CreateBatch() {
   const [batchName, setBatchName] = useState("");
   const [batchDescription, setBatchDescription] = useState("");
@@ -92,7 +93,16 @@ function CreateBatch() {
   };
   
   return (
-    <div className="flex justify-center items-center h-full mt-10">
+    <div className="flex justify-center items-center h-full mt-10"  style={{
+      marginTop: '-70px',
+      backgroundImage: `url(${CreateBatchBackground})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      width: '100%',
+      height: '100vh', // Adjust height as needed
+      
+    }}>
       <Card className="w-full max-w-lg p-8">
         <Typography variant="h4" color="blue-gray" className="mb-6">
           Batch Creation
@@ -162,7 +172,7 @@ function CreateBatch() {
           <Typography variant="lead" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" size="lg">
+          <Button type="submit" size="lg" style={{background:'#023047'}}>
             Create Batch
           </Button>
         </form>

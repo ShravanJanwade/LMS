@@ -27,6 +27,7 @@ import { fetchTrainees } from "../Services/BatchEmployee.js";
 import { fetchBatchProgress } from "../Services/ProgressData.js";
 import { modalDeleteBatch, modalDeleteTrainee } from "../Data/ModalData.jsx";
 import DeletedModal from "../Components/DeletedModal.jsx";
+import Yell from '../assets/Yell.svg'
 const BatchDetails = () => {
   const [trainees, setTrainees] = useState([]);
   const [rows, setRows] = useState(trainees);
@@ -187,7 +188,7 @@ const BatchDetails = () => {
     <div className="flex h-screen">
       <div className="flex w-1/2">
         <div className="flex flex-col w-full m-5">
-          <Card className="mt-0 mb-6 w-full m-1 h-1/2">
+          <Card className="mt-0 mb-6 w-full m-1 h-1/2" style={{background:`url(${Yell})`}}>
             <CardBody>
               {batchDetails ? (
                 <>
@@ -199,11 +200,11 @@ const BatchDetails = () => {
                     Batch Name: {batchDetails.batchName}
                     <div className="flex justify-end w-80">
                       <Link to="/lms/batches/editBatch">
-                        <Button className="mr-2" onClick={deleteBatchhandler}>
+                        <Button className="mr-2" onClick={deleteBatchhandler} style={{background:'#023047'}}>
                           Edit Batch
                         </Button>
                       </Link>
-                      <Button className="h-10" onClick={deleteBatchhandler}>
+                      <Button className="h-10" onClick={deleteBatchhandler} style={{background:'#023047'}}>
                         Delete Batch
                       </Button>
                       <Modal
@@ -243,7 +244,7 @@ const BatchDetails = () => {
             className="course-card-wrapper"
             style={{ zIndex: 1 }}
           >
-            <Card className="mt-6 w-full">
+            <Card className="mt-6 w-full"  style={{background:`url(${Yell})`}}>
               <CardBody>
                 <Typography variant="h3" color="blue-gray" className="mb-2">
                   Learning Plan for Batch
@@ -252,13 +253,13 @@ const BatchDetails = () => {
               </CardBody>
               <CardFooter className="pt-0">
                 {learningPlan && <Link to="/lms/batches/batchDetails/learningPlan">
-              <Button>View Learning Plan</Button>
+              <Button style={{background:'#023047'}}>View Learning Plan</Button>
                 </Link>}
                 {!learningPlan && <Link to="/lms/batches/batchDetails/learningPlan">
-              <Button>Add Learning Plan</Button>
+              <Button style={{background:'#023047'}}>Attach Learning Plan</Button>
                 </Link>}
               <Link to="/lms/batches/batchDetails/batchUsersProgress">
-              <Button className="ml-5">View Batch Trainee Progress</Button>
+              <Button style={{background:'#023047'}} className="ml-5">View Batch Trainee Progress</Button>
               </Link>
             </CardFooter>
             </Card>
@@ -266,13 +267,13 @@ const BatchDetails = () => {
         </div>
       </div>
       <div className="w-1/2 h-full">
-        <Card className="h-full m-1 mt-5">
+        <Card className="h-full m-1 mt-5" >
           <CardHeader
             floated={false}
             shadow={false}
             className={`rounded-none ${height}`}
           >
-            <div className="mb-0 mt-0 flex items-center justify-between gap-10 mb-0">
+            <div className="mb-0 mt-0 flex items-center justify-between gap-10 mb-0" >
               <div>
                 <Typography variant="h5" color="blue-gray">
                   List of Trainees in the Batch
@@ -285,7 +286,7 @@ const BatchDetails = () => {
                     to="/lms/batches/batchDetails/addUsersToBatch"
                     className="self-end m-1 mr-0"
                   >
-                    <Button className="flex items-center gap-1 w-60" size="sm">
+                    <Button className="flex items-center gap-1 w-60" size="sm" style={{background:'#023047'}}>
                       <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add
                       Trainees To Batch
                     </Button>

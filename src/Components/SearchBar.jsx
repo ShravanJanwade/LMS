@@ -63,7 +63,7 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
   }, [clearSearch]);
 
   return (
-    <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+    <div className="flex flex-col items-center justify-between gap-4 md:flex-row" >
       <div className="w-full md:w-72">
         <label htmlFor="searchInput" className="sr-only">Search</label>
         <Input
@@ -72,6 +72,7 @@ const SearchBar = ({ setRows, TABLE_ROWS, setSelectedRows, clearSearch }) => {
           onChange={searchQueryHandler}
           label=""
           placeholder="Search"
+          style={{border:'0.5px solid black',borderRadius:'10px'}}
           icon={<MagnifyingGlassIcon className="h-5 w-5" />}
         />
       </div>

@@ -11,7 +11,7 @@ import {
   getPeriodStatus,
 } from "../Services/AttendanceService";
 import { attendanceRecordFound } from "../Services/AttendanceService";
-import Yellow from "../assets/Background.svg"
+import Yellow from "../assets/BatchForm.svg"
 const BatchSelectPage = () => {
   const [batch, setBatch] = useState(null);
   const [course, setCourse] = useState(null);

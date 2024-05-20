@@ -12,6 +12,8 @@ import Modal from "../Components/Modal";
 import EmployeeTable from "../Components/EmployeeTable";
 import { TABLE_HEAD } from "../Services/EmployeeData.js";
 import SearchBar from "../Components/SearchBar";
+import BreadCrumbs from "../Components/BreadCrumbs.jsx";
+import Yellow from "../assets/back1.svg"
 import {
   fetchUpdatedEmployees,
   sendSelectedUsers,
@@ -145,8 +147,9 @@ const UpdateAttendance = () => {
 
   return (
     <Card className="h-full w-full mt-2">
-      <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-8 flex items-center justify-between gap-8">
+  <CardHeader style={{background:`url(${Yellow})`,borderRadius:'12px',marginLeft:'0px',padding:'15px',marginRight:'0px',height:'250px',marginTop:'-50px',paddingTop:'0',paddingLeft:'0'}} floated={false} shadow={false} className="rounded-none" >
+      <BreadCrumbs/>
+              <div className="mb-8 flex items-center justify-between gap-8"  style={{padding:'15px'}}>
           <div>
             <Typography variant="h5" color="blue-gray">
               {`Batch-${batch ? batch.name : "Batch Not Found"} Course-${
@@ -161,7 +164,7 @@ const UpdateAttendance = () => {
             </Typography>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row"  style={{padding:'15px'}}>
           <SearchBar
             setRows={setRows}
             TABLE_ROWS={employees}

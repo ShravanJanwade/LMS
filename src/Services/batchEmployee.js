@@ -1,7 +1,7 @@
-import {BatchIp,myHeaders} from "./IpAddress"
+import {AttendanceIp,myHeaders} from "./IpAddress"
 export async function fetchEmployees(batchId) {
     try {
-      const response = await fetch(`${BatchIp}/batch/employees/${batchId}`,{
+      const response = await fetch(`${AttendanceIp}/batch/employees/${batchId}`,{
         headers:myHeaders,
       });
       if (!response.ok) {
@@ -16,7 +16,7 @@ export async function fetchEmployees(batchId) {
   export async function fetchUpdatedEmployees(batchId,courseId,type,date) {
     
     try {
-      const response = await fetch(`${BatchIp}/attendance/batch/${batchId}/course/${courseId}/Date/${date}/type/${type}`,{
+      const response = await fetch(`${AttendanceIp}/batch/${batchId}/course/${courseId}/Date/${date}/type/${type}`,{
         headers:myHeaders,
       });
       if (!response.ok) {
@@ -45,11 +45,9 @@ export async function fetchEmployees(batchId) {
         "attendance": filteredAttendance,
     };
     try {
-        const response = await fetch(`${BatchIp}/attendance/update`, {
+        const response = await fetch(`${AttendanceIp}/update`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: myHeaders,
           body: JSON.stringify(data),
         });
     

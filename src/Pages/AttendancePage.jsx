@@ -20,6 +20,8 @@ import { modalSubmitAttendance } from "../Data/ModalData.jsx";
 import { FaUserCheck } from "react-icons/fa6";
 import SubmittedModal from "../Components/SubmittedModal.jsx";
 import { useNavigate } from "react-router-dom";
+import Yellow from "../assets/back1.svg"
+import BreadCrumbs from "../Components/BreadCrumbs.jsx";
 const AttendancePage = () => {
   const table = {
     height: "570px",
@@ -107,21 +109,22 @@ const course = JSON.parse(sessionStorage.getItem("course"));
     };
   return (
     <Card className="h-full w-full mt-2">
-      <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-8 flex items-center justify-between gap-8">
-          <div>
-          <Typography variant="h5" color="blue-gray">
+      <CardHeader style={{background:`url(${Yellow})`,borderRadius:'12px',marginLeft:'0px',padding:'15px',marginRight:'0px',height:'250px',marginTop:'-50px',paddingTop:'0',paddingLeft:'0'}} floated={false} shadow={false} className="rounded-none" >
+      <BreadCrumbs/>
+        <div  className="mb-8 flex items-center justify-between gap-8" style={{padding:'15px'}}>
+          <div  >
+          <Typography variant="h5" color="blue-gray" >
           {`Batch-${batch ? batch.name : 'Batch Not Found'} Course-${course ? course.name : 'Course Not Found'}`}
             </Typography>
             <Typography variant="h5" color="blue-gray">
               Employees list
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
+            <Typography color="gray" variant="h6" className="mt-1 font-normal">
               Select The employees you want to take attendance
             </Typography>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row" style={{padding:'15px'}}>
           <SearchBar
             setRows={setRows}
             TABLE_ROWS={employees}

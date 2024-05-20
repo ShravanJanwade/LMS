@@ -11,6 +11,7 @@ import {
   getPeriodStatus,
 } from "../Services/AttendanceService";
 import { attendanceRecordFound } from "../Services/AttendanceService";
+import Yellow from "../assets/Background.svg"
 const BatchSelectPage = () => {
   const [batch, setBatch] = useState(null);
   const [course, setCourse] = useState(null);
@@ -142,27 +143,27 @@ const BatchSelectPage = () => {
     const fetchData = async () => {
       try {
         const periodData = await getPeriodStatus(batch.id, course.id, date);
-        if (periodData.length == 0 && update==0) {
+        if (periodData.length == 0 && update == 0) {
           setPeriodData(null);
           setError(
             "Attendance Record Found. Attendance has already been taken.Click Here to update Attendance."
           );
         }
-        if(update==0){
+        if (update == 0) {
           if (periodData) {
             const transformedData = periodData.map((period) => ({
-              id: period === "First Half" ? 1 : period === "Second Half" ? 2 : 3,
+              id:
+                period === "First Half" ? 1 : period === "Second Half" ? 2 : 3,
               name: period,
             }));
-  
+
             setPeriodData(transformedData);
           } else {
             throw new Error("Failed to fetch period data");
           }
-        }else{
+        } else {
           setPeriodData(getPeriod);
         }
-        
       } catch (error) {
         console.error("Error fetching period data:", error);
       }
@@ -174,16 +175,32 @@ const BatchSelectPage = () => {
       // Cleanup function
     };
   }, [date]);
-  useEffect(()=>{
+  useEffect(() => {
     setError(null);
-  },[date])
+  }, [date]);
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div
+      className="flex items-center justify-center h-screen"
+      style={{
+        marginTop: '-70px',
+        backgroundImage: `url(${Yellow})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100vh', // Adjust height as needed
+      }}
+      // style={{
+      //   marginTop: '-70px',
+      //   background: 'linear-gradient(135deg, #fff6d9 0%, #f0e68c 100%)'
+      // }}
+      
+    >
       <Card
-        color="transparent"
+        // color="orange"
         shadow={true} // Set shadow to true
-        className="flex items-center justify-center border border-gray-200 rounded-xlg p-8" // Add border and padding
-        style={{ maxWidth: "800px" }} // Set max-width for responsiveness
+        className="flex items-center justify-center border border-gray-200 rounded-xlg p-12" // Add border and padding
+        style={{ maxWidth: "800px" }} // Set max-width for responsiveness\
       >
         <Typography variant="h4" color="blue-gray" className="text-center">
           Attendance System
@@ -217,15 +234,19 @@ const BatchSelectPage = () => {
               </Typography>
             )}
             {course && <Date date={date} setDate={setDate} />}
-            {error==null && <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Half of the day
-            </Typography>}
-            {error==null && <SelectOption
-              disabled={date != null ? false : true}
-              selectHandler={periodHandler}
-              data={periodData}
-              label={"Select Period"}
-            />}
+            {error == null && (
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Half of the day
+              </Typography>
+            )}
+            {error == null && (
+              <SelectOption
+                disabled={date != null ? false : true}
+                selectHandler={periodHandler}
+                data={periodData}
+                label={"Select Period"}
+              />
+            )}
           </div>
           {error && (
             <Typography color="red" className="mt-4">
@@ -249,7 +270,12 @@ const BatchSelectPage = () => {
             </Typography>
           )}
           {update == 0 && (
-            <Button className="mt-6" fullWidth onClick={takeAttendanceHandler}>
+            <Button
+              className="mt-6"
+              style={{ backgroundColor: "#023047" }}
+              fullWidth
+              onClick={takeAttendanceHandler}
+            >
               Take Attendance
             </Button>
           )}
@@ -258,6 +284,7 @@ const BatchSelectPage = () => {
               className="mt-6"
               fullWidth
               onClick={updateAttendanceHandler}
+              style={{ backgroundColor: "#023047" }}
             >
               Update Attendance
             </Button>

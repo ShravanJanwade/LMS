@@ -1,7 +1,7 @@
 import { AttendanceIp, myHeaders } from "./IpAddress";
 export async function getBatches() {
   try {
-    const response = await fetch(`${AttendanceIp}/batch`, {
+    const response = await fetch(`${AttendanceIp}/batches`, {
       headers: myHeaders,
     });
     if (!response.ok) {
@@ -15,7 +15,7 @@ export async function getBatches() {
 }
 export async function getCourses(batchId) {
   try {
-    const response = await fetch(`${AttendanceIp}/batch/${batchId}/courses`, {
+    const response = await fetch(`http://172.18.4.108:1111/batch-course/batch/${batchId}`, {
       headers: myHeaders,
     });
     if (!response.ok) {
@@ -45,7 +45,7 @@ export const getPeriod = [
 export async function getPeriodStatus(batchId, courseId, date) {
   try {
     const response = await fetch(
-      `${AttendanceIp}/attendance/batch/${batchId}/course/${courseId}/Date/${date}`,
+      `${AttendanceIp}/batch/${batchId}/course/${courseId}/Date/${date}`,
       {
         headers: myHeaders,
       }
@@ -62,7 +62,7 @@ export async function getPeriodStatus(batchId, courseId, date) {
 export async function attendanceRecordFound(batchId, courseId, type, date) {
   try {
     const response = await fetch(
-      `${AttendanceIp}/attendance/batch/${batchId}/course/${courseId}/Date/${date}/type/${type}`,
+      `${AttendanceIp}/batch/${batchId}/course/${courseId}/Date/${date}/type/${type}`,
       {
         headers: myHeaders,
       }

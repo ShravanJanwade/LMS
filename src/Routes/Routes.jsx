@@ -11,6 +11,9 @@ import LearningPlan from "../Pages/LearningPlan";
 import LearningResource from "../Pages/LearningResource";
 import ProgressList from "../Pages/ProgressList";
 import EditBatch from "../Pages/EditBatch";
+import BatchSelectPage from '../Pages/BatchSelectPage';
+import AttendancePage from '../Pages/AttendancePage';
+import UpdateAttendance from '../Pages/UpdateAttendance';
 function AppRoutes() {
   return (
     <Routes>
@@ -26,6 +29,9 @@ function AppRoutes() {
       <Route path="/lms/batches/batchDetails/batchUsersProgress" element={<ProgressList/>}/>
       <Route path="lms/batches/batchDetails/learningPlan" element={<LearningPlan/>}/>
       <Route path="/lms/batches/batchDetails/learningPlan/resources" element={<LearningResource/>}/>
+      <Route path="/attendance/BatchSelect" element={<BatchSelectPage/>}/>
+      <Route path="/attendance/takeAttendance" element={<AttendancePage/>}/>
+      <Route path="/attendance/updateAttendance" element={<UpdateAttendance/>}/>
     </Routes>
   );
 }

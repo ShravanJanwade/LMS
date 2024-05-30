@@ -1,7 +1,9 @@
-import {ProgressIp, myHeaders} from "./IpAddress"
+import { ProgressIp, myHeaders } from "./IpAddress";
 export async function fetchProgressData() {
   try {
-    const response = await fetch(`${ProgressIp}/batch-progress`,{headers:myHeaders});
+    const response = await fetch(`${ProgressIp}/batch-progress`, {
+      headers: myHeaders,
+    });
     if (response.status === 204) {
       return [];
     }
@@ -18,7 +20,12 @@ export async function fetchProgressData() {
 }
 export async function fetchBatchUserProgress(id) {
   try {
-    const response = await fetch(`${ProgressIp}/batch-progress/allusers/${id}`);
+    const response = await fetch(
+      `${ProgressIp}/batch-progress/allusers/${id}`,
+      {
+        headers: myHeaders,
+      }
+    );
     if (!response.ok) {
       // throw new Error("Failed to fetch progress");
       return [];
@@ -33,9 +40,9 @@ export async function fetchBatchUserProgress(id) {
 
 export async function fetchBatchProgress(batchId) {
   try {
-    const response = await fetch(
-      `${ProgressIp}/batch-progress/${batchId}`
-    );
+    const response = await fetch(`${ProgressIp}/batch-progress/${batchId}`, {
+      headers: myHeaders,
+    });
     if (!response.ok) {
       // throw new Error("Failed to fetch progress");
       return [];

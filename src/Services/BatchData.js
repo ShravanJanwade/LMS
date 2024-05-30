@@ -40,9 +40,8 @@ export async function createBatch(data) {
   try {
     const response = await fetch(`${BatchIp}/batch`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+       headers: myHeaders ,
+
       body: JSON.stringify(data),
     });
 
@@ -59,7 +58,9 @@ export async function createBatch(data) {
 // batchAPI.js
 export async function getBatchDetails(id) {
   try {
-    const response = await fetch(`${BatchIp}/batch/id/${id}`);
+    const response = await fetch(`${BatchIp}/batch/id/${id}`,{
+      headers: myHeaders ,
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch batch details");
     }
@@ -74,9 +75,8 @@ export async function updateBatch(id, data) {
   try {
     const response = await fetch(`${BatchIp}/batch/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: myHeaders ,
+
       body: JSON.stringify(data),
     });
 

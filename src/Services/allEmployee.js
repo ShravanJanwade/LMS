@@ -1,8 +1,10 @@
 // traineesAPI.js
-import {BatchIp} from './IpAddress'
+import {BatchIp, myHeaders, token} from './IpAddress'
 export async function fetchEmployees(batchId) {
     try {
-      const response = await fetch(`${BatchIp}/batch/remaining-employees/batch-id/${batchId}`);
+      const response = await fetch(`${BatchIp}/batch/remaining-employees/batch-id/${batchId}`,{
+       headers: myHeaders ,
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch trainees");
       }
@@ -16,7 +18,9 @@ export async function fetchEmployees(batchId) {
   export async function fetchBatchSize(batchId) {
     try {
 
-      const response = await fetch(`${BatchIp}/batch/batch-size/${batchId}`);
+      const response = await fetch(`${BatchIp}/batch/batch-size/${batchId}`,{
+       headers: myHeaders ,
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch trainees");
       }
@@ -37,10 +41,7 @@ export async function fetchEmployees(batchId) {
       
       const response = await fetch(`${BatchIp}/batch/employee/batch-id/${batchId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-          
-        },
+        headers: myHeaders ,
         body: JSON.stringify(transformedUsers) // Send transformedUsers instead of userIds
       });
       
@@ -64,6 +65,12 @@ export async function fetchEmployees(batchId) {
   
       const response = await fetch(`${BatchIp}/batch/existing-batch/bulk/batch-id/${batchId}`, {
         method: 'POST',
+       headers: {
+        "Authorization": `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS,GET"
+      } ,
         body: formData // Send the FormData object as the request body
       });
   
@@ -81,6 +88,7 @@ export async function fetchEmployees(batchId) {
     try {
       // Make a GET request to the endpoint
       const response = await fetch(`${BatchIp}/batch/format`, {
+       headers: myHeaders ,
         method: 'GET',
       });
   

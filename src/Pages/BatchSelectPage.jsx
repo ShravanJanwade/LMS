@@ -118,14 +118,17 @@ const BatchSelectPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const courseData = await getCourses(batch.id);
+        console.log("Method called for courses")
+        const courseData = await getCourses(batch.id,date);
         if (courseData) {
           const transformedData = courseData.courses.map((course) => ({
             id: course.courseId,
             name: course.courseName,
           }));
-          setCourseData(transformedData);
-        } else {
+
+              setCourseData(transformedData);
+            
+          } else {
           throw new Error("Failed to fetch course data");
         }
       } catch (error) {
@@ -138,7 +141,7 @@ const BatchSelectPage = () => {
     return () => {
       // Cleanup function
     };
-  }, [batch, batchData]);
+  }, [date,batch,course]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -174,10 +177,10 @@ const BatchSelectPage = () => {
     return () => {
       // Cleanup function
     };
-  }, [date]);
+  }, [date,batch,course]);
   useEffect(() => {
     setError(null);
-  }, [date]);
+  }, [date,batch,course]);
   return (
     <div
       className="flex items-center justify-center h-screen"
@@ -219,27 +222,28 @@ const BatchSelectPage = () => {
               data={batchData}
               label={"Select Batch"}
             />
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Select Course
-            </Typography>
-            <SelectOption
-              disabled={batch != null ? false : true}
-              selectHandler={courseHandler}
-              data={courseData}
-              label={"Select Course"}
-            />
-            {course && (
+            {batch && (
               <Typography variant="h6" color="blue-gray" className="-mb-3">
                 Select Date
               </Typography>
             )}
-            {course && <Date date={date} setDate={setDate} />}
-            {error == null && (
+            {batch && <Date date={date} setDate={setDate} />}
+            {date && <Typography variant="h6" color="blue-gray" className="-mb-3">
+              Select Course
+            </Typography>}
+            {date && <SelectOption
+              disabled={batch != null ? false : true}
+              selectHandler={courseHandler}
+              data={courseData}
+              label={"Select Course"}
+            />}
+            
+            {error == null && course && (
               <Typography variant="h6" color="blue-gray" className="-mb-3">
                 Half of the day
               </Typography>
             )}
-            {error == null && (
+            {error == null && course && (
               <SelectOption
                 disabled={date != null ? false : true}
                 selectHandler={periodHandler}

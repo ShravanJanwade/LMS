@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { getBatchDetails, updateBatch } from "../Services/BatchData";
-import {fetchBatchSize } from "../Services/allEmployee.js";
-import CreateBatchBackground from '../assets/BatchForm.svg'
+import { fetchBatchSize } from "../Services/allEmployee.js";
+import CreateBatchBackground from "../assets/BatchForm.svg";
+import Modal from "../Components/Modal.jsx";
+import { EmployeeDrawer } from "../Components/EmployeeDrawer.jsx";
 
 function EditBatch() {
   const [batchName, setBatchName] = useState("");
@@ -13,10 +15,15 @@ function EditBatch() {
   const [endDate, setEndDate] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [duration, setDuration] = useState("");
-  const [currentSize,setCurrentSize]=useState(0);
+  const [currentSize, setCurrentSize] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState("");
   const id = sessionStorage.getItem("id");
   const navigate = useNavigate();
-
+  const [openRight, setOpenRight] = useState(false);
+  const openDrawerRight = () => setOpenRight(true);
+  const closeDrawerRight = () => setOpenRight(false);
   useEffect(() => {
     const fetchData = async () => {
       const data = await getBatchDetails(id);
@@ -59,9 +66,9 @@ function EditBatch() {
       setDuration("");
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     calculateDuration();
-  })
+  });
 
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
@@ -77,8 +84,17 @@ function EditBatch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(currentSize>batchSize){
-      setErrorMessage("Batch size cannot be less than current Employees size which is "+currentSize+". Please delete some employees to reduce the batch size");
+    if (currentSize > batchSize) {
+      setData({
+        title: "Delete Employees First",
+        message:
+          "Batch size cannot be less than current Employees size which is " +
+          currentSize +
+          ". Please delete some employees to reduce the batch size",
+        actionText: "Delete Trainees",
+        delete: true,
+      });
+      setOpen((prev) => !prev);
       return;
     }
     const success = await updateBatch(id, {
@@ -102,19 +118,18 @@ function EditBatch() {
     const fetchData = async () => {
       try {
         const data = await fetchBatchSize(id);
-        if(data){
+        if (data) {
           setCurrentSize(data.employeeCount);
-        }else{
-          throw new Error("Couldn't fetch batch Size")
+        } else {
+          throw new Error("Couldn't fetch batch Size");
         }
-      
       } catch (error) {
         console.error("Error fetching batchSize:", error);
       }
     };
 
     fetchData();
-  }, [id]);
+  });
   const handleBatchSizeChange = (e) => {
     const newSize = parseInt(e.target.value);
     if (!isNaN(newSize) && newSize >= 1 && newSize <= 5000) {
@@ -127,18 +142,39 @@ function EditBatch() {
       setErrorMessage("Batch size must be between 1 and 5000.");
     }
   };
-  
-  
+
+  const handleOpen = () => {
+    setOpenRight((prev) => !prev);
+    setOpen((prev)=>!prev)
+  };
+  const handleClose = () => {
+    setOpen((prev) => !prev);
+  };
   return (
-    <div className="flex justify-center items-center h-full mt-10"   style={{
-      marginTop: '-70px',
-      backgroundImage: `url(${CreateBatchBackground})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      width: '100%',
-      height: '100vh', // Adjust height as needed
-    }}>
+    <div
+      className="flex justify-center items-center h-full mt-10"
+      style={{
+        marginTop: "-70px",
+        backgroundImage: `url(${CreateBatchBackground})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        width: "100%",
+        height: "100vh", // Adjust height as needed
+      }}
+    >
+      <Modal
+        handleOpen={handleOpen}
+        open={open}
+        handleClose={handleClose}
+        data={data}
+        loading={loading}
+      />
+      <EmployeeDrawer
+        openRight={openRight}
+        setOpenRight={setOpenRight}
+        closeDrawerRight={closeDrawerRight}
+      />
       <Card className="w-full max-w-lg p-8">
         <Typography variant="h4" color="blue-gray" className="mb-6">
           Edit Batch
@@ -207,7 +243,7 @@ function EditBatch() {
           <Typography variant="lead" color="gray">
             Duration: {duration}
           </Typography>
-          <Button type="submit" size="lg" style={{background:'#023047'}}>
+          <Button type="submit" size="lg" style={{ background: "#023047" }}>
             Update Batch
           </Button>
         </form>

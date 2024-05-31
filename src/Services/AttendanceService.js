@@ -13,9 +13,9 @@ export async function getBatches() {
     return null;
   }
 }
-export async function getCourses(batchId) {
+export async function getCourses(batchId,date) {
   try {
-    const response = await fetch(`${AttendanceIp}/batch/${batchId}/courses`, {
+    const response = await fetch(`${AttendanceIp}/batch/${batchId}/date/${date}/courses`, {
       headers: myHeaders,
     });
     if (!response.ok) {
